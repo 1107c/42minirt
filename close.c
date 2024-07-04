@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:07:25 by ksuh              #+#    #+#             */
-/*   Updated: 2024/07/04 13:08:33 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/07/04 13:29:55 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void	close_all(t_rt *rt, int error_num)
 	mlx_destroy_display(rt->mlx);
 	free(rt->img);
 	free(rt->cam);
+	free(rt->fig);
+	free(rt->light);
+	free(rt->amblight);
 	free(rt->mlx);
 	rt->mlx = NULL;
 	free(rt);
