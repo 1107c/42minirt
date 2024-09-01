@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/07/04 13:23:13 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/01 13:59:26 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,37 @@
 # define SPHERE		1
 # define CYLINDER	2
 
-# define WINDOW_WIDTH	1920
-# define WINDOW_HEIGHT	1080
+# ifndef WINDOW_WIDTH
+#  define WINDOW_WIDTH	1920
+# endif
+# ifndef WINDOW_HEIGHT
+#  define WINDOW_HEIGHT	1080
+# endif
 # define WINDOW_TITLE	"miniRT"
 
-# include <stdio.h>
-# include "minilibx-linux/mlx.h"
-# include "minilibx-linux/mlx_int.h"
+# define ESC 65307
+
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <fcntl.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+
+
+# include "../minilibx-linux/mlx.h"
 # include "math.h"
-# include "libft/libft.h"
+# include "../libft/libft.h"
+
+typedef enum e_msg
+{
+	NO_ARG,
+	MUCH_ARG,
+	EXTEN_ERR,
+	FATAL_ERR,
+	OPEN_ERR,
+
+}	t_msg;
 
 typedef struct s_amblight
 {
@@ -92,6 +113,8 @@ typedef struct s_rt
 	t_fig		*fig;
 	t_light		*light;
 	t_amblight	*amblight;
+	char		*file_name;
+	int			file_fd;
 	int			win_x;
 	int			win_y;
 	void		*mlx;
@@ -106,5 +129,6 @@ t_rt	*init_rt();
 
 /* close.c */
 void	close_all(t_rt *rt, int error_num);
+
 
 #endif

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/07/04 13:23:33 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/01 13:58:51 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "../includes/minirt.h"
 
 static t_image	*init_img(void *mlx);
 static t_cam	*init_cam();
@@ -23,15 +23,22 @@ t_rt	*init_rt()
 	t_rt	*rt;
 
 	rt = malloc(sizeof(t_rt));
+	if (!rt)
+		return (NULL);
 	rt->mlx = mlx_init();
-	rt->win_x = WINDOW_WIDTH;
-	rt->win_y = WINDOW_HEIGHT;
+	if (!rt->mlx)
+		return (NULL);
+	mlx_get_screen_size(rt->mlx, &rt->win_x, &rt->win_y);
 	rt->win = mlx_new_window(rt->mlx, rt->win_x, rt->win_y, WINDOW_TITLE);
+	if (!rt->win)
+		return (NULL);
 	rt->img = init_img(rt->mlx);
 	rt->cam = init_cam();
 	rt->fig = init_fig();
 	rt->light = init_light();
 	rt->amblight = init_amblight();
+	if (!rt->img || !rt->cam || !rt->fig || !rt->light || !rt->amblight)
+		return (NULL);
 	return (rt);
 }
 

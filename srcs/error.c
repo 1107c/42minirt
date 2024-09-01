@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42gyeongsan.kr>         +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/27 16:28:51 by ksuh              #+#    #+#             */
-/*   Updated: 2024/02/29 20:56:44 by ksuh             ###   ########.fr       */
+/*   Created: 2024/07/04 13:04:21 by ksuh              #+#    #+#             */
+/*   Updated: 2024/09/01 11:21:34 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minirt.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+int	error(int error_num)
 {
-	t_list	*back;
-
-	if (!lst)
-		return ;
-	back = ft_lstlast(*lst);
-	if (back)
-		back->next = new;
-	else
-		*lst = new;
+	if (error_num == 1)
+		ft_putendl_fd("usage: ./miniRT [*.rt]", STDERR_FILENO);
+	exit(error_num);
 }
