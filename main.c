@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/07/04 13:21:15 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/01 14:34:15 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@ int	main(int argc, char **argv)
 	filename = argv[1];
 	rt = init_rt(filename);
 	// interpret_data(rt, filename);
-	// draw(rt);
+	draw(rt);
 	mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
-	// mlx_key_hook(rt->win, &key_handle, rt);
+	mlx_key_hook(rt->win, &key_handle, rt);
 	mlx_loop(rt->mlx);
 	return (0);
 }

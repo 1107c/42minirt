@@ -6,14 +6,14 @@
 #    By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 11:30:30 by ksuh              #+#    #+#              #
-#    Updated: 2024/07/04 13:22:23 by ksuh             ###   ########.fr        #
+#    Updated: 2024/09/01 14:34:29 by ksuh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -g -Wall -Wextra -Werror
 
-SRCS = close.c error.c init.c main.c
+SRCS = close.c error.c init.c key_handle.c main.c draw.c
 
 OBJS= $(SRCS:.c=.o)
 
@@ -23,7 +23,7 @@ MLX = libmlx_Linux.a
 MLX_PATH = ./minilibx-linux
 
 LIB_DIR = ./libft
-LIB = libft.a
+LIB = ${LIB_DIR}/libft.a
 
 NAME = miniRT
 
@@ -40,7 +40,6 @@ $(MLX) :
 
 $(LIB) :
 	make -C $(LIB_DIR)
-	cp $(LIB_DIR)/$(LIB) $(LIB)
 
 clean :	
 	make clean -C $(LIB_DIR)
@@ -51,7 +50,6 @@ fclean :
 	make clean -C $(MLX_PATH)
 	rm -rf $(OBJS)
 	rm -rf $(NAME)
-	rm -rf $(LIB)
 
 re : fclean all
 

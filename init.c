@@ -6,16 +6,16 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/07/04 13:23:33 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/07/04 16:47:49 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-static t_image	*init_img(void *mlx);
-static t_cam	*init_cam();
-static t_fig	*init_fig();
-static t_light	*init_light();
+static t_image		*init_img(void *mlx);
+static t_cam		*init_cam();
+static t_fig		*init_fig();
+static t_light		*init_light();
 static t_amblight	*init_amblight();
 
 t_rt	*init_rt()
