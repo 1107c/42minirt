@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 11:12:11 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 11:20:10 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-# include <unistd.h>
 # include <stdio.h>
-# include <stdlib.h>
-
 
 # include "../minilibx-linux/mlx.h"
 # include "math.h"
@@ -134,6 +131,9 @@ t_rt	*init_rt();
 
 /* close.c */
 void	close_all(t_rt *rt, int error_num);
+
+/* interpret.c */
+void	interpret_data(t_rt *rt);
 
 
 #endif
