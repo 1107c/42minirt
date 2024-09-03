@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 15:21:45 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 17:31:00 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,69 @@ static void	interpret_amb(t_rt *rt, char **args);
 // check point
 // 1. A, C, L 요소들이 무조건 한 번씩 나와야 함
 // 2. 
+
+// func_valid_data(arg) char값의 유효성을 검사하는 함수
+// 유효하지 않은 경우
+// 1. 한 숫자단위 내에 소수점이 여러개 있을 경우 => ex) 0.333.2
+// 2. 소수점 뒤에 오는 문자가 숫자가 아닌 경우 => ex) 0.,
+// 3. 쉼표 뒤에(+,-부호를 건너 뛴)오는 문자가 숫자가 아닌 경우 => ex) ,+,
+// 4. 쉼표가 3개 이상 나오는 경우
+// 5. 숫자가 아닌 값이 오는 경우
+
+int	is_invalid(char **s, int *dot, int *comma)
+{
+	if (**s == '.')
+	{
+		if (*dot || !ft_isdigit(*(*s + 1)))
+			return (1);
+		(*dot)++;
+	}
+	else if (**s == ',')
+	{
+		if (*comma == 2)
+			return (1);
+		(*comma)++;
+		(*dot) = 0;
+		if (*(*s + 1) == '+' || *(*s + 1) == '-')
+			s++;
+		return (ft_isdigit(*(*s + 1)));
+	}
+	else if (ft_isdigit(**s))
+		return (1);
+	return (0);
+}
+
+int	is_valid_data(char **args)
+{
+	char	*s;
+	int		dot;
+	int		comma;
+
+	while (*args)
+	{
+		s = *args++;
+		dot = 0;
+		comma = 0;
+		if (s == '+' || s == '-')
+			s++;
+		if (!ft_isdigit(s))
+			return (0);
+		while (s)
+		{
+			if (is_invalid(&s, &dot, &comma))
+				return (0);
+			s++;
+		}
+		if (comma == 1)
+			return (0);
+	}
+	return (1);
+}
+
+int	ft_iscomma(int c)
+{
+	return (c == ',')
+}
 
 int		get_arg_len(char **args)
 {
@@ -85,6 +148,8 @@ void	interpret_data(t_rt *rt)
 			// 할당 실패시 메모리 해제 후 종료
 			if (!args)
 				close_all(rt, MEM_ERR);
+			if (!is_valid_data(args))
+				close_all(rt, FORMAT_ERR);
 			print_args(args);
 			interpret_args(rt, args);
 			free_args(args);
@@ -100,9 +165,9 @@ void	interpret_args(t_rt *rt, char **args)
 	if (ft_strcmp(args[0], "A"))
 		interpret_amb(rt, args);
 	else if (ft_strcmp(args[0], "C"))
-
+		interpret_cam(rt, args);
 	else if (ft_strcmp(args[0], "L"))
-
+		interpret_light(rt, args);
 	else if (ft_strcmp(args[0], "sp"))
 
 	else if (ft_strcmp(args[0], "pl"))
@@ -132,4 +197,44 @@ void	interpret_amb(t_rt *rt, char **args)
 		free_args(args);
 		close_all(rt, AMB_LEN_ERR);
 	}
+	if (ft_strchr(args[1], ','))
+	{
+		free(args);
+		close_all(rt, AMB_RATIO_FORMAT_ERR);
+	}
+	rt->amblight->light_ratio = ft_atol();
+	ft_split(args[2], ft_iscomma);
+	rt->amblight->ch = 1;
+}
+
+void	interpret_cam(t_rt *rt, char **args)
+{
+	if (rt->cam->ch)
+	{
+		free_args(args);
+		close_all(rt, CAM_DUP_ERR);
+	}
+	if (get_arg_len(args) != 4)
+	{
+		free_args(args);
+		close_all(rt, CAM_LEN_ERR);
+	}
+	
+	
+	rt->cam->ch = 1;
+}
+
+void	interpret_light(t_rt *rt, char **args)
+{
+	if (rt->cam->ch)
+	{
+		free_args(args);
+		close_all(rt, LIGHT_DUP_ERR);
+	}
+	if (get_arg_len(args) != 4)
+	{
+		free_args(args);
+		close_all(rt, LIGHT_LEN_ERR);
+	}
+	rt->cam->ch = 1;
 }

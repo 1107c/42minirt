@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 15:23:09 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 16:58:33 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,16 @@
 
 # define ESC 65307
 
-# define MEM_ERR		"Error\n=> memory allocation failed"
-# define INVALID_OPT	"Error\n=> invalid option"
-# define AMB_DUP_ERR	"Error\n=> ambient light duplicate error"
-# define AMB_LEN_ERR	"Error\n=> invalid ambient light format"
+# define MEM_ERR				"Error\n=> memory allocation failed"
+# define FORMAT_ERR				"Error\n=> invalid format"
+# define INVALID_OPT			"Error\n=> invalid option"
+# define AMB_DUP_ERR			"Error\n=> ambient light duplication error"
+# define AMB_LEN_ERR			"Error\n=> invalid ambient light format"
+# define AMB_RATIO_FORMAT_ERR	"Error\n=> invalid light format"
+# define CAM_DUP_ERR			"Error\n=> cam duplication error"
+# define CAM_LEN_ERR			"Error\n=> invalid cam format"
+# define LIGHT_DUP_ERR			"Error\n=> light duplication error"
+# define LIGHT_LEN_ERR			"Error\n=> invalid light format"
 
 
 # include <sys/types.h>
