@@ -1,26 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back.c                                   :+:      :+:    :+:   */
+/*   interpret.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42gyeongsan.kr>         +#+  +:+       +#+        */
+/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/27 16:28:51 by ksuh              #+#    #+#             */
-/*   Updated: 2024/02/29 20:56:44 by ksuh             ###   ########.fr       */
+/*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
+/*   Updated: 2024/09/03 10:56:49 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minirt.h"
 
-void	ft_lstadd_back(t_list **lst, t_list *new)
+void	interpret_data(t_rt *rt)
 {
-	t_list	*back;
-
-	if (!lst)
-		return ;
-	back = ft_lstlast(*lst);
-	if (back)
-		back->next = new;
-	else
-		*lst = new;
+	
 }

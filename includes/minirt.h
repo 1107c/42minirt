@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/02 14:00:27 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 11:12:11 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,37 @@
 # define SPHERE		1
 # define CYLINDER	2
 
-# define WINDOW_WIDTH	1920
-# define WINDOW_HEIGHT	1080
+# ifndef WINDOW_WIDTH
+#  define WINDOW_WIDTH	1920
+# endif
+# ifndef WINDOW_HEIGHT
+#  define WINDOW_HEIGHT	1080
+# endif
 # define WINDOW_TITLE	"miniRT"
 
-# define KEY_ESC	65307
+# define ESC 65307
 
-# define KEY_PLUS	61
-# define KEY_MINUS	45
-
-# define KEY_R		114
-
-# define KEY_W		119
-# define KEY_S		115
-# define KEY_A		97
-# define KEY_D		100
-
-# define KEY_Q		113
-# define KEY_E		101
-
-# define KEY_Z		122
-# define KEY_X		120
-
-# define KEY_I		105
-# define KEY_P		112
-
-# define KEY_UP		65362
-# define KEY_DOWN	65364
-# define KEY_LEFT	65361
-# define KEY_RIGHT	65363
-
-# include <stdio.h>
-# include "minilibx-linux/mlx.h"
-# include "minilibx-linux/mlx_int.h"
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <fcntl.h>
+# include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+
+
+# include "../minilibx-linux/mlx.h"
 # include "math.h"
-# include "libft/libft.h"
+# include "../libft/libft.h"
+
+typedef enum e_msg
+{
+	NO_ARG,
+	MUCH_ARG,
+	EXTEN_ERR,
+	FATAL_ERR,
+	OPEN_ERR,
+
+}	t_msg;
 
 typedef struct s_amblight
 {
@@ -60,6 +55,7 @@ typedef struct s_amblight
 	int		r;
 	int		g;
 	int		b;
+	int		ch;
 }	t_amblight;
 
 typedef struct s_cam
@@ -73,6 +69,7 @@ typedef struct s_cam
 	int		fov;
 	int		move_x;
 	int		move_y;
+	int		ch;
 }	t_cam;
 
 typedef struct s_light
@@ -83,7 +80,9 @@ typedef struct s_light
 	float	brightness;
 	int		r;
 	int		g;
-	int		b;	
+	int		b;
+	int		ch;
+	struct s_light	*next;
 }	t_light;
 
 typedef struct s_fig
@@ -99,7 +98,8 @@ typedef struct s_fig
 	float	height;
 	int		r;
 	int		g;
-	int		b;	
+	int		b;
+	struct s_fig	*next;
 }	t_fig;
 
 typedef struct s_image
@@ -118,6 +118,8 @@ typedef struct s_rt
 	t_fig		*fig;	// figure
 	t_light		*light;	// light
 	t_amblight	*amblight;
+	char		*file_name;
+	int			file_fd;
 	int			win_x;
 	int			win_y;
 	void		*mlx;
@@ -133,10 +135,5 @@ t_rt	*init_rt();
 /* close.c */
 void	close_all(t_rt *rt, int error_num);
 
-/* key_handle.c */
-int	key_handle(int keycode, t_rt *rt);
-
-/* draw.c */
-void	draw(t_rt *rt);
 
 #endif

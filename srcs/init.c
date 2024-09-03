@@ -6,11 +6,11 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/02 13:59:03 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 11:07:55 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "../includes/minirt.h"
 
 static t_image		*init_img(void *mlx);
 static t_cam		*init_cam();
@@ -23,15 +23,22 @@ t_rt	*init_rt()
 	t_rt	*rt;
 
 	rt = malloc(sizeof(t_rt));
+	if (!rt)
+		return (NULL);
 	rt->mlx = mlx_init();
-	rt->win_x = WINDOW_WIDTH;
-	rt->win_y = WINDOW_HEIGHT;
+	if (!rt->mlx)
+		return (NULL);
+	mlx_get_screen_size(rt->mlx, &rt->win_x, &rt->win_y);
 	rt->win = mlx_new_window(rt->mlx, rt->win_x, rt->win_y, WINDOW_TITLE);
+	if (!rt->win)
+		return (NULL);
 	rt->img = init_img(rt->mlx);
 	rt->cam = init_cam();
 	rt->fig = init_fig();
 	rt->light = init_light();
 	rt->amblight = init_amblight();
+	if (!rt->img || !rt->cam || !rt->fig || !rt->light || !rt->amblight)
+		return (NULL);
 	return (rt);
 }
 
@@ -65,6 +72,7 @@ t_cam	*init_cam()
 	cam->fov = 0;
 	cam->move_x = 0;
 	cam->move_y = 0;
+	cam->ch = 0;
 	return (cam);
 }
 
@@ -87,6 +95,7 @@ t_fig	*init_fig()
 	fig->r = 0;
 	fig->g = 0;
 	fig->b = 0;
+	fig->next = NULL;
 	return (fig);
 }
 
@@ -104,6 +113,8 @@ t_light	*init_light()
 	light->r = 0;
 	light->g = 0;
 	light->b = 0;
+	light->ch = 0;
+	light->next = NULL;
 	return (light);
 }
 
@@ -118,5 +129,6 @@ t_amblight	*init_amblight()
 	amblight->r = 0;
 	amblight->g = 0;
 	amblight->b = 0;
+	amblight->ch = 0;
 	return (amblight);
 }

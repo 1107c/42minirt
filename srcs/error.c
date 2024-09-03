@@ -1,24 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstiter.c                                       :+:      :+:    :+:   */
+/*   error.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42gyeongsan.kr>         +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/02/27 17:51:28 by ksuh              #+#    #+#             */
-/*   Updated: 2024/02/27 17:52:55 by ksuh             ###   ########.fr       */
+/*   Created: 2024/07/04 13:04:21 by ksuh              #+#    #+#             */
+/*   Updated: 2024/09/01 11:21:34 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/minirt.h"
 
-void	ft_lstiter(t_list *lst, void (*f)(void *))
+int	error(int error_num)
 {
-	if (!f)
-		return ;
-	while (lst)
-	{
-		f(lst->content);
-		lst = lst->next;
-	}
+	if (error_num == 1)
+		ft_putendl_fd("usage: ./miniRT [*.rt]", STDERR_FILENO);
+	exit(error_num);
 }
