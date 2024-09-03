@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 18:45:47 by ksuh              #+#    #+#             */
-/*   Updated: 2024/05/15 12:47:17 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 11:37:36 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,6 @@ char	*get_next_line(int fd)
 	while (!is_end)
 		buffer = read_buffer(fd, backup[fd], buffer, &is_end);
 	len = ft_strlen(buffer);
-	if (buffer[len - 1] == '\n')
-		buffer[len - 1] = '\0';
 	return (buffer);
 }
 
