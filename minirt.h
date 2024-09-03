@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/01 13:41:52 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/02 14:00:27 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,10 +113,10 @@ typedef struct s_image
 
 typedef struct s_rt
 {
-	t_image		*img;
-	t_cam		*cam;
-	t_fig		*fig;
-	t_light		*light;
+	t_image		*img;	// mlx_image 
+	t_cam		*cam;	// camera
+	t_fig		*fig;	// figure
+	t_light		*light;	// light
 	t_amblight	*amblight;
 	int			win_x;
 	int			win_y;
