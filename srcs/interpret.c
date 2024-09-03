@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   interpret.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 15:21:45 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 15:38:40 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ void	interpret_args(t_rt *rt, char **args)
 	else if (ft_strcmp(args[0], "pl"))
 
 	else if (ft_strcmp(args[0], "cy"))
-
+		interpret_amb(rt, args);
 	else
 	{
 		free_args(args);

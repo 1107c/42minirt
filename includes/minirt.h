@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 15:23:09 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 16:03:22 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@
 # define INVALID_OPT	"Error\n=> invalid option"
 # define AMB_DUP_ERR	"Error\n=> ambient light duplicate error"
 # define AMB_LEN_ERR	"Error\n=> invalid ambient light format"
+# define SIGN_LEN_ERR	"Error\n=> there are many sign in float"
 
 
 # include <sys/types.h>

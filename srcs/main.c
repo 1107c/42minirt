@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 14:54:45 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 15:33:17 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,17 @@ static int	close_win(t_rt *rt);
 
 void	print_err(t_msg	msg, t_rt *rt)
 {
+	ft_putendl_fd("Error\n", 2)
 	if (msg == NO_ARG)
-		ft_putendl_fd("no input, enter only *.rt.\n", 1)	;
+		ft_putendl_fd("no input, enter only *.rt.", 2);
 	else if (msg == MUCH_ARG)
-		ft_putendl_fd("too many input, enter only *.rt.\n", 1);
+		ft_putendl_fd("too many input, enter only *.rt.", 2);
 	else if (msg == EXTEN_ERR)
-		ft_putendl_fd("input is not .rt, enter only *.rt.\n", 1);
+		ft_putendl_fd("input is not .rt, enter only *.rt.", 2);
 	else if (msg == EXTEN_ERR)
-		ft_putendl_fd("fatal error.\n", 1);
+		ft_putendl_fd("fatal error.", 2);
 	else if (msg == OPEN_ERR)
-		ft_putendl_fd("file open failed.\n", 1);
+		ft_putendl_fd("file open failed.", 2);
 	if (rt)
 		close_win(rt);
 	exit (1);
