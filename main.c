@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
-
+// 김시윤의 작품
 static int	close_win(t_rt *rt);
 
 int	main(int argc, char **argv)
