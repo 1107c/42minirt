@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 11:24:31 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 11:47:12 by yeojukim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	close_win(t_rt *rt);
 void	print_err(t_msg	msg, t_rt *rt)
 {
 	if (msg == NO_ARG)
-		ft_putendl_fd("no input, enter only *.rt.\n", 1)	;
+		ft_putendl_fd("no input, enter only *.rt.\n", 1);
 	else if (msg == MUCH_ARG)
 		ft_putendl_fd("too many input, enter only *.rt.\n", 1);
 	else if (msg == EXTEN_ERR)
@@ -49,13 +49,10 @@ int	open_err(int *arg, char **args, t_rt *rt)
 	args += 1;
 	*arg -= 1;
 	i = ft_strlen(args[0]);
-	if (i < 3)
-		return (print_err(EXTEN_ERR, rt), 1);
 	if (!((args[0][i - 3] == '.') && (args[0][i - 2] == 'r') && \
 	(args[0][i - 1] == 't')))
 		return (print_err(EXTEN_ERR, rt), 1);
 	rt->file_name = args[0];
-	printf("file: %s\n", rt->file_name);
 	rt->file_fd = open(rt->file_name, O_RDONLY);
 	if (rt->file_fd < 0)
 		return (print_err(OPEN_ERR, rt), 1);
@@ -84,11 +81,11 @@ int	main(int arg, char **args)
 			return (print_err(FATAL_ERR, rt), 1);
 		if (open_err(&arg, args, rt))
 			return (1);
-		interpret_data(rt);
+		// interpret_data(rt, filename);
 		// draw(rt);
-		// mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
-		// mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
-		// mlx_loop(rt->mlx);
+		mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
+		mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
+		mlx_loop(rt->mlx);
 	}
 	return (0);
 }
