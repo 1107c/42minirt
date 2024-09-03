@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 11:20:10 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 15:23:09 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,12 @@
 # define WINDOW_TITLE	"miniRT"
 
 # define ESC 65307
+
+# define MEM_ERR		"Error\n=> memory allocation failed"
+# define INVALID_OPT	"Error\n=> invalid option"
+# define AMB_DUP_ERR	"Error\n=> ambient light duplicate error"
+# define AMB_LEN_ERR	"Error\n=> invalid ambient light format"
+
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -116,6 +122,7 @@ typedef struct s_rt
 	t_light		*light;	// light
 	t_amblight	*amblight;
 	char		*file_name;
+	char		*line;
 	int			file_fd;
 	int			win_x;
 	int			win_y;
@@ -124,13 +131,13 @@ typedef struct s_rt
 }	t_rt;
 
 /* error.c */
-int		error(int error_num);
+int		error(char *error_msg);
 
 /* init.c */
 t_rt	*init_rt();
 
 /* close.c */
-void	close_all(t_rt *rt, int error_num);
+void	close_all(t_rt *rt, char *error_msg);
 
 /* interpret.c */
 void	interpret_data(t_rt *rt);

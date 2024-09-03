@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 11:24:31 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/03 14:54:45 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ int	open_err(int *arg, char **args, t_rt *rt)
 	(args[0][i - 1] == 't')))
 		return (print_err(EXTEN_ERR, rt), 1);
 	rt->file_name = args[0];
-	printf("file: %s\n", rt->file_name);
 	rt->file_fd = open(rt->file_name, O_RDONLY);
 	if (rt->file_fd < 0)
 		return (print_err(OPEN_ERR, rt), 1);
@@ -86,6 +85,7 @@ int	main(int arg, char **args)
 			return (1);
 		interpret_data(rt);
 		// draw(rt);
+		// mlx_key_hook(rt->win, &key_handle, rt);
 		// mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
 		// mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
 		// mlx_loop(rt->mlx);
@@ -95,6 +95,6 @@ int	main(int arg, char **args)
 
 int	close_win(t_rt *rt)
 {
-	close_all(rt, 0);
+	close_all(rt, NULL);
 	return (0);
 }
