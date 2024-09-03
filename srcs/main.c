@@ -6,11 +6,13 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 11:59:32 by yeojukim         ###   ########.fr       */
+/*   Updated: 2024/09/03 12:02:36 by yeojukim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minirt.h"
+
+//test
 
 static int	close_win(t_rt *rt);
 
