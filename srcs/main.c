@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/01 14:04:13 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/03 10:47:26 by yeojukim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	close_win(t_rt *rt);
 void	print_err(t_msg	msg, t_rt *rt)
 {
 	if (msg == NO_ARG)
-		ft_putendl_fd("no input, enter only *.rt.\n", 1)	;
+		ft_putendl_fd("no input, enter only *.rt.\n", 1);
 	else if (msg == MUCH_ARG)
 		ft_putendl_fd("too many input, enter only *.rt.\n", 1);
 	else if (msg == EXTEN_ERR)
