@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/01 14:04:13 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/03 11:09:48 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ int	open_err(int *arg, char **args, t_rt *rt)
 	args += 1;
 	*arg -= 1;
 	i = ft_strlen(args[0]);
+	if (i < 3)
+		return (print_err(EXTEN_ERR, rt), 1);
 	if (!((args[0][i - 3] == '.') && (args[0][i - 2] == 'r') && \
 	(args[0][i - 1] == 't')))
 		return (print_err(EXTEN_ERR, rt), 1);
@@ -81,7 +83,7 @@ int	main(int arg, char **args)
 			return (print_err(FATAL_ERR, rt), 1);
 		if (open_err(&arg, args, rt))
 			return (1);
-		// interpret_data(rt, filename);
+		// interpret_data(rt);
 		// draw(rt);
 		mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
 		mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);

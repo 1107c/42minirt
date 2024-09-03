@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/01 13:59:26 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/03 11:12:11 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_amblight
 	int		r;
 	int		g;
 	int		b;
+	int		ch;
 }	t_amblight;
 
 typedef struct s_cam
@@ -68,6 +69,7 @@ typedef struct s_cam
 	int		fov;
 	int		move_x;
 	int		move_y;
+	int		ch;
 }	t_cam;
 
 typedef struct s_light
@@ -78,7 +80,9 @@ typedef struct s_light
 	float	brightness;
 	int		r;
 	int		g;
-	int		b;	
+	int		b;
+	int		ch;
+	struct s_light	*next;
 }	t_light;
 
 typedef struct s_fig
@@ -94,7 +98,8 @@ typedef struct s_fig
 	float	height;
 	int		r;
 	int		g;
-	int		b;	
+	int		b;
+	struct s_fig	*next;
 }	t_fig;
 
 typedef struct s_image
@@ -108,10 +113,10 @@ typedef struct s_image
 
 typedef struct s_rt
 {
-	t_image		*img;
-	t_cam		*cam;
-	t_fig		*fig;
-	t_light		*light;
+	t_image		*img;	// mlx_image 
+	t_cam		*cam;	// camera
+	t_fig		*fig;	// figure
+	t_light		*light;	// light
 	t_amblight	*amblight;
 	char		*file_name;
 	int			file_fd;

@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/01 13:58:51 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/03 11:07:55 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minirt.h"
 
-static t_image	*init_img(void *mlx);
-static t_cam	*init_cam();
-static t_fig	*init_fig();
-static t_light	*init_light();
+static t_image		*init_img(void *mlx);
+static t_cam		*init_cam();
+static t_fig		*init_fig();
+static t_light		*init_light();
 static t_amblight	*init_amblight();
 
 t_rt	*init_rt()
@@ -72,6 +72,7 @@ t_cam	*init_cam()
 	cam->fov = 0;
 	cam->move_x = 0;
 	cam->move_y = 0;
+	cam->ch = 0;
 	return (cam);
 }
 
@@ -94,6 +95,7 @@ t_fig	*init_fig()
 	fig->r = 0;
 	fig->g = 0;
 	fig->b = 0;
+	fig->next = NULL;
 	return (fig);
 }
 
@@ -111,6 +113,8 @@ t_light	*init_light()
 	light->r = 0;
 	light->g = 0;
 	light->b = 0;
+	light->ch = 0;
+	light->next = NULL;
 	return (light);
 }
 
@@ -125,5 +129,6 @@ t_amblight	*init_amblight()
 	amblight->r = 0;
 	amblight->g = 0;
 	amblight->b = 0;
+	amblight->ch = 0;
 	return (amblight);
 }

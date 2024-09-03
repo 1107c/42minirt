@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+         #
+#    By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 11:30:30 by ksuh              #+#    #+#              #
-#    Updated: 2024/09/01 13:28:46 by myeochoi         ###   ########.fr        #
+#    Updated: 2024/09/03 11:13:30 by ksuh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,6 +51,7 @@ all : $(NAME)
 
 
 $(NAME): $(OBJS) $(LIB) $(MLX_DIR)$(MLX)
+	cp $(LIB_DIR)/$(LIB) $(LIB)
 	$(CC) $(CFLAGS) $(OBJS) $(LIB) $(INCS) -o $@
 
 $(OBJS) : $(SRCS)
@@ -64,7 +65,6 @@ endif
 
 $(LIB) : $(LIB_DIR)
 	make -C $(LIB_DIR)
-	cp $(LIB_DIR)/$(LIB) $(LIB)
 
 $(MLX_DIR)$(MLX):
 	make -C $(MLX_DIR)
