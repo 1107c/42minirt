@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 12:02:36 by yeojukim         ###   ########.fr       */
+/*   Updated: 2024/09/04 09:41:10 by yeojukim         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,15 +85,16 @@ int	main(int arg, char **args)
 			return (1);
 		// interpret_data(rt, filename);
 		// draw(rt);
-		mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
-		mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
-		mlx_loop(rt->mlx);
+		// mlx_key_hook(rt->win, &key_handle, rt);
+		// mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
+		// mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
+		// mlx_loop(rt->mlx);
 	}
 	return (0);
 }
 
 int	close_win(t_rt *rt)
 {
-	close_all(rt, 0);
+	close_all(rt, NULL);
 	return (0);
 }

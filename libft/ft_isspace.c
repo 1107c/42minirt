@@ -1,38 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/01 14:34:15 by ksuh             ###   ########.fr       */
+/*   Created: 2024/09/03 14:21:24 by ksuh              #+#    #+#             */
+/*   Updated: 2024/09/03 14:32:18 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "libft.h"
 
-static int	close_win(t_rt *rt);
-
-int	main(int argc, char **argv)
+int	ft_isspace(int c)
 {
-	t_rt	*rt;
-	char	*filename;
-
-	if (argc != 2)
-		error(1);
-	filename = argv[1];
-	rt = init_rt(filename);
-	// interpret_data(rt, filename);
-	draw(rt);
-	mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
-	mlx_key_hook(rt->win, &key_handle, rt);
-	mlx_loop(rt->mlx);
-	return (0);
-}
-
-int	close_win(t_rt *rt)
-{
-	close_all(rt, 0);
+	if (c == ' ' || (c >= 9 && c <= 13))
+		return (1);
 	return (0);
 }
