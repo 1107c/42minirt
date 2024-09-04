@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 14:25:50 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 15:17:05 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,12 @@ void	parse_args(t_rt *rt, char **args)
 		parse_cam(rt, args);
 	else if (ft_strcmp(args[0], "L"))
 		parse_light(rt, args);
-	else if (ft_strcmp(args[0], "sp"))
-
 	else if (ft_strcmp(args[0], "pl"))
-
+		parse_plane(rt, args);
+	else if (ft_strcmp(args[0], "sp"))
+		parse_sphere(rt, args);
 	else if (ft_strcmp(args[0], "cy"))
-		parse_amb(rt, args);
+		parse_cylinder(rt, args);
 	else
 		free_2d_and_close_all(rt, args, INVALID_OPT);
 }

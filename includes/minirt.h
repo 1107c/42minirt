@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 14:25:48 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 15:21:46 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,15 @@ typedef enum e_msg
 	OPEN_ERR,
 
 }	t_msg;
+
+typedef enum e_type
+{
+	IMG,
+	CAM,
+	FIG,
+	LIGHT,
+	AMBLIGHT
+}	t_type;
 
 typedef struct s_vector
 {
@@ -159,7 +168,5 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 int		get_arg_len(char **args);
 void	print_args(char **args);
 void	free_args(char **args);
-
-
 
 #endif

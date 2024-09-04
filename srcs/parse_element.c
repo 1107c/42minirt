@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:27:14 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 14:27:16 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 15:00:53 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	parse_amb(t_rt *rt, char **args)
 		free_2d_and_close_all(rt, args, AMB_DUP_ERR);
 	if (get_arg_len(args) != 3)
 		free_2d_and_close_all(rt, args, AMB_LEN_ERR);
-	if (!is_valid_single_double_value(rt, args[1], 0.0, 1.0))
+	if (!is_valid_single_double_value(rt, args[1], 0, 1))
 		free_2d_and_close_all(rt, args, rt->error);
 	rt->amblight->light_ratio = ft_atod(args[1]);
 	if (!is_valid_multi_double_value(rt->amblight->rgb, args[2], 0, 255))

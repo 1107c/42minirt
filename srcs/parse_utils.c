@@ -70,3 +70,31 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 	}
 	return (free_args(tmp), 1);
 }
+
+void	*lst_back(t_rt *rt, t_type type)
+{
+	void	*tmp;
+	void	*alloc;
+
+	if (type == FIG)
+	{
+		(t_fig *)alloc = init_fig();
+		if (!alloc)
+			return (NULL);
+		(t_fig *)tmp = rt->fig;
+		while (tmp->next)
+			(t_fig *)tmp = (t_fig *)tmp->next;
+		(t_fig *)tmp->next = alloc;
+	}
+	if (type == LIGHT)
+	{
+		(t_light *)alloc = init_light();
+		if (!alloc)
+			return (NULL);
+		(t_light *)tmp = rt->light;
+		while (tmp->next)
+			(t_light *)tmp = (t_light *)tmp->next;
+		(t_light *)tmp->next = alloc;
+	}
+	return (tmp->next);
+}
