@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 20:23:40 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 13:36:09 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,38 +184,88 @@ void	interpret_args(t_rt *rt, char **args)
 	else if (ft_strcmp(args[0], "pl"))
 
 	else if (ft_strcmp(args[0], "cy"))
-
+		interpret_amb(rt, args);
 	else
 		free_2d_and_close_all(rt, args, INVALID_OPT);
 }
 
-int	is_int_range(long long n, long long range_min, long long range_max)
+// int 자료형이 주어진 범위에 있는지 검사
+int	is_int_range(int n, int range_min, int range_max)
 {
 	return (n >= range_min && n <= range_max);
 }
 
+// double 자료형이 주어진 범위에 있는지 검사
 int	is_double_range(double d, double range_min, double range_max)
 {
 	return (d >= range_min && d <= range_max);
 }
 
-int	is_valid_int_range(long long arr[3], long long range_min, long long range_max)
+// 한 개의 int 자료형 유효성 검사
+int	is_valid_single_int_value(t_rt *rt, char *arg, int range_min, int range_max)
 {
-	arr[0] = ft_atol();
-	arr[1] = ft_atol();
-	arr[2] = ft_atol();
-	if (!is_int_range(arr[0], range_min, range_max))
+	int	n;
+
+	if (ft_strchr(arg, ','))
+	{
+		rt->error = FORMAT_ERR;
 		return (0);
-	if (!is_int_range(arr[1], range_min, range_max))
+	}
+	n = ft_atoi(arg, range_min, range_max);
+	if (!is_int_range(n, range_min, range_max))
+	{
+		rt->error = RANGE_ERR;
 		return (0);
-	if (!is_int_range(arr[2], range_min, range_max))
-		return (0);
+	}
 	return (1);
 }
 
-char	**get_split()
+// 한 개의 double 자료형 유효성 검사
+int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double range_max)
 {
-	
+	double	d;
+
+	if (ft_strchr(arg, ','))
+	{
+		rt->error = FORMAT_ERR;
+		return (0);
+	}
+	d = ft_atod(arg);
+	if (!is_int_range(d, range_min, range_max))
+	{
+		rt->error = RANGE_ERR;
+		return (0);
+	}
+	return (1);
+}
+
+// vector의 double 자료형(3개) 유효성 검사
+int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max)
+{
+	char	**tmp;
+
+	tmp = ft_split(arg, ft_iscomma);
+	if (!tmp)
+	{
+		vec->error = MEM_ALLOC_ERR;
+		return (0);
+	}
+	if (get_arg_len(tmp) != 3)
+	{
+		vec->error = FORMAT_ERR;
+		return (free_args(tmp), 0);
+	}
+	vec->x = ft_atod(tmp[0]);
+	vec->y = ft_atod(tmp[1]);
+	vec->z = ft_atod(tmp[2]);
+	if (!is_double_range(vec->x, range_min, range_max)
+	|| !is_double_range(vec->y, range_min, range_max)
+	|| !is_double_range(vec->z, range_min, range_max))
+	{
+		vec->error = RANGE_ERR;
+		return (free_args(tmp), 0);
+	}
+	return (free_args(tmp), 1);
 }
 
 // ∗ identifier: A
@@ -224,29 +274,15 @@ char	**get_split()
 
 void	interpret_amb(t_rt *rt, char **args)
 {
-	char		**rgb;
-	long long	arr[3];
-
 	if (rt->amblight->ch)
 		free_2d_and_close_all(rt, args, AMB_DUP_ERR);
 	if (get_arg_len(args) != 3)
 		free_2d_and_close_all(rt, args, AMB_LEN_ERR);
-	if (ft_strchr(args[1], ','))
-		free_2d_and_close_all(rt, args, AMB_RATIO_FORMAT_ERR);
-	rt->amblight->light_ratio = ft_atol();
-	if (!is_double_range(rt->amblight->light_ratio, 0.0, 1.0))
-		free_2d_and_close_all(rt, args, AMB_RATIO_RANGE_ERR);
-	rgb = ft_split(args[2], ft_iscomma);
-	if (!rgb)
-		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
-	free_args(args);
-	if (get_arg_len(rgb) != 3)
-		free_2d_and_close_all(rt, rgb, FORMAT_ERR);
-	if (!is_valid_int_range(arr, 0, 255))
-		free_2d_and_close_all(rt, rgb, AMB_RGB_RANGE_ERR);
-	rt->amblight->r = ft_atol();
-	rt->amblight->g = ft_atol();
-	rt->amblight->b = ft_atol();
+	if (!is_valid_single_double_value(rt, args[1], 0.0, 1.0))
+		free_2d_and_close_all(rt, args, rt->error);
+	rt->amblight->light_ratio = ft_atod(args[1]);
+	if (!is_valid_multi_double_value(rt->amblight->rgb, args[2], 0, 255))
+		free_2d_and_close_all(rt, args, rt->amblight->rgb->error);
 	rt->amblight->ch = 1;
 }
 
@@ -257,50 +293,17 @@ void	interpret_amb(t_rt *rt, char **args)
 
 void	interpret_cam(t_rt *rt, char **args)
 {
-	char		**xyz;
-	long long	arr[3];
-
 	if (rt->cam->ch)
 		free_2d_and_close_all(rt, args, CAM_DUP_ERR);
 	if (get_arg_len(args) != 4)
 		free_2d_and_close_all(rt, args, CAM_LEN_ERR);
-	xyz = ft_split(args[1], ft_iscomma);
-	if (!xyz)
-		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
-	if (get_arg_len(xyz) != 3)
-	{
-		free_args(xyz);
-		free_2d_and_close_all(rt, args, FORMAT_ERR);
-	}
-	if (!is_valid_int_range(arr, INT_MIN, INT_MAX))
-	{
-		free_args(xyz);
-		free_2d_and_close_all(rt, args, CAM_RANGE_ERR);
-	}
-	rt->cam->x = arr[0];
-	rt->cam->y = arr[1];
-	rt->cam->z = arr[2];
-	free_args(xyz);
-	xyz = ft_split(args[2], ft_iscomma);
-	if (!xyz)
-		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
-	if (get_arg_len(xyz) != 3)
-	{
-		free_args(xyz);
-		free_2d_and_close_all(rt, args, FORMAT_ERR);
-	}
-	rt->cam->vx = ft_atol();
-	rt->cam->vy = ft_atol();
-	rt->cam->vz = ft_atol();
-	free_args(xyz);
-	if (!is_double_range(rt->cam->vx, -1.0, 1.0) \
-		|| !is_double_range(rt->cam->vy, -1.0, 1.0) \
-		|| !is_double_range(rt->cam->vz, -1.0, 1.0))
-		free_2d_and_close_all(rt, args, CAM_RANGE_ERR);
-	if (ft_strchr(args[3], ','))
-		free_2d_and_close_all(rt, args, CAM_FOV_FORMAT_ERR);
-	if ()0, 180
-	free_args(args);
+	if (!is_valid_multi_double_value(rt->cam->xyz, args[0], INT_MIN, INT_MAX))
+		free_2d_and_close_all(rt, args, rt->cam->xyz->error);
+	if (!is_valid_multi_double_value(rt->cam->orient_vec, args[1], -1, 1))
+		free_2d_and_close_all(rt, args, rt->cam->orient_vec->error);
+	if (!is_valid_single_int_value(rt, args[2], 0, 180))
+		free_2d_and_close_all(rt, args, rt->error);
+	rt->cam->fov = ft_atod(args[2]);
 	rt->cam->ch = 1;
 }
 
@@ -315,5 +318,12 @@ void	interpret_light(t_rt *rt, char **args)
 		free_2d_and_close_all(rt, args, LIGHT_DUP_ERR);
 	if (get_arg_len(args) != 4)
 		free_2d_and_close_all(rt, args, LIGHT_LEN_ERR);
+	if (!is_valid_multi_double_value(rt->light->xyz, args[0], INT_MIN, INT_MAX))
+		free_2d_and_close_all(rt, args, rt->light->xyz->error);
+	if (!is_valid_single_double_value(rt, args[1], 0, 1))
+		free_2d_and_close_all(rt, args, rt->error);
+	rt->light->brightness = ft_atod(args[1]);
+	if (!is_valid_multi_double_value(rt->light->rgb, args[2], 0, 255))
+		free_2d_and_close_all(rt, args, rt->light->rgb->error);
 	rt->cam->ch = 1;
 }

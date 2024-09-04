@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 11:07:55 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 13:20:41 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static t_cam		*init_cam();
 static t_fig		*init_fig();
 static t_light		*init_light();
 static t_amblight	*init_amblight();
+static t_vector		*init_vector();
 
 t_rt	*init_rt()
 {
@@ -37,6 +38,7 @@ t_rt	*init_rt()
 	rt->fig = init_fig();
 	rt->light = init_light();
 	rt->amblight = init_amblight();
+	rt->error = NULL;
 	if (!rt->img || !rt->cam || !rt->fig || !rt->light || !rt->amblight)
 		return (NULL);
 	return (rt);
@@ -62,13 +64,10 @@ t_cam	*init_cam()
 	cam = malloc(sizeof(t_cam));
 	if (!cam)
 		return (NULL);
-	// or ft_memset
-	cam->x = 0;
-	cam->y = 0;
-	cam->z = 0;
-	cam->vx = 0;
-	cam->vy = 0;
-	cam->vz = 0;
+	cam->xyz = init_vector();
+	cam->orient_vec = init_vector();
+	if (!cam->xyz || !cam->orient_vec)
+		return (free(cam->xyz), free(cam->orient_vec), NULL);
 	cam->fov = 0;
 	cam->move_x = 0;
 	cam->move_y = 0;
@@ -84,17 +83,13 @@ t_fig	*init_fig()
 	if (!fig)
 		return (NULL);
 	fig->type = PLANE;
-	fig->x = 0;
-	fig->y = 0;
-	fig->z = 0;
-	fig->vx = 0;
-	fig->vy = 0;
-	fig->vz = 0;
+	fig->xyz = init_vector();
+	fig->normal_vec = init_vector();
+	fig->rgb = init_vector();
+	if (!fig->xyz || !fig->normal_vec || !fig->rgb)
+		return (free(fig->xyz), free(fig->normal_vec), free(fig->rgb), NULL);
 	fig->diameter = 0;
 	fig->height = 0;
-	fig->r = 0;
-	fig->g = 0;
-	fig->b = 0;
 	fig->next = NULL;
 	return (fig);
 }
@@ -106,13 +101,11 @@ t_light	*init_light()
 	light = malloc(sizeof(t_light));
 	if (!light)
 		return (NULL);
-	light->x = 0;
-	light->y = 0;
-	light->z = 0;
+	light->xyz = init_vector();
+	light->rgb = init_vector();
+	if (!light->xyz || !light->rgb)
+		return (free(light->xyz), free(light->rgb), free(light), NULL);
 	light->brightness = 0;
-	light->r = 0;
-	light->g = 0;
-	light->b = 0;
 	light->ch = 0;
 	light->next = NULL;
 	return (light);
@@ -126,9 +119,23 @@ t_amblight	*init_amblight()
 	if (!amblight)
 		return (NULL);
 	amblight->light_ratio = 0;
-	amblight->r = 0;
-	amblight->g = 0;
-	amblight->b = 0;
+	amblight->rgb = init_vector();
+	if (!amblight->rgb)
+		return (free(amblight), NULL);
 	amblight->ch = 0;
 	return (amblight);
+}
+
+t_vector		*init_vector()
+{
+	t_vector	*vec;
+
+	vec = malloc(sizeof(t_vector));
+	if (!vec)
+		return (NULL);
+	vec->x = 0;
+	vec->y = 0;
+	vec->z = 0;
+	vec->error = NULL;
+	return (vec);
 }
