@@ -31,6 +31,7 @@ int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double r
 	if (ft_strchr(arg, ','))
 	{
 		rt->error = FORMAT_ERR;
+		// printf("1\n");
 		return (0);
 	}
 	d = ft_atod(arg);
@@ -53,9 +54,11 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 		vec->error = MEM_ALLOC_ERR;
 		return (0);
 	}
+	print_args(tmp);
 	if (get_arg_len(tmp) != 3)
 	{
 		vec->error = FORMAT_ERR;
+		// printf("2\n");
 		return (free_args(tmp), 0);
 	}
 	vec->x = ft_atod(tmp[0]);
@@ -78,23 +81,33 @@ void	*lst_back(t_rt *rt, t_type type)
 
 	if (type == FIG)
 	{
-		(t_fig *)alloc = init_fig();
+		alloc = init_fig();
 		if (!alloc)
 			return (NULL);
-		(t_fig *)tmp = rt->fig;
-		while (tmp->next)
-			(t_fig *)tmp = (t_fig *)tmp->next;
-		(t_fig *)tmp->next = alloc;
+		if (!rt->fig)
+			rt->fig = alloc;
+		else
+		{
+			tmp = rt->fig;
+			while (((t_fig *)tmp)->next)
+				tmp = ((t_fig *)tmp)->next;
+			((t_fig *)tmp)->next = (t_fig *)alloc;
+		}
 	}
 	if (type == LIGHT)
 	{
-		(t_light *)alloc = init_light();
+		alloc = init_light();
 		if (!alloc)
 			return (NULL);
-		(t_light *)tmp = rt->light;
-		while (tmp->next)
-			(t_light *)tmp = (t_light *)tmp->next;
-		(t_light *)tmp->next = alloc;
+		if (!rt->light)
+			rt->light = alloc;
+		else
+		{
+			tmp = rt->light;
+			while (((t_light *)tmp)->next)
+				tmp = ((t_light *)tmp)->next;
+			((t_light *)tmp)->next = (t_light *)alloc;
+		}
 	}
-	return (tmp->next);
+	return (alloc);
 }

@@ -3,16 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:17:05 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:06:26 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-static void	parse_args(t_rt *rt);
+static int	is_valid_data(char **args);
+static int	is_valid(char **s, int *dot, int *comma);
+static void	parse_args(t_rt *rt, char **args);
 
 // ◦ Each type of element can be separated by one or more line break(s).
 // ◦ Each type of information from an element can be separated by one or more space(s).
@@ -26,6 +28,19 @@ static void	parse_args(t_rt *rt);
 
 
 // .rt 파일을 get_next_line함수로 한 줄씩 읽으면서 유효한지 검사하는 함수
+
+void	check_len(t_rt *rt)
+{
+	if (rt->amblight->ch < 1)
+		close_all(rt, AMB_INPUT_ERR);
+	if (rt->cam->ch < 1)
+		close_all(rt, CAM_INPUT_ERR);
+	if (!rt->light)
+		close_all(rt, LIGHT_INPUT_ERR);
+	if (!rt->fig)
+		close_all(rt, FIG_INPUT_ERR);
+}
+
 void	parse_data(t_rt *rt)
 {
 	char	**args;
@@ -38,6 +53,7 @@ void	parse_data(t_rt *rt)
 		if (rt->line[0] != '\n')
 		{
 			args = ft_split(rt->line, ft_isspace);
+			print_args(args);
 			if (!args)
 				close_all(rt, MEM_ALLOC_ERR);
 			if (!is_valid_data(args))
@@ -48,6 +64,7 @@ void	parse_data(t_rt *rt)
 		}
 		free(rt->line);
 	}
+	check_len(rt);
 	rt->line = NULL;
 	close(rt->file_fd);
 }
@@ -66,18 +83,20 @@ int	is_valid_data(char **args)
 	int		dot;
 	int		comma;
 
+	args++;
 	while (*args)
 	{
 		s = *args++;
+		//printf("%s\n", s);
 		dot = 0;
 		comma = 0;
-		if (s == '+' || s == '-')
+		if (*s == '+' || *s == '-')
 			s++;
-		if (!ft_isdigit(s))
+		if (!ft_isdigit(*s))
 			return (0);
-		while (s)
+		while (*s)
 		{
-			if (is_invalid(&s, &dot, &comma))
+			if (!is_valid(&s, &dot, &comma))
 				return (0);
 			s++;
 		}
@@ -87,43 +106,44 @@ int	is_valid_data(char **args)
 	return (1);
 }
 
-int	is_invalid(char **s, int *dot, int *comma)
+int	is_valid(char **s, int *dot, int *comma)
 {
 	if (**s == '.')
 	{
 		if (*dot || !ft_isdigit(*(*s + 1)))
-			return (1);
+			return (0);
 		(*dot)++;
 	}
 	else if (**s == ',')
 	{
 		if (*comma == 2)
-			return (1);
+			return (0);
 		(*comma)++;
 		(*dot) = 0;
+		//printf("%c\n", *(*s + 1));
 		if (*(*s + 1) == '+' || *(*s + 1) == '-')
-			s++;
+			(*s)++;
 		return (ft_isdigit(*(*s + 1)));
 	}
-	else if (ft_isdigit(**s))
-		return (1);
-	return (0);
+	else if (!ft_isdigit(**s))
+		return (0);
+	return (1);
 }
 
 // 요소를 구분하는 함수
 void	parse_args(t_rt *rt, char **args)
 {
-	if (ft_strcmp(args[0], "A"))
-		parse_amb(rt, args);
-	else if (ft_strcmp(args[0], "C"))
+	if (!ft_strcmp(args[0], "A"))
+		parse_amb(rt, args);	
+	else if (!ft_strcmp(args[0], "C"))
 		parse_cam(rt, args);
-	else if (ft_strcmp(args[0], "L"))
+	else if (!ft_strcmp(args[0], "L"))
 		parse_light(rt, args);
-	else if (ft_strcmp(args[0], "pl"))
+	else if (!ft_strcmp(args[0], "pl"))
 		parse_plane(rt, args);
-	else if (ft_strcmp(args[0], "sp"))
+	else if (!ft_strcmp(args[0], "sp"))
 		parse_sphere(rt, args);
-	else if (ft_strcmp(args[0], "cy"))
+	else if (!ft_strcmp(args[0], "cy"))
 		parse_cylinder(rt, args);
 	else
 		free_2d_and_close_all(rt, args, INVALID_OPT);

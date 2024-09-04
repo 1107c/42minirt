@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:21:46 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:06:26 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # endif
 # define WINDOW_TITLE	"miniRT"
 
-# define ESC 65307
+# define KEY_ESC 65307
 
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
@@ -36,16 +36,18 @@
 # define INVALID_OPT			"Error\n=> invalid option"
 # define AMB_DUP_ERR			"Error\n=> ambient light duplication error"
 # define AMB_LEN_ERR			"Error\n=> invalid ambient light format"
+# define AMB_INPUT_ERR			"Error\n=> no amblight input"
 # define AMB_RATIO_FORMAT_ERR	"Error\n=> invalid ambient light ratio format"
 # define AMB_RATIO_RANGE_ERR	"Error\n=> invalid ambient ratio range"
-# define AMB_RATIO_RANGE_ERR	"Error\n=> invalid ambient rgb range"
 # define CAM_DUP_ERR			"Error\n=> cam duplication error"
 # define CAM_LEN_ERR			"Error\n=> invalid cam format"
+# define CAM_INPUT_ERR			"Error\n=> no camera input"
 # define CAM_RANGE_ERR			"Error\n=> invalid ambient rgb range"
 # define CAM_FOV_FORMAT_ERR		"Error\n=> invalid cam fov format"
 # define LIGHT_DUP_ERR			"Error\n=> light duplication error"
 # define LIGHT_LEN_ERR			"Error\n=> invalid light format"
-
+# define LIGHT_INPUT_ERR		"Error\n=> no light input"
+# define FIG_INPUT_ERR			"Error\n=> no figure input"
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -151,9 +153,12 @@ int		error(char *error_msg);
 
 /* init.c */
 t_rt	*init_rt();
+t_fig		*init_fig();
+t_light		*init_light();
 
 /* close.c */
 void	close_all(t_rt *rt, char *error_msg);
+void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
 
 /* parse.c */
 void	parse_data(t_rt *rt);
@@ -168,5 +173,19 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 int		get_arg_len(char **args);
 void	print_args(char **args);
 void	free_args(char **args);
+void	*lst_back(t_rt *rt, t_type type);
+
+/* parse_element.c */
+void	parse_amb(t_rt *rt, char **args);
+void	parse_cam(t_rt *rt, char **args);
+void	parse_light(t_rt *rt, char **args);
+
+/* parse_figure.c */
+void	parse_plane(t_rt *rt, char **args);
+void	parse_sphere(t_rt *rt, char **args);
+void	parse_cylinder(t_rt *rt, char **args);
+
+/* ft_atod.c */
+double ft_atod(char *str);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 14:31:57 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 16:52:56 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static t_image		*init_img(void *mlx);
 static t_cam		*init_cam();
-static t_fig		*init_fig();
-static t_light		*init_light();
 static t_amblight	*init_amblight();
 static t_vector		*init_vector();
 
@@ -35,11 +33,11 @@ t_rt	*init_rt()
 		return (NULL);
 	rt->img = init_img(rt->mlx);
 	rt->cam = init_cam();
-	rt->fig = init_fig();
-	rt->light = init_light();
+	rt->fig = NULL;
+	rt->light = NULL;
 	rt->amblight = init_amblight();
 	rt->error = NULL;
-	if (!rt->img || !rt->cam || !rt->fig || !rt->light || !rt->amblight)
+	if (!rt->img || !rt->cam || !rt->amblight)
 		return (NULL);
 	return (rt);
 }

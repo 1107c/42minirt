@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_figure.c.c                                   :+:      :+:    :+:   */
+/*   parse_figure.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:16:37 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:17:16 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 16:55:30 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	parse_plane(t_rt *rt, char **args)
 	fig = lst_back(rt, FIG);
 	if (!fig)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
+	// print_args(args);
 	if (get_arg_len(args) != 4)
 		free_2d_and_close_all(rt, args, AMB_LEN_ERR);
 	if (!is_valid_multi_double_value(fig->xyz, args[1], INT_MIN, INT_MAX))

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   close.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:07:25 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 14:21:00 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 15:59:54 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ void	close_all(t_rt *rt, char *error_msg)
 	free(rt->light);
 	free(rt->amblight);
 	free(rt->mlx);
-	free(rt->file_name);
 	free(rt->line);
 	rt->mlx = NULL;
 	free(rt);

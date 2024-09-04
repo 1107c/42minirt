@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:00:24 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:06:26 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,14 @@ static int	close_win(t_rt *rt);
 
 void	print_err(t_msg	msg, t_rt *rt)
 {
-	ft_putendl_fd("Error\n", 2)
+	ft_putendl_fd("Error\n", 2);
 	if (msg == NO_ARG)
 		ft_putendl_fd("no input, enter only *.rt.", 2);
 	else if (msg == MUCH_ARG)
 		ft_putendl_fd("too many input, enter only *.rt.", 2);
 	else if (msg == EXTEN_ERR)
 		ft_putendl_fd("input is not .rt, enter only *.rt.", 2);
-	else if (msg == EXTEN_ERR)
+	else if (msg == FATAL_ERR)
 		ft_putendl_fd("fatal error.", 2);
 	else if (msg == OPEN_ERR)
 		ft_putendl_fd("file open failed.", 2);
@@ -31,17 +31,6 @@ void	print_err(t_msg	msg, t_rt *rt)
 		close_win(rt);
 	exit (1);
 }
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] && s1[i] == s2[i])
-		i++;
-	return (s1[i] - s2[i]);
-}
-
 
 int	open_err(int *arg, char **args, t_rt *rt)
 {
@@ -62,12 +51,12 @@ int	open_err(int *arg, char **args, t_rt *rt)
 	return (0);
 }
 
-int	key_press(int keycode, t_rt *rt)
-{
-	if (keycode == ESC)
-		close_win(rt);
-	return (0);
-}
+// int	key_press(int keycode, t_rt *rt)
+// {
+// 	if (keycode == ESC)
+// 		close_win(rt);
+// 	return (0);
+// }
 
 int	main(int arg, char **args)
 {
@@ -85,6 +74,23 @@ int	main(int arg, char **args)
 		if (open_err(&arg, args, rt))
 			return (1);
 		parse_data(rt);
+
+		while (rt->fig)
+		{
+			printf("fig type: %d\n", rt->fig->type);
+			printf("fig: %f\n", rt->fig->diameter);
+			printf("fig: %f\n", rt->fig->height);
+			printf("xyz: %f\n", rt->fig->xyz->x);
+			printf("xyz: %f\n", rt->fig->xyz->y);
+			printf("xyz: %f\n", rt->fig->xyz->z);
+			printf("normal_vec: %f\n", rt->fig->normal_vec->x);
+			printf("normal_vec: %f\n", rt->fig->normal_vec->y);
+			printf("normal_vec: %f\n", rt->fig->normal_vec->z);
+			printf("rgb: %f\n", rt->fig->rgb->x);
+			printf("rgb: %f\n", rt->fig->rgb->y);
+			printf("rgb: %f\n", rt->fig->rgb->z);
+			rt->fig = rt->fig->next;
+		}
 		// draw(rt);
 		// mlx_key_hook(rt->win, &key_handle, rt);
 		// mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
