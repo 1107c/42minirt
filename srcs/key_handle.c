@@ -6,17 +6,17 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:12:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/07/04 14:17:15 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:18:28 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "../includes/minirt.h"
 
 int	key_handle(int keycode, t_rt *rt)
 {
 	printf("keycode: %d\n", keycode);
 	if (keycode == KEY_ESC)
-		close_all(rt, 0);
+		close_all(rt, NULL);
 	// else if (keycode == KEY_R)
 	// 	rt_reset(rt);
 	// else if (keycode == KEY_UP || keycode == KEY_DOWN || \
