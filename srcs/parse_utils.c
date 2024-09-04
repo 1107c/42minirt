@@ -78,23 +78,23 @@ void	*lst_back(t_rt *rt, t_type type)
 
 	if (type == FIG)
 	{
-		(t_fig *)alloc = init_fig();
+		alloc = init_fig();
 		if (!alloc)
 			return (NULL);
-		(t_fig *)tmp = rt->fig;
-		while (tmp->next)
-			(t_fig *)tmp = (t_fig *)tmp->next;
-		(t_fig *)tmp->next = alloc;
+		tmp = rt->fig;
+		while (((t_fig *)tmp)->next)
+			tmp = ((t_fig *)tmp)->next;
+		((t_fig *)tmp)->next = (t_fig *)alloc;
 	}
 	if (type == LIGHT)
 	{
-		(t_light *)alloc = init_light();
+		alloc = init_light();
 		if (!alloc)
 			return (NULL);
-		(t_light *)tmp = rt->light;
-		while (tmp->next)
-			(t_light *)tmp = (t_light *)tmp->next;
-		(t_light *)tmp->next = alloc;
+		tmp = rt->fig;
+		while (((t_light *)tmp)->next)
+			tmp = ((t_light *)tmp)->next;
+		((t_light *)tmp)->next = (t_light *)alloc;
 	}
-	return (tmp->next);
+	return (alloc);
 }

@@ -6,13 +6,15 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:17:05 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 15:40:24 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-static void	parse_args(t_rt *rt);
+static int	is_valid_data(char **args);
+static int	is_invalid(char **s, int *dot, int *comma);
+static void	parse_args(t_rt *rt, char **args);
 
 // ◦ Each type of element can be separated by one or more line break(s).
 // ◦ Each type of information from an element can be separated by one or more space(s).
@@ -71,9 +73,9 @@ int	is_valid_data(char **args)
 		s = *args++;
 		dot = 0;
 		comma = 0;
-		if (s == '+' || s == '-')
+		if (*s == '+' || *s == '-')
 			s++;
-		if (!ft_isdigit(s))
+		if (!ft_isdigit(*s))
 			return (0);
 		while (s)
 		{

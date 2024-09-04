@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:00:24 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 15:41:17 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	close_win(t_rt *rt);
 
 void	print_err(t_msg	msg, t_rt *rt)
 {
-	ft_putendl_fd("Error\n", 2)
+	ft_putendl_fd("Error\n", 2);
 	if (msg == NO_ARG)
 		ft_putendl_fd("no input, enter only *.rt.", 2);
 	else if (msg == MUCH_ARG)
@@ -31,17 +31,6 @@ void	print_err(t_msg	msg, t_rt *rt)
 		close_win(rt);
 	exit (1);
 }
-
-int	ft_strcmp(char *s1, char *s2)
-{
-	int	i;
-
-	i = 0;
-	while (s1[i] && s1[i] == s2[i])
-		i++;
-	return (s1[i] - s2[i]);
-}
-
 
 int	open_err(int *arg, char **args, t_rt *rt)
 {
@@ -62,12 +51,12 @@ int	open_err(int *arg, char **args, t_rt *rt)
 	return (0);
 }
 
-int	key_press(int keycode, t_rt *rt)
-{
-	if (keycode == ESC)
-		close_win(rt);
-	return (0);
-}
+// int	key_press(int keycode, t_rt *rt)
+// {
+// 	if (keycode == ESC)
+// 		close_win(rt);
+// 	return (0);
+// }
 
 int	main(int arg, char **args)
 {
