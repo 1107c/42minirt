@@ -6,7 +6,7 @@
 #    By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 11:30:30 by ksuh              #+#    #+#              #
-#    Updated: 2024/09/03 11:20:39 by ksuh             ###   ########.fr        #
+#    Updated: 2024/09/04 14:25:48 by ksuh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CFLAGS = -g -Wall -Wextra -Werror
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 
-PRE_MEN_C = close.c error.c init.c main.c interpret.c
+PRE_MEN_C = close.c error.c init.c main.c parse.c
 PRE_MEN_O = $(PRE_MEN_C:%.c=%.o)
 
 MEN_C	=	$(addprefix $(MEN_DIR),$(PRE_MEN_C))

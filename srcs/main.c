@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 15:33:17 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/04 14:27:34 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	main(int arg, char **args)
 			return (print_err(FATAL_ERR, rt), 1);
 		if (open_err(&arg, args, rt))
 			return (1);
-		interpret_data(rt);
+		parse_data(rt);
 		// draw(rt);
 		// mlx_key_hook(rt->win, &key_handle, rt);
 		// mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);

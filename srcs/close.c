@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:07:25 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 15:07:36 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 14:21:00 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,11 @@ void	close_all(t_rt *rt, char *error_msg)
 	rt->mlx = NULL;
 	free(rt);
 	error(error_msg);
+}
+
+// 2차원 배열을 free하고 프로그램 종료
+void	free_2d_and_close_all(t_rt *rt, char **args, char *msg)
+{
+	free_args(args);
+	close_all(rt, msg);
 }

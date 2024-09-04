@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 13:33:47 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 14:25:48 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,20 @@ t_rt	*init_rt();
 /* close.c */
 void	close_all(t_rt *rt, char *error_msg);
 
-/* interpret.c */
-void	interpret_data(t_rt *rt);
+/* parse.c */
+void	parse_data(t_rt *rt);
+
+/* parse_utils.c */
+int	ft_iscomma(int c);
+int	is_double_range(double d, double range_min, double range_max);
+int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double range_max);
+int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max);
+
+/* 2d_array_utils1.c */
+int		get_arg_len(char **args);
+void	print_args(char **args);
+void	free_args(char **args);
+
 
 
 #endif
