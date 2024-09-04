@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 20:36:03 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/04 13:34:47 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,11 +180,20 @@ void	interpret_args(t_rt *rt, char **args)
 	else if (ft_strcmp(args[0], "L"))
 		interpret_light(rt, args);
 	else if (ft_strcmp(args[0], "sp"))
-
+	{
+		rt->fig->type = 0;
+		interpret_fig(rt, args, 4, NULL);
+	}
 	else if (ft_strcmp(args[0], "pl"))
-
+	{
+		rt->fig->type = 1;
+		interpret_fig(rt, args, 4, NULL);
+	}
 	else if (ft_strcmp(args[0], "cy"))
-
+	{
+		rt->fig->type = 2;
+		interpret_fig(rt, args, 4, NULL);
+	}
 	else
 		free_2d_and_close_all(rt, args, INVALID_OPT);
 }
@@ -221,6 +230,73 @@ char	**get_split()
 // ∗ identifier: A
 // ∗ ambient lighting ratio in range [0.0,1.0]: 0.2
 // ∗ R,G,B colors in range [0-255]: 255, 255, 255
+
+char**	split_comma(t_rt *rt, int num, char **args)
+{
+	char	**res;
+
+	res = ft_split(args[num], ft_iscomma);
+	if (!res)
+		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
+	if (get_arg_len(res) != 3)
+	{
+		free_args(res);
+		free_2d_and_close_all(rt, args, FORMAT_ERR);
+	}
+	return (res);
+}
+
+void	fig_check(int max, t_rt *rt, char **args, char **tmp)
+{
+	if (get_arg_len(args) != max)
+		free_2d_and_close_all(rt, args, AMB_LEN_ERR);
+	if (type == 0)
+		if (ft_strchr(args[2], ','))
+			free_2d_and_close_all(rt, args, AMB_RATIO_FORMAT_ERR);
+	if (type == 2)
+		if (ft_strchr(args[3], ',') || ft_strchr(args[4], ','))
+			free_2d_and_close_all(rt, args, AMB_RATIO_FORMAT_ERR);
+	tmp = split_comma(rt, 1, args);
+	rt->fig->x = ft_atod(tmp[0]);
+	rt->fig->y = ft_atod(tmp[1]);
+	rt->fig->z = ft_atod(tmp[2]);
+	free_args(tmp);
+	tmp = split_comma(rt, max - 1, args);
+	if (!is_valid_int_range(arr, 0, 255))
+		free_2d_and_close_all(rt, tmp, AMB_RGB_RANGE_ERR);
+	rt->fig->r = ft_atol(tmp[0]);
+	rt->fig->g = ft_atol(tmp[1]);
+	rt->fig->b = ft_atol(tmp[2]);
+	free_args(tmp);
+}
+
+void	interpret_fig(t_rt *rt, char **args, int max, char **tmp)
+{
+	if (rt->fig->type == 2)
+		max = 6;
+	fig_check(max, rt, args);
+	if (rt->fig->type == 1 || rt->fig->type == 2)
+	{
+		tmp = split_comma(rt, 2, args, tmp);
+		rt->fig->vx = ft_atod(tmp[0]);
+		rt->fig->vy = ft_atod(tmp[1]);
+		rt->fig->vz = ft_atod(tmp[2]);
+		if (!is_double_range(rt->fig->vx, -1.0, 1.0) || !is_double_range(rt->fig->\
+		vy, -1.0, 1.0) || !is_double_range(rt->fig->vz, -1.0, 1.0))
+		{
+			free_args(tmp);
+			free_2d_and_close_all(rt, args, FORMAT_ERR);
+		}
+		free_args(tmp);
+		if (rt->fig->type == 2)
+		{
+			rt->fig->diameter = ft_atod(args[3]);
+			rt->fig->height = ft_atod(args[4]);
+		}
+	}
+	if (rt->fig->type == 0)
+		rt->fig->diameter = ft_atod(args[2]);
+}
 
 void	interpret_amb(t_rt *rt, char **args)
 {
