@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isspace.c                                       :+:      :+:    :+:   */
+/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/03 14:21:24 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:33:06 by ksuh             ###   ########.fr       */
+/*   Created: 2024/02/29 16:41:58 by myeochoi          #+#    #+#             */
+/*   Updated: 2024/03/01 13:33:03 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	ft_isspace(int c)
+t_list	*ft_lstlast(t_list *lst)
 {
-	if (c == ' ' || (c >= 9 && c <= 13))
-		return (1);
-	return (0);
+	if (!lst)
+		return (0);
+	if (lst->next == 0)
+		return (lst);
+	return (ft_lstlast (lst->next));
 }

@@ -6,11 +6,11 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:12:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 14:53:16 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:18:28 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "../includes/minirt.h"
 
 int	key_handle(int keycode, t_rt *rt)
 {
