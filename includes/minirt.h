@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:47:10 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:44:19 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,18 @@
 # define INVALID_OPT			"Error\n=> invalid option"
 # define AMB_DUP_ERR			"Error\n=> ambient light duplication error"
 # define AMB_LEN_ERR			"Error\n=> invalid ambient light format"
+# define AMB_INPUT_ERR			"Error\n=> no amblight input"
 # define AMB_RATIO_FORMAT_ERR	"Error\n=> invalid ambient light ratio format"
 # define AMB_RATIO_RANGE_ERR	"Error\n=> invalid ambient ratio range"
 # define CAM_DUP_ERR			"Error\n=> cam duplication error"
 # define CAM_LEN_ERR			"Error\n=> invalid cam format"
+# define CAM_INPUT_ERR			"Error\n=> no camera input"
 # define CAM_RANGE_ERR			"Error\n=> invalid ambient rgb range"
 # define CAM_FOV_FORMAT_ERR		"Error\n=> invalid cam fov format"
 # define LIGHT_DUP_ERR			"Error\n=> light duplication error"
 # define LIGHT_LEN_ERR			"Error\n=> invalid light format"
-
+# define LIGHT_INPUT_ERR		"Error\n=> no light input"
+# define FIG_INPUT_ERR			"Error\n=> no figure input"
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -52,7 +55,6 @@
 # include <stdio.h>
 
 # include "../minilibx-linux/mlx.h"
-# include "math.h"
 # include "../libft/libft.h"
 
 typedef enum e_msg
@@ -147,11 +149,16 @@ typedef struct s_rt
 
 /* error.c */
 int		error(char *error_msg);
+void	print_err(t_msg	msg, t_rt *rt);
+int		open_err(int *arg, char **args, t_rt *rt);
 
 /* init.c */
-t_rt	*init_rt();
-t_fig		*init_fig();
-t_light		*init_light();
+t_rt		*init_rt();
+t_vector	*init_vector();
+
+/* init_utils.c */
+t_light	*init_light();
+t_fig	*init_fig();
 
 /* close.c */
 void	close_all(t_rt *rt, char *error_msg);
@@ -161,16 +168,16 @@ void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
 void	parse_data(t_rt *rt);
 
 /* parse_utils.c */
-int	ft_iscomma(int c);
-int	is_double_range(double d, double range_min, double range_max);
-int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double range_max);
-int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max);
+int		ft_iscomma(int c);
+int		is_double_range(double d, double range_min, double range_max);
+int		is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double range_max);
+int		is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max);
+void	*lst_back(t_rt *rt, t_type type);
 
-/* 2d_array_utils1.c */
+/* 2d_array_utils.c */
 int		get_arg_len(char **args);
 void	print_args(char **args);
 void	free_args(char **args);
-void	*lst_back(t_rt *rt, t_type type);
 
 /* parse_element.c */
 void	parse_amb(t_rt *rt, char **args);
@@ -182,7 +189,10 @@ void	parse_plane(t_rt *rt, char **args);
 void	parse_sphere(t_rt *rt, char **args);
 void	parse_cylinder(t_rt *rt, char **args);
 
-/* ft_atod.c */
-double ft_atod(char *str);
+/* rt_utils.c */
+void	print_rt(t_rt *rt);
+
+/* key_handle.c */
+int	key_handle(int keycode, t_rt *rt);
 
 #endif

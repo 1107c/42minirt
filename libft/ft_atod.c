@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 09:19:02 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:45:56 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:33:31 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ ssize_t	ft_atoss(const char *s)
 double ft_atod(char *str)
 {
 	ssize_t	i;
-	ssize_t		j;
-	ssize_t 	k;
+	ssize_t	j;
+	ssize_t k;
 	double	front;
 	double	back;
 

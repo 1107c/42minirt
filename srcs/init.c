@@ -6,16 +6,15 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:47:19 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:44:03 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minirt.h"
 
 static t_image		*init_img(void *mlx);
-static t_cam		*init_cam();
 static t_amblight	*init_amblight();
-static t_vector		*init_vector();
+static t_cam		*init_cam();
 
 t_rt	*init_rt()
 {
@@ -33,11 +32,11 @@ t_rt	*init_rt()
 		return (NULL);
 	rt->img = init_img(rt->mlx);
 	rt->cam = init_cam();
-	rt->fig = init_fig();
-	rt->light = init_light();
+	rt->fig = NULL;
+	rt->light = NULL;
 	rt->amblight = init_amblight();
 	rt->error = NULL;
-	if (!rt->img || !rt->cam || !rt->fig || !rt->light || !rt->amblight)
+	if (!rt->img || !rt->cam || !rt->amblight)
 		return (NULL);
 	return (rt);
 }
@@ -53,6 +52,21 @@ t_image	*init_img(void *mlx)
 	img->buffer = mlx_get_data_addr(img->img, &img->bits_per_pixel, \
 				&img->size_line, &img->endian);
 	return (img);
+}
+
+t_amblight	*init_amblight()
+{
+	t_amblight	*amblight;
+
+	amblight = malloc(sizeof(t_amblight));
+	if (!amblight)
+		return (NULL);
+	amblight->light_ratio = 0;
+	amblight->rgb = init_vector();
+	if (!amblight->rgb)
+		return (free(amblight), NULL);
+	amblight->ch = 0;
+	return (amblight);
 }
 
 t_cam	*init_cam()
@@ -71,57 +85,6 @@ t_cam	*init_cam()
 	cam->move_y = 0;
 	cam->ch = 0;
 	return (cam);
-}
-
-t_fig	*init_fig()
-{
-	t_fig	*fig;
-
-	fig = malloc(sizeof(t_fig));
-	if (!fig)
-		return (NULL);
-	fig->type = PLANE;
-	fig->xyz = init_vector();
-	fig->normal_vec = init_vector();
-	fig->rgb = init_vector();
-	if (!fig->xyz || !fig->normal_vec || !fig->rgb)
-		return (free(fig->xyz), free(fig->normal_vec), free(fig->rgb), NULL);
-	fig->diameter = 0;
-	fig->height = 0;
-	fig->next = NULL;
-	return (fig);
-}
-
-t_light	*init_light()
-{
-	t_light	*light;
-
-	light = malloc(sizeof(t_light));
-	if (!light)
-		return (NULL);
-	light->xyz = init_vector();
-	light->rgb = init_vector();
-	if (!light->xyz || !light->rgb)
-		return (free(light->xyz), free(light->rgb), free(light), NULL);
-	light->brightness = 0;
-	light->ch = 0;
-	light->next = NULL;
-	return (light);
-}
-
-t_amblight	*init_amblight()
-{
-	t_amblight	*amblight;
-
-	amblight = malloc(sizeof(t_amblight));
-	if (!amblight)
-		return (NULL);
-	amblight->light_ratio = 0;
-	amblight->rgb = init_vector();
-	if (!amblight->rgb)
-		return (free(amblight), NULL);
-	amblight->ch = 0;
-	return (amblight);
 }
 
 t_vector		*init_vector()

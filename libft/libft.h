@@ -6,14 +6,16 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/28 16:57:51 by myeochoi          #+#    #+#             */
-/*   Updated: 2024/09/04 15:56:41 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:35:07 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
+
 # include <unistd.h>
 # include <stdlib.h>
+# include "math.h"
 
 # define MAX_SIZE 1024
 
@@ -73,5 +75,6 @@ void	ft_lstclear(t_list **lst, void (*del)(void*));
 void	ft_lstiter(t_list *lst, void (*f)(void *));
 t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void(*del)(void *));
 char	*get_next_line(int fd);
+double 	ft_atod(char *str);
 
 #endif

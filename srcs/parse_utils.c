@@ -53,6 +53,7 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 		vec->error = MEM_ALLOC_ERR;
 		return (0);
 	}
+	print_args(tmp);
 	if (get_arg_len(tmp) != 3)
 	{
 		vec->error = FORMAT_ERR;
@@ -81,20 +82,30 @@ void	*lst_back(t_rt *rt, t_type type)
 		alloc = init_fig();
 		if (!alloc)
 			return (NULL);
-		tmp = rt->fig;
-		while (((t_fig *)tmp)->next)
-			tmp = ((t_fig *)tmp)->next;
-		((t_fig *)tmp)->next = (t_fig *)alloc;
+		if (!rt->fig)
+			rt->fig = alloc;
+		else
+		{
+			tmp = rt->fig;
+			while (((t_fig *)tmp)->next)
+				tmp = ((t_fig *)tmp)->next;
+			((t_fig *)tmp)->next = (t_fig *)alloc;
+		}
 	}
 	if (type == LIGHT)
 	{
 		alloc = init_light();
 		if (!alloc)
 			return (NULL);
-		tmp = rt->fig;
-		while (((t_light *)tmp)->next)
-			tmp = ((t_light *)tmp)->next;
-		((t_light *)tmp)->next = (t_light *)alloc;
+		if (!rt->light)
+			rt->light = alloc;
+		else
+		{
+			tmp = rt->light;
+			while (((t_light *)tmp)->next)
+				tmp = ((t_light *)tmp)->next;
+			((t_light *)tmp)->next = (t_light *)alloc;
+		}
 	}
 	return (alloc);
 }

@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:16:37 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:25:19 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:18:09 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,75 +71,3 @@ void	parse_cylinder(t_rt *rt, char **args)
 	if (!is_valid_multi_double_value(fig->rgb, args[5], 0, 255))
 		free_2d_and_close_all(rt, args, fig->rgb->error);
 }
-
-
-// void	parse_fig(t_fig *fig, t_rt *rt, char **args, char **tmp)
-// {
-// 	fig_check(fig, rt, args, tmp);
-// 	if (fig->type == 1 || fig->type == 2)
-// 	{
-// 		is_valid_multi_double_value(fig->xyz, args[0], INT_MIN, INT_MAX);
-// 		tmp = split_comma(rt, 2, args);
-// 		fig->vx = ft_atod(tmp[0]);
-// 		fig->vy = ft_atod(tmp[1]);
-// 		fig->vz = ft_atod(tmp[2]);
-// 		if (!is_double_range(fig->vx, -1.0, 1.0) || !is_double_range(fig->\
-// 		vy, -1.0, 1.0) || !is_double_range(fig->vz, -1.0, 1.0))
-// 		{
-// 			free_args(tmp);
-// 			free_2d_and_close_all(rt, args, FORMAT_ERR);
-// 		}
-// 		free_args(tmp);
-// 		if (fig->type == 2)
-// 		{
-// 			fig->diameter = ft_atod(args[3]);
-// 			fig->height = ft_atod(args[4]);
-// 		}
-// 	}
-// 	if (fig->type == 0)
-// 		fig->diameter = ft_atod(args[2]);
-// }
-
-// void	fig_check(int max, t_rt *rt, char **args, char **tmp)
-// {
-// 	int	max;
-
-// 	max = 4;
-// 	if (fig->type == 2)
-// 		max = 6;
-// 	if (get_arg_len(args) != max)
-// 		free_2d_and_close_all(rt, args, AMB_LEN_ERR);
-// 	if (fig->type == 0)
-// 		if (ft_strchr(args[2], ','))
-// 			free_2d_and_close_all(rt, args, AMB_RATIO_FORMAT_ERR);
-// 	if (fig->type == 2)
-// 		if (ft_strchr(args[3], ',') || ft_strchr(args[4], ','))
-// 			free_2d_and_close_all(rt, args, AMB_RATIO_FORMAT_ERR);
-// 	tmp = split_comma(rt, 1, args);
-// 	fig->x = ft_atod(tmp[0]);
-// 	fig->y = ft_atod(tmp[1]);
-// 	fig->z = ft_atod(tmp[2]);
-// 	free_args(tmp);
-// 	tmp = split_comma(rt, max - 1, args);
-// 	if (!is_valid_int_range(arr, 0, 255))
-// 		free_2d_and_close_all(rt, tmp, AMB_RGB_RANGE_ERR);
-// 	fig->r = ft_atol(tmp[0]);
-// 	fig->g = ft_atol(tmp[1]);
-// 	fig->b = ft_atol(tmp[2]);
-// 	free_args(tmp);
-// }
-
-// char**	split_comma(t_rt *rt, int num, char **args)
-// {
-// 	char	**res;
-
-// 	res = ft_split(args[num], ft_iscomma);
-// 	if (!res)
-// 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
-// 	if (get_arg_len(res) != 3)
-// 	{
-// 		free_args(res);
-// 		free_2d_and_close_all(rt, args, FORMAT_ERR);
-// 	}
-// 	return (res);
-// }
