@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC = cc
-CFLAGS = -g -Wall -Wextra -Werror
+# CFLAGS = -g -Wall -Wextra -Werror
 
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
@@ -44,7 +44,7 @@ LIB_DIR = ./libft/
 LIB = libft.a
 
 HEADER_DIR	=	./includes/
-INCS = -L$(MLX_DIR) -lmlx_Linux -L/usr/lib -I$(MLX_DIR) -lXext -lX11 -lm -lz
+INCS = -L$(MLX_DIR) -lmlx_Linux -L/usr/lib -I$(MLX_DIR) -lXext -lX11 -lm
 
 NAME = miniRT
 
