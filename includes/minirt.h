@@ -53,6 +53,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <math.h>
 
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
