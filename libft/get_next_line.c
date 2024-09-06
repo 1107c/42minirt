@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/16 18:45:47 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 11:37:36 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 21:48:34 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ char	*get_next_line(int fd)
 	static char	backup[MAX_SIZE][BUFFER_SIZE];
 	char		*buffer;
 	int			is_end;
-	int			len;
 
 	is_end = 0;
 	if (fd < 0 || fd > 1024 || BUFFER_SIZE <= 0)
@@ -32,7 +31,6 @@ char	*get_next_line(int fd)
 	buffer = NULL;
 	while (!is_end)
 		buffer = read_buffer(fd, backup[fd], buffer, &is_end);
-	len = ft_strlen(buffer);
 	return (buffer);
 }
 

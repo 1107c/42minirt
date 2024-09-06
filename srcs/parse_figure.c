@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 15:16:37 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:18:09 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/05 09:37:58 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	parse_plane(t_rt *rt, char **args)
 {
 	t_fig	*fig;
 
-	fig = lst_back(rt, FIG);
+	fig = lst_addback(rt, FIG);
 	if (!fig)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
 	if (get_arg_len(args) != 4)
@@ -33,7 +33,7 @@ void	parse_sphere(t_rt *rt, char **args)
 {
 	t_fig	*fig;
 
-	fig = lst_back(rt, FIG);
+	fig = lst_addback(rt, FIG);
 	if (!fig)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
 	fig->type = SPHERE;
@@ -52,7 +52,7 @@ void	parse_cylinder(t_rt *rt, char **args)
 {
 	t_fig	*fig;
 
-	fig = lst_back(rt, FIG);
+	fig = lst_addback(rt, FIG);
 	if (!fig)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
 	fig->type = CYLINDER;

@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 14:27:56 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 21:52:26 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,14 @@ static void	draw_plane(t_rt *rt);
 
 void	draw(t_rt *rt)
 {
-	(void)rt;
+	double	h;
 
+	h = WINDOW_WIDTH / tan(rt->cam->fov);
+	printf("h: %lf\n", h);
 	draw_plane(rt);
 	// draw_sphere();
 	// draw_cylinder();
-	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
+	// mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
 
 // ∗ identifier: pl
@@ -42,9 +44,9 @@ void	pixel_to_image(t_image *img, double x, double y, int color)
 
 void	draw_plane(t_rt *rt)
 {
-	for (int i = 0; i < WINDOW_WIDTH; i++)
+	for (int i = 0; i < WINDOW_WIDTH / 10; i++)
 	{
-		for (int j = 0; j < WINDOW_HEIGHT; j++)
+		for (int j = 0; j < WINDOW_HEIGHT / 10; j++)
 			pixel_to_image(rt->img, i, j, 0x0000e1);
 	}
 }

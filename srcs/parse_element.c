@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_element.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:27:14 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 16:55:52 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/05 09:38:10 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	parse_light(t_rt *rt, char **args)
 {
 	t_light	*light;
 
-	light = lst_back(rt, LIGHT);
+	light = lst_addback(rt, LIGHT);
 	if (!light)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
 	if (rt->light->ch)
@@ -72,7 +72,6 @@ void	parse_light(t_rt *rt, char **args)
 	if (!is_valid_single_double_value(rt, args[2], 0, 1))
 		free_2d_and_close_all(rt, args, rt->error);
 	rt->light->brightness = ft_atod(args[2]);
-	printf("%f\n", rt->light->brightness);
 	if (!is_valid_multi_double_value(rt->light->rgb, args[3], 0, 255))
 		free_2d_and_close_all(rt, args, rt->light->rgb->error);
 	rt->light->ch = 1;

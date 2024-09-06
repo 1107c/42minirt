@@ -12,24 +12,76 @@
 
 #include "../includes/minirt.h"
 
+static void	print_amblight(t_amblight *amb);
+static void	print_camera(t_cam *cam);
+static void	print_light(t_light *light);
+static void	print_fig(t_fig *fig);
+
 void	print_rt(t_rt *rt)
 {
-	t_fig	*fig;
+	print_amblight(rt->amblight);
+	print_camera(rt->cam);
+	print_light(rt->light);
+	print_fig(rt->fig);
+}
 
-	fig = rt->fig;
-	printf("-----------------figure------------------\n\n");
-	while (fig)
+void	print_amblight(t_amblight *amb)
+{
+	printf("-----------------amblight------------------\n\n");
+	printf("rgb: %f, %f, %f\n", amb->rgb->x, amb->rgb->y, \
+		amb->rgb->z);
+	printf("light_ratio: %f\n", amb->light_ratio);
+	printf("-------------------------------------------\n\n");
+}
+
+void	print_camera(t_cam *cam)
+{
+	printf("-------------------cam--------------------\n\n");
+	printf("x, y, z: %f, %f, %f\n", cam->xyz->x, cam->xyz->y, \
+				cam->xyz->z);
+	printf("orient_vec: %f, %f, %f\n", cam->orient_vec->x, \
+				cam->orient_vec->y, cam->orient_vec->z);
+	printf("fov: %d\n", cam->fov);
+	printf("move_x, move_y: %d, %d\n", cam->move_x, cam->move_y);
+	printf("------------------------------------------\n\n");
+}
+
+void	print_light(t_light *light)
+{
+	t_light	*_light;
+
+	_light = light;
+	printf("------------------light-------------------\n\n");
+	while (_light)
 	{
-		printf("type: %d\n", fig->type);
-		printf("diameter: %f\n", fig->diameter);
-		printf("height: %f\n", fig->height);
-		printf("x, y, z: %f, %f, %f\n", fig->xyz->x, fig->xyz->y, \
-				fig->xyz->z);
-		printf("norm_vec: %f, %f, %f\n", fig->normal_vec->x, \
-				fig->normal_vec->y, fig->normal_vec->z);
-		printf("rgb: %f, %f, %f\n", fig->rgb->x, fig->rgb->y, \
-				fig->rgb->z);
-		printf("-----------------------------------------\n\n");
-		fig = fig->next;
+		printf("x, y, z: %f, %f, %f\n", _light->xyz->x, _light->xyz->y, \
+				_light->xyz->z);
+		printf("rgb: %f, %f, %f\n", _light->rgb->x, \
+				_light->rgb->y, _light->rgb->z);
+		printf("brightness: %f\n", _light->brightness);
+		printf("------------------------------------------\n\n");
+		_light = _light->next;
+	}
+}
+
+void	print_fig(t_fig *fig)
+{
+	t_fig	*_fig;
+
+	_fig = fig;
+	printf("------------------figure-------------------\n\n");
+	while (_fig)
+	{
+		printf("type: %d\n", _fig->type);
+		printf("diameter: %f\n", _fig->diameter);
+		printf("height: %f\n", _fig->height);
+		printf("x, y, z: %f, %f, %f\n", _fig->xyz->x, _fig->xyz->y, \
+				_fig->xyz->z);
+		printf("norm_vec: %f, %f, %f\n", _fig->normal_vec->x, \
+				_fig->normal_vec->y, _fig->normal_vec->z);
+		printf("rgb: %f, %f, %f\n", _fig->rgb->x, _fig->rgb->y, \
+				_fig->rgb->z);
+		printf("-------------------------------------------\n\n");
+		_fig = _fig->next;
 	}
 }
