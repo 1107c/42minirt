@@ -69,6 +69,8 @@ t_amblight	*init_amblight()
 	return (amblight);
 }
 
+// comment -> yeojukim
+// : 수정된 구조체에 따라 수정했습니다.
 t_cam	*init_cam()
 {
 	t_cam	*cam;
@@ -76,13 +78,18 @@ t_cam	*init_cam()
 	cam = malloc(sizeof(t_cam));
 	if (!cam)
 		return (NULL);
-	cam->xyz = init_vector();
+	cam->coords = init_vector();
 	cam->orient_vec = init_vector();
-	if (!cam->xyz || !cam->orient_vec)
-		return (free(cam->xyz), free(cam->orient_vec), NULL);
+	cam->right_vec = init_vector();
+	cam->up_vec = init_vector();
+	cam->corner_vec = init_vector();
+	if (!cam->coords || !cam->orient_vec || !cam->right_vec || !cam->up_vec || !cam->corner_vec)
+		return (free(cam->coords), free(cam->orient_vec), free(cam->right_vec), free(cam->up_vec), \
+				free(cam->corner_vec), free(cam), NULL);
 	cam->fov = 0;
-	cam->move_x = 0;
-	cam->move_y = 0;
+	cam->vp_h = 0;
+	cam->vp_w = 0;
+	cam->as_ratio = 0;
 	cam->ch = 0;
 	return (cam);
 }

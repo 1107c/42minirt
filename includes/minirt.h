@@ -90,8 +90,8 @@ typedef struct s_vector
 // : origin은 광선의 원점(시작점)을 의미하고 direction은 광선의 방향을 의미합니다.
 typedef	struct s_ray
 {
-	t_vector	origin;
-	t_vector	direction;
+	t_vector	*origin;
+	t_vector	*direction;
 }	t_ray;
 
 typedef struct s_amblight
@@ -114,17 +114,17 @@ typedef struct s_amblight
 // : corner_vec - 뷰포트의 좌하단 모서리 좌표를 나타냅니다. 광선 생성의 기준점으로 사용됩니다.
 typedef struct s_cam
 {
-	t_vector	coords;
-	t_vector	orient_vec;
-	t_vector	right_vec;
-	t_vector	up_vec;
+	t_vector	*coords;
+	t_vector	*orient_vec;
+	t_vector	*right_vec;
+	t_vector	*up_vec;
 	double		fov;
 	double		as_ratio;
 	double		vp_w;
 	double		vp_h;
 	//int		move_x;
 	//int		move_y;
-	t_vector	corner_vec;
+	t_vector	*corner_vec;
 	int		ch;
 }	t_cam;
 
@@ -225,13 +225,13 @@ int	key_handle(int keycode, t_rt *rt);
 // comment -> yeojukim
 // : 벡터 유틸들의 함수목록들입니다.
 /* vector_utils.c */
-t_vector	normalize_vec(t_vector rhs);
-double		dot_product(t_vector lhs, t_vector rhs);
-t_vector	cross_product(t_vector lhs, t_vector rhs);
-double		udistance_vec(t_vector lhs, t_vector rhs);
-void		invert_vec(t_vector rhs);
-t_vector	add_vec(t_vector lhs, t_vector rhs);
-t_vector	sub_vec(t_vector lhs, t_vector rhs);
-t_vector	mul_vec(t_vector lhs, double rhs);
+t_vector	*normalize_vec(t_vector *rhs);
+double		dot_product(t_vector *lhs, t_vector *rhs);
+t_vector	*cross_product(t_vector *lhs, t_vector *rhs);
+double		udistance_vec(t_vector *lhs, t_vector *rhs);
+void		invert_vec(t_vector *rhs);
+t_vector	*add_vec(t_vector *lhs, t_vector *rhs);
+t_vector	*sub_vec(t_vector *lhs, t_vector *rhs);
+t_vector	*mul_vec(t_vector *lhs, double rhs);
 
 #endif
