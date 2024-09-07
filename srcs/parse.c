@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "../includes/minirt.h"
 
 static int	is_valid_data(char **args);
 static int	is_valid(char **s, int *dot, int *comma);

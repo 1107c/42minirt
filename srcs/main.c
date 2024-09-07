@@ -31,7 +31,7 @@ int	main(int arg, char **args)
 			return (1);
 		parse_data(rt);
 		print_rt(rt);
-		// draw(rt);
+		//draw(rt);
 		mlx_key_hook(rt->win, &key_handle, rt);
 		mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
 		mlx_loop(rt->mlx);

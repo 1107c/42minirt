@@ -38,3 +38,4 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 
 	return (tray);
 }
+
