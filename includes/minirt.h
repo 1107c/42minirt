@@ -222,6 +222,20 @@ void	print_rt(t_rt *rt);
 /* key_handle.c */
 int	key_handle(int keycode, t_rt *rt);
 
+/* draw.c */
+void	draw_sphere(t_rt *rt);
+
+// comment -> yeojukim
+// : 광선값 조정 함수목록들 입니다.
+/* ray.c */
+t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
+void	get_cam_basis(t_cam *cam);
+
+// comment -> yeojukim
+// : 광선-물체 교차 계산 함수목록들 입니다.
+/* intersect.c */
+double	intersect_sphere(t_ray *ray, t_fig *fig);
+
 // comment -> yeojukim
 // : 벡터 유틸들의 함수목록들입니다.
 /* vector_utils.c */

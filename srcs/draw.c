@@ -18,8 +18,8 @@ void	draw(t_rt *rt)
 {
 	(void)rt;
 
-	draw_plane(rt);
-	// draw_sphere();
+	//draw_plane(rt);
+	draw_sphere(rt);
 	// draw_cylinder();
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
@@ -46,5 +46,25 @@ void	draw_plane(t_rt *rt)
 	{
 		for (int j = 0; j < WINDOW_HEIGHT; j++)
 			pixel_to_image(rt->img, i, j, 0x0000e1);
+	}
+}
+
+void	draw_sphere(t_rt *rt)
+{
+	int	x;
+	int	y;
+	t_ray	*tray;
+	float	f;
+
+	for (x = 0; x < rt->win_y; x++)
+	{
+		for (y = 0; y < rt->win_x; y++)
+		{
+			tray = cam_ray(rt->cam, rt, x, y);
+			if (intersect_sphere(tray, rt->fig))
+				pixel_to_image(rt->img, y, x, 0x0000e1);
+			else
+				pixel_to_image(rt->img, y, x, 0x000000);
+		}
 	}
 }
