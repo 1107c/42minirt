@@ -6,7 +6,7 @@
 /*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 21:50:34 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/04 17:48:58 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int arg, char **args)
 		rt = init_rt();
 		if (!rt)
 			return (print_err(FATAL_ERR, rt), 1);
+		printf("here\n");
 		if (open_err(&arg, args, rt))
 			return (1);
 		parse_data(rt);

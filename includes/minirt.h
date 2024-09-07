@@ -53,6 +53,7 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 # include <stdio.h>
+# include <math.h>
 
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
@@ -84,6 +85,15 @@ typedef struct s_vector
 	char	*error;
 }	t_vector;
 
+// comment -> yeojukim
+// : 광선에 대한 정보를 담는 구조체입니다.
+// : origin은 광선의 원점(시작점)을 의미하고 direction은 광선의 방향을 의미합니다.
+typedef	struct s_ray
+{
+	t_vector	*origin;
+	t_vector	*direction;
+}	t_ray;
+
 typedef struct s_amblight
 {
 	t_vector	*rgb;
@@ -91,13 +101,30 @@ typedef struct s_amblight
 	int		ch;
 }	t_amblight;
 
+// comment -> yeojukim
+// : coords - 카메라의 위치. 즉, 이 좌표를 기준으로 광선을 계산해야합니다.
+// : orient_vec - 방향 벡터. 카메라가 어디를 바라보고있는지를 나타내는 방향 벡터입니다(정면 기준 (0, 0, -1)). z축을 담당합니다.
+// : right_vec - 오른쪽 벡터. 카메라 좌우의 기울기를 나타냅니다(정면 기준 (1, 0, 0)). x축을 담당합니다.
+// : up_vec - 위쪽 벡터. 카메라 상하의 기울기를 나타냅니다(정면 기준 (0, 1, 0)). y축을 담당합니다.
+// : fov - 시야각입니다. 클 수록 넓은 시야를 가지게 됩니다.
+// : as_ratio - 화면의 가로 세로 비율입니다. 이 비율에 따라 뷰포트의 높이/너비가 조정됩니다(width / height).
+//		fov와 함께 시야를 계산할 때 사용합니다.
+// : vp_w, vp_h - 카메라가 볼 수 있는 가상 화면의 너비와 높이를 정의합니다(width * height).
+//		값이 클 수록 더 큰 장면을 뷰포트에서 볼 수 있습니다.
+// : corner_vec - 뷰포트의 좌하단 모서리 좌표를 나타냅니다. 광선 생성의 기준점으로 사용됩니다.
 typedef struct s_cam
 {
-	t_vector	*xyz;
+	t_vector	*coords;
 	t_vector	*orient_vec;
-	int		fov;
-	int		move_x;
-	int		move_y;
+	t_vector	*right_vec;
+	t_vector	*up_vec;
+	double		fov;
+	double		as_ratio;
+	double		vp_w;
+	double		vp_h;
+	//int		move_x;
+	//int		move_y;
+	t_vector	*corner_vec;
 	int		ch;
 }	t_cam;
 
@@ -197,5 +224,28 @@ void	print_rt(t_rt *rt);
 
 /* key_handle.c */
 int	key_handle(int keycode, t_rt *rt);
+
+// comment -> yeojukim
+// : 벡터 유틸들의 함수목록들입니다.
+/* vector_utils.c */
+t_vector	*normalize_vec(t_vector *rhs);
+double		dot_product(t_vector *lhs, t_vector *rhs);
+void	cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
+// t_vector	cross_product(t_vector lhs, t_vector rhs);
+double		udistance_vec(t_vector lhs, t_vector rhs);
+void		invert_vec(t_vector rhs);
+t_vector	*add_vec(t_vector *lhs, t_vector *rhs);
+t_vector	*sub_vec(t_vector *lhs, t_vector *rhs);
+t_vector	*mul_vec(t_vector *lhs, double rhs);
+
+/* ray.c */
+t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
+void	get_cam_basis(t_cam *cam);
+
+/* intersection.c */
+int	intersect_plane(t_vector *plane, t_vector line);
+int	intersect_sphere(t_ray *ray, t_fig *fig);
+
+// int	intersect_sphere(t_vector *sphere, t_vector p1, t_vector p2, double radius);
 
 #endif

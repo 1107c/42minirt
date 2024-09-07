@@ -37,12 +37,12 @@ void	print_amblight(t_amblight *amb)
 void	print_camera(t_cam *cam)
 {
 	printf("-------------------cam--------------------\n\n");
-	printf("x, y, z: %f, %f, %f\n", cam->xyz->x, cam->xyz->y, \
-				cam->xyz->z);
+	printf("x, y, z: %f, %f, %f\n", cam->coords->x, cam->coords->y, \
+				cam->coords->z);
 	printf("orient_vec: %f, %f, %f\n", cam->orient_vec->x, \
 				cam->orient_vec->y, cam->orient_vec->z);
-	printf("fov: %d\n", cam->fov);
-	printf("move_x, move_y: %d, %d\n", cam->move_x, cam->move_y);
+	printf("fov: %f\n", cam->fov);
+	// printf("move_x, move_y: %d, %d\n", cam->move_x, cam->move_y);
 	printf("------------------------------------------\n\n");
 }
 
