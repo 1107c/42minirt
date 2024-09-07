@@ -230,13 +230,14 @@ int	key_handle(int keycode, t_rt *rt);
 /* vector_utils.c */
 t_vector	*normalize_vec(t_vector *rhs);
 double		dot_product(t_vector *lhs, t_vector *rhs);
-void	cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
-// t_vector	cross_product(t_vector lhs, t_vector rhs);
-double		udistance_vec(t_vector lhs, t_vector rhs);
-void		invert_vec(t_vector rhs);
+t_vector	*cross_product(t_vector *lhs, t_vector *rhs);
+double		udistance_vec(t_vector *lhs, t_vector *rhs);
+void		invert_vec(t_vector *rhs);
 t_vector	*add_vec(t_vector *lhs, t_vector *rhs);
 t_vector	*sub_vec(t_vector *lhs, t_vector *rhs);
 t_vector	*mul_vec(t_vector *lhs, double rhs);
+// void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
+// t_vector	cross_product(t_vector lhs, t_vector rhs);
 
 /* ray.c */
 t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
