@@ -25,6 +25,8 @@
 # endif
 # define WINDOW_TITLE	"miniRT"
 
+# define ANG	0.0174533
+
 # define KEY_ESC 65307
 
 # define INT_MAX	2147483647
@@ -245,8 +247,8 @@ void	get_cam_basis(t_cam *cam);
 
 /* intersection.c */
 int	intersect_plane(t_vector *plane, t_vector line);
-int	intersect_sphere(t_ray *ray, t_fig *fig);
+// int	intersect_sphere(t_ray *ray, t_fig *fig);
 
-// int	intersect_sphere(t_vector *sphere, t_vector p1, t_vector p2, double radius);
+int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector p2, double radius);
 
 #endif

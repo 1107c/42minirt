@@ -44,7 +44,7 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 void	get_cam_basis(t_cam *cam)
 {
 	t_vector	v;
-	t_vector	u;
+	t_vector	*u;
 	int			cnt;
 
 	// P(a, b, c), n(p, q, r) => px + qy + rz = d
@@ -121,18 +121,18 @@ void	get_cam_basis(t_cam *cam)
 	v.z -= cam->coords->z;
 	normalize_vec(&v);
 	printf("base right vector: %lf, %lf, %lf\n", v.x , v.y, v.z);
-	cross_product(cam->orient_vec, &v, &u);
-	normalize_vec(&u);
-	printf("base up vector: %lf, %lf, %lf\n", u.x, u.y, u.z);
+	u = cross_product(cam->orient_vec, &v);
+	normalize_vec(u);
+	printf("base up vector: %lf, %lf, %lf\n", u->x, u->y, u->z);
 	cam->right_vec->x = v.x;
 	cam->right_vec->y = v.y;
 	cam->right_vec->z = v.z;
-	cam->up_vec->x = u.x;
-	cam->up_vec->y = u.y;
-	cam->up_vec->z = u.z;
-	cam->corner_vec->x = -(v.x + u.x);
-	cam->corner_vec->y = -(v.y + u.y);
-	cam->corner_vec->z = -(v.z + u.z);
+	cam->up_vec->x = u->x;
+	cam->up_vec->y = u->y;
+	cam->up_vec->z = u->z;
+	cam->corner_vec->x = -(v.x + u->x);
+	cam->corner_vec->y = -(v.y + u->y);
+	cam->corner_vec->z = -(v.z + u->z);
 	normalize_vec(cam->corner_vec);
 }
 

@@ -19,7 +19,7 @@ void	draw(t_rt *rt)
 {
 	t_ray	*ray;
 
-	rt->cam->as_ratio = WINDOW_WIDTH / tan(rt->cam->fov);
+	rt->cam->as_ratio = WINDOW_WIDTH / (2 * tan(ANG * (rt->cam->fov / 2)));
 	printf("ratio: %lf\n", rt->cam->as_ratio);
 	get_cam_basis(rt->cam);
 	// ray = cam_ray(rt->cam);
@@ -42,6 +42,7 @@ void	pixel_to_image(t_image *img, double x, double y, int color)
 {
 	int	pixel;
 
+	// printf("x, y: %lf, %lf\n", x, y);
 	pixel = ((int)y * img->size_line) + ((int)x * 4);
 	img->buffer[pixel + 0] = (color) & 0xff;
 	img->buffer[pixel + 1] = (color >> 8) & 0xff;
@@ -62,6 +63,7 @@ void	draw_plane(t_rt *rt)
 	save_point.x = start_point.x;
 	save_point.y = start_point.y;
 	save_point.z = start_point.z;
+
 	// printf("start point: %lf, %lf ,%lf\n", start_point.x, start_point.y, start_point.z);
 	for (int i = 0; i < WINDOW_WIDTH; i++)
 	{
@@ -93,22 +95,23 @@ void	draw_sphere(t_rt *rt)
 	t_ray		*ray;
 
 	printf("figure type: %d\n", rt->fig->next->type);
-	start_point.x = rt->cam->coords->x - rt->cam->as_ratio * (rt->cam->right_vec->x - rt->cam->up_vec->x - rt->cam->orient_vec->x);
-	start_point.y = rt->cam->coords->y - rt->cam->as_ratio * (rt->cam->right_vec->y - rt->cam->up_vec->y - rt->cam->orient_vec->y);
-	start_point.z = rt->cam->coords->z - rt->cam->as_ratio * (rt->cam->right_vec->z - rt->cam->up_vec->z - rt->cam->orient_vec->z);
+	start_point.x = rt->cam->coords->x + rt->cam->as_ratio * rt->cam->orient_vec->x - 960 * rt->cam->right_vec->x + 540 * rt->cam->up_vec->x;
+	start_point.y = rt->cam->coords->y + rt->cam->as_ratio * rt->cam->orient_vec->y - 960 * rt->cam->right_vec->y + 540 * rt->cam->up_vec->y;
+	start_point.z = rt->cam->coords->z + rt->cam->as_ratio * rt->cam->orient_vec->z - 960 * rt->cam->right_vec->z + 540 * rt->cam->up_vec->z;
 	save_point.x = start_point.x;
 	save_point.y = start_point.y;
 	save_point.z = start_point.z;
 	printf("start point: %lf, %lf, %lf\n", start_point.x, start_point.y, start_point.z);
+	// printf("sizeline: %d\n", rt->img->size_line);
 
-	for (int i = 0; i < WINDOW_WIDTH; i++)
+	for (int j = 0; j < WINDOW_HEIGHT; j++)
 	{
-		for (int j = 0; j < WINDOW_HEIGHT; j++)
+		for (int i = 0; i < WINDOW_WIDTH; i++)
 		{
-			ray = cam_ray(rt->cam, rt, i, j);
-			// if (intersect_sphere(rt->fig->next->xyz, rt->cam->coords, start_point, rt->fig->next->diameter / 2))
-			if (intersect_sphere(ray, rt->fig->next))
+			// ray = cam_ray(rt->cam, rt, i, j);
+			if (intersect_sphere(rt->fig->next->xyz, rt->cam->coords, start_point, (rt->fig->next->diameter / 2)))
 				pixel_to_image(rt->img, i, j, 0x0000e1);
+			// if (intersect_sphere(ray, rt->fig->next))
 			start_point.x += rt->cam->right_vec->x;
 			start_point.y += rt->cam->right_vec->y;
 			start_point.z += rt->cam->right_vec->z;
@@ -119,5 +122,7 @@ void	draw_sphere(t_rt *rt)
 		start_point.x = save_point.x;
 		start_point.y = save_point.y;
 		start_point.z = save_point.z;
+		// printf("start point: %lf, %lf, %lf\n", start_point.x, start_point.y, start_point.z);
 	}
+	printf("done\n");
 }
