@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   2d_array_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:22:30 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:22:32 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/08 12:46:55 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	free_args(char **args)
 	while (args[i])
 	{
 		free(args[i++]);
-		args[i] = NULL;
+		//args[i] = NULL;
 	}
 	free(args);
 	args = NULL;

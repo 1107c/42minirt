@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:44:19 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/08 12:47:21 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,36 +216,7 @@ void	parse_plane(t_rt *rt, char **args);
 void	parse_sphere(t_rt *rt, char **args);
 void	parse_cylinder(t_rt *rt, char **args);
 
-/* rt_utils.c */
-void	print_rt(t_rt *rt);
-
-/* key_handle.c */
-int	key_handle(int keycode, t_rt *rt);
-
-/* draw.c */
-void	draw_sphere(t_rt *rt);
-
-// comment -> yeojukim
-// : 광선값 조정 함수목록들 입니다.
-/* ray.c */
-t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
-void	get_cam_basis(t_cam *cam);
-
-// comment -> yeojukim
-// : 광선-물체 교차 계산 함수목록들 입니다.
-/* intersect.c */
-double	intersect_sphere(t_ray *ray, t_fig *fig);
-
-// comment -> yeojukim
-// : 벡터 유틸들의 함수목록들입니다.
-/* vector_utils.c */
-t_vector	*normalize_vec(t_vector *rhs);
-double		dot_product(t_vector *lhs, t_vector *rhs);
-t_vector	*cross_product(t_vector *lhs, t_vector *rhs);
-double		udistance_vec(t_vector *lhs, t_vector *rhs);
-void		invert_vec(t_vector *rhs);
-t_vector	*add_vec(t_vector *lhs, t_vector *rhs);
-t_vector	*sub_vec(t_vector *lhs, t_vector *rhs);
-t_vector	*mul_vec(t_vector *lhs, double rhs);
+/* ft_atod.c */
+double ft_atod(char *str);
 
 #endif
