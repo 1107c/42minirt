@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:07:25 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 15:59:54 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/08 12:39:40 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,24 @@ void	close_all(t_rt *rt, char *error_msg)
 	mlx_destroy_image(rt->mlx, rt->img->img);
 	mlx_destroy_window(rt->mlx, rt->win);
 	mlx_destroy_display(rt->mlx);
+	free(rt->cam->xyz);
+	free(rt->cam->orient_vec);
+	free(rt->amblight->rgb);
+	free(rt->light->xyz);
+	free(rt->light->rgb);
 	free(rt->img);
 	free(rt->cam);
-	free(rt->fig);
+	t_fig *tmp;
+	while (rt->fig)
+	{
+		//printf("fig : %d\n", rt->fig->type);
+		tmp = rt->fig;
+		rt->fig = rt->fig->next;
+		free(tmp->xyz);
+		free(tmp->normal_vec);
+		free(tmp->rgb);
+		free(tmp);
+	}
 	free(rt->light);
 	free(rt->amblight);
 	free(rt->mlx);

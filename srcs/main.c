@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:06:26 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/08 12:34:06 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,28 +74,28 @@ int	main(int arg, char **args)
 		if (open_err(&arg, args, rt))
 			return (1);
 		parse_data(rt);
-
-		while (rt->fig)
+		t_fig	*tmp = rt->fig;
+		while (tmp)
 		{
-			printf("fig type: %d\n", rt->fig->type);
-			printf("fig: %f\n", rt->fig->diameter);
-			printf("fig: %f\n", rt->fig->height);
-			printf("xyz: %f\n", rt->fig->xyz->x);
-			printf("xyz: %f\n", rt->fig->xyz->y);
-			printf("xyz: %f\n", rt->fig->xyz->z);
-			printf("normal_vec: %f\n", rt->fig->normal_vec->x);
-			printf("normal_vec: %f\n", rt->fig->normal_vec->y);
-			printf("normal_vec: %f\n", rt->fig->normal_vec->z);
-			printf("rgb: %f\n", rt->fig->rgb->x);
-			printf("rgb: %f\n", rt->fig->rgb->y);
-			printf("rgb: %f\n", rt->fig->rgb->z);
-			rt->fig = rt->fig->next;
+			printf("fig type: %d\n", tmp->type);
+			printf("fig: %f\n", tmp->diameter);
+			printf("fig: %f\n", tmp->height);
+			printf("xyz: %f\n", tmp->xyz->x);
+			printf("xyz: %f\n", tmp->xyz->y);
+			printf("xyz: %f\n", tmp->xyz->z);
+			printf("normal_vec: %f\n", tmp->normal_vec->x);
+			printf("normal_vec: %f\n", tmp->normal_vec->y);
+			printf("normal_vec: %f\n", tmp->normal_vec->z);
+			printf("rgb: %f\n", tmp->rgb->x);
+			printf("rgb: %f\n", tmp->rgb->y);
+			printf("rgb: %f\n", tmp->rgb->z);
+			tmp = tmp->next;
 		}
 		// draw(rt);
 		// mlx_key_hook(rt->win, &key_handle, rt);
-		// mlx_hook(rt->win, 2, 1L << 0, &key_press, rt);
-		// mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
-		// mlx_loop(rt->mlx);
+		mlx_hook(rt->win, 2, 1L << 0, &key_handle, rt);
+		mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
+		mlx_loop(rt->mlx);
 	}
 	return (0);
 }

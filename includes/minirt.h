@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:06:26 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/08 12:11:37 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,5 +187,8 @@ void	parse_cylinder(t_rt *rt, char **args);
 
 /* ft_atod.c */
 double ft_atod(char *str);
+
+/* key_handle.c */
+int	key_handle(int keycode, t_rt *rt);
 
 #endif

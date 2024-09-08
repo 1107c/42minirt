@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/27 10:29:17 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/03 14:37:35 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/08 12:19:47 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ size_t	ft_memlen(char const *s, int (*f)(int))
 	size_t	m;
 
 	m = 0;
-	while (*s)
+	while (*s)	
 	{
 		while (*s && f(*s))
 			s++;

@@ -54,7 +54,7 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 		vec->error = MEM_ALLOC_ERR;
 		return (0);
 	}
-	print_args(tmp);
+	//print_args(tmp);
 	if (get_arg_len(tmp) != 3)
 	{
 		vec->error = FORMAT_ERR;
