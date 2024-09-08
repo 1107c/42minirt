@@ -246,7 +246,7 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
 void	get_cam_basis(t_cam *cam);
 
 /* intersection.c */
-int	intersect_plane(t_vector *plane, t_vector line);
+int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
 
 int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector p2, double radius);

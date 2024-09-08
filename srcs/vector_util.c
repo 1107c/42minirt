@@ -76,5 +76,5 @@ void	invert_vec(t_vector *rhs)
 {
 	rhs->x = -rhs->x;
 	rhs->y = -rhs->y;
-	rhs->z = -rhs->x;
+	rhs->z = -rhs->z;
 }

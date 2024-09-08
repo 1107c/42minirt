@@ -12,13 +12,31 @@
 
 # include "../includes/minirt.h"
 
-int	intersect_plane(t_vector *plane, t_vector line)
+int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam)
 {
 	double	res;
-
-	res = plane->x * line.x + plane->y * line.y + plane->z * line.z;
-	// printf("res: %lf\n", res);
-	return (res > 0.001);
+	double	d;
+	double	_d;
+	// p: plane->normal_vec->x, q: plane->normal_vec->y, r: plane->normal_vec->z
+	// a: point->x, b: point->y, c: point->z
+	// a': cam->x, b': point->y, c': point->z
+	// d: p*plane->x + q*plane->y+ r*plane->z
+	d = plane->normal_vec->x * plane->xyz->x + \
+		plane->normal_vec->y * plane->xyz->y + \
+		plane->normal_vec->z * plane->xyz->z;
+	_d = plane->normal_vec->x * cam->x + \
+		plane->normal_vec->y * cam->y + \
+		plane->normal_vec->z * cam->z;
+	d -= _d;
+	res = plane->normal_vec->x * (point->x - cam->x) + \
+		plane->normal_vec->y * (point->y - cam->y) + \
+		plane->normal_vec->z * (point->z - cam->z);
+	if (res == 0)
+		return (0);
+	if (res < 0.001 && res > -0.001)
+		return (1);
+	d /= res;
+	return (d > 0);
 }
 
 // int	intersect_sphere(t_ray *ray, t_fig *fig)
