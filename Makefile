@@ -3,15 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+         #
+#    By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/07/04 11:30:30 by ksuh              #+#    #+#              #
-#    Updated: 2024/09/08 12:52:14 by myeochoi         ###   ########.fr        #
+#    Updated: 2024/09/09 15:01:35 by myeochoi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
-# CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra -Werror
 
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/

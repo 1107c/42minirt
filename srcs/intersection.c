@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersection.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/07 13:08:46 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/09 15:02:49 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius
 	return (0);
 }
 
-int	intersect_cylinder(t_fig *cy)
-{
+// int	intersect_cylinder(t_fig *cy)
+// {
 
-}
+// }
