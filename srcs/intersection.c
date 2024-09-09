@@ -12,27 +12,44 @@
 
 # include "../includes/minirt.h"
 
+// p: plane->normal_vec->x, q: plane->normal_vec->y, r: plane->normal_vec->z
+// a: point->x, b: point->y, c: point->z
+// a': cam->x, b': point->y, c': point->z
+// d: p*plane->x + q*plane->y+ r*plane->z
+
+// 두 점 P(a, b, c), P'(a', b', c')을 지나는 직선의 방정식은 다음과 같다.
+// x - a / (a' - a) = y - b / (b' - b) = z - c / (c' - c)		---- 1
+
+// 한 점 P''(a'', b'', c'')을 지나고, 법선벡터가 n(p, q, r)인 평면의 방정식:
+// px + qy + rz = pa'' + qb'' + rc''							---- 2
+
+// 1 = t로 두고 x, y, z를 매개변수 t로 치환하면 (0 < t, P(a, b, c)가 카메라의 위치이기 때문)
+// x = (a' - a)t + a
+// y = (b' - b)t + b
+// z = (c' - c)t + c
+
+// (x, y, z) 가 평면위에 있어야할 조건을 구해본다면
+// p((a' - a)t + a) + q((b' - b)t + b) + r((c' - c)t + c) = pa'' + qb'' + rc''
+// (p(a' - a) + q(b' - b) + r(c' - c))t = (pa'' + qb'' + rc'') - (pa + qb + rc)
+// i) p(a' - a) + q(b' - b) + r(c' - c) = 0
+// 우변 = 0이면 모든 t에 대해 식이 성립 o
+// 우변 != 0이면 모든 t에 대해 식이 성립 x
+// i) p(a' - a) + q(b' - b) + r(c' - c) != 0
+// ((pa'' + qb'' + rc'') - (pa + qb + rc)) / p(a' - a) + q(b' - b) + r(c' - c) > 0이면 
+// 카메라 시야에서 평면과 교점이 발생
+
 int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam)
 {
-	double	res;
 	double	d;
-	double	_d;
-	// p: plane->normal_vec->x, q: plane->normal_vec->y, r: plane->normal_vec->z
-	// a: point->x, b: point->y, c: point->z
-	// a': cam->x, b': point->y, c': point->z
-	// d: p*plane->x + q*plane->y+ r*plane->z
-	d = plane->normal_vec->x * plane->xyz->x + \
-		plane->normal_vec->y * plane->xyz->y + \
-		plane->normal_vec->z * plane->xyz->z;
-	_d = plane->normal_vec->x * cam->x + \
-		plane->normal_vec->y * cam->y + \
-		plane->normal_vec->z * cam->z;
-	d -= _d;
+	double	res;
+
+	d = dot_product(plane->normal_vec, plane->xyz) \
+		- dot_product(plane->normal_vec, cam);
 	res = plane->normal_vec->x * (point->x - cam->x) + \
 		plane->normal_vec->y * (point->y - cam->y) + \
 		plane->normal_vec->z * (point->z - cam->z);
 	if (res == 0)
-		return (0);
+		return (res == d);
 	if (res < 0.001 && res > -0.001)
 		return (1);
 	d /= res;
