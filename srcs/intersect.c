@@ -32,17 +32,17 @@
 // : 교차점(t)의 위치를 구하기 위해 이차방정식 근의 공식을 사용합니다.
 // : t = (-B +- sqrt(@) / (2A));
 // : 두개의 해 모두 교차점의 매개변수이지만 양수일 때만 해당 값을 사용합니다.
-double	intersect_sphere(t_ray *ray, t_fig *fig)
+double	intersect_sphere(t_ray ray, t_fig *fig)
 {
 	t_vector	*tvec;
 	double	abc[3];
 	double	disc;
 	double	t[2];
 
-	tvec = sub_vec(ray->origin, fig->xyz);
+	tvec = sub_vec(ray.origin, fig->xyz);
 
-	abc[0] = dot_product(ray->direction, ray->direction);
-	abc[1] = 2.0 * dot_product(tvec, ray->direction);
+	abc[0] = dot_product(ray.direction, ray.direction);
+	abc[1] = 2.0 * dot_product(tvec, ray.direction);
 	abc[2] = dot_product(tvec, tvec) - (fig->diameter * fig->diameter);
 	
 	disc = abc[1] * abc[1] - 4 * abc[0] * abc[2];

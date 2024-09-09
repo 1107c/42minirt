@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   close.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:07:25 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/08 12:53:41 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/04 17:40:47 by ksuh             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,21 @@
 
 void	close_all(t_rt *rt, char *error_msg)
 {
-	mlx_destroy_image(rt->mlx, rt->img->img);
-	mlx_destroy_window(rt->mlx, rt->win);
-	mlx_destroy_display(rt->mlx);
-	free(rt->cam->coords);
-	free(rt->cam->right_vec);
-	free(rt->cam->up_vec);
-	free(rt->cam->corner_vec);
-	free(rt->cam->orient_vec);
-	free(rt->amblight->rgb);
-	free(rt->light->xyz);
-	free(rt->light->rgb);
-	free(rt->img);
-	free(rt->cam);
-	t_fig *tmp;
-	while (rt->fig)
+	if (rt)
 	{
-		//printf("fig : %d\n", rt->fig->type);
-		tmp = rt->fig;
-		rt->fig = rt->fig->next;
-		free(tmp->xyz);
-		free(tmp->normal_vec);
-		free(tmp->rgb);
-		free(tmp);
+		mlx_destroy_image(rt->mlx, rt->img->img);
+		mlx_destroy_window(rt->mlx, rt->win);
+		mlx_destroy_display(rt->mlx);
+		free(rt->img);
+		free(rt->cam);
+		free(rt->fig);
+		free(rt->light);
+		free(rt->amblight);
+		free(rt->mlx);
+		free(rt->line);
+		rt->mlx = NULL;
+		free(rt);
 	}
-	free(rt->light);
-	free(rt->amblight);
-	free(rt->mlx);
-	free(rt->line);
-	rt->mlx = NULL;
-	free(rt);
 	error(error_msg);
 }
 

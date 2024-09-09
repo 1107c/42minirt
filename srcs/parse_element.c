@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minirt.h"
+#include "minirt.h"
 
 // ∗ identifier: A
 // ∗ ambient lighting ratio in range [0.0,1.0]: 0.2

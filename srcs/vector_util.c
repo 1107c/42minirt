@@ -34,7 +34,7 @@ t_vector	*normalize_vec(t_vector *rhs)
 // : 광원과 조명을 계산하기 위해 사용됩니다.
 double	dot_product(t_vector *lhs, t_vector *rhs)
 {
-	return (lhs->x * rhs->x + lhs->y * rhs->y + lhs->z * lhs->z);
+	return (lhs->x * rhs->x + lhs->y * rhs->y + lhs->z * rhs->z);
 }
 
 // comment -> yeojukim

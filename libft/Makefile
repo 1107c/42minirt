@@ -3,15 +3,15 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+         #
+#    By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/28 17:10:52 by myeochoi          #+#    #+#              #
-#    Updated: 2024/09/08 12:47:35 by myeochoi         ###   ########.fr        #
+#    Updated: 2024/09/04 17:34:32 by ksuh             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC	=	cc
-CFALG	=	-Wall -Wextra -Werror -g
+# CFALG	=	-Wall -Wextra -Werror
 NAME	=	libft.a
 SRCS	=	ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c ft_isalpha.c ft_isascii.c\
 ft_isdigit.c ft_isprint.c ft_itoa.c ft_memchr.c ft_memcmp.c\
