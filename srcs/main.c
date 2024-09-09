@@ -27,7 +27,6 @@ int	main(int arg, char **args)
 		rt = init_rt();
 		if (!rt)
 			return (print_err(FATAL_ERR, rt), 1);
-		printf("here\n");
 		if (open_err(&arg, args, rt))
 			return (1);
 		parse_data(rt);

@@ -27,16 +27,11 @@ void	draw(t_rt *rt)
 	// cam_ray(rt->cam, rt, 1920, 0);
 	// cam_ray(rt->cam, rt, 0, 1080);
 	// cam_ray(rt->cam, rt, 1920, 1080);
-	draw_plane(rt);
+	// draw_plane(rt);
 	draw_sphere(rt);
 	// draw_cylinder();
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
-
-// ∗ identifier: pl
-// ∗ x,y,z coordinates of a point in the plane: 0.0,0.0,-10.0
-// ∗ 3d normalized normal vector. In range [-1,1] for each x,y,z axis: 0.0,1.0,0.0
-// ∗ R,G,B colors in range [0-255]: 0,0,225
 
 void	pixel_to_image(t_image *img, double x, double y, int color)
 {
@@ -52,7 +47,6 @@ void	pixel_to_image(t_image *img, double x, double y, int color)
 
 void	draw_plane(t_rt *rt)
 {
-	// 시작점
 	t_vector	start_point;
 	t_vector	save_point;
 	t_vector	line;
@@ -63,8 +57,6 @@ void	draw_plane(t_rt *rt)
 	save_point.x = start_point.x;
 	save_point.y = start_point.y;
 	save_point.z = start_point.z;
-
-	// printf("start point: %lf, %lf ,%lf\n", start_point.x, start_point.y, start_point.z);
 	for (int j = 0; j < WINDOW_HEIGHT; j++)
 	{
 		for (int i = 0; i < WINDOW_WIDTH; i++)
@@ -89,7 +81,6 @@ void	draw_plane(t_rt *rt)
 
 void	draw_sphere(t_rt *rt)
 {
-	// 시작점
 	t_vector	start_point;
 	t_vector	save_point;
 	t_ray		*ray;
@@ -102,14 +93,12 @@ void	draw_sphere(t_rt *rt)
 	save_point.y = start_point.y;
 	save_point.z = start_point.z;
 	printf("start point: %lf, %lf, %lf\n", start_point.x, start_point.y, start_point.z);
-	// printf("sizeline: %d\n", rt->img->size_line);
-
 	for (int j = 0; j < WINDOW_HEIGHT; j++)
 	{
 		for (int i = 0; i < WINDOW_WIDTH; i++)
 		{
 			// ray = cam_ray(rt->cam, rt, i, j);
-			if (intersect_sphere(rt->fig->next->xyz, rt->cam->coords, start_point, (rt->fig->next->diameter / 2)))
+			if (intersect_sphere(rt->fig->next->xyz, rt->cam->coords, &start_point, (rt->fig->next->diameter / 2)))
 				pixel_to_image(rt->img, i, j, 0x0000e1);
 			// if (intersect_sphere(ray, rt->fig->next))
 			start_point.x += rt->cam->right_vec->x;
@@ -122,7 +111,5 @@ void	draw_sphere(t_rt *rt)
 		start_point.x = save_point.x;
 		start_point.y = save_point.y;
 		start_point.z = save_point.z;
-		// printf("start point: %lf, %lf, %lf\n", start_point.x, start_point.y, start_point.z);
 	}
-	printf("done\n");
 }

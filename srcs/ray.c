@@ -40,6 +40,12 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 	return (tray);
 }
 
+// 카메라 시점의 기저벡터를 구하는 과정
+// 카메라의 orient_vec의 yz, xz로의 정사영과 z축이 이루는 각 theta, pi를 구한다. 
+// 카메라의 orient_vec가 z축 위에 있다고 가정했을 때,
+// 해당 벡터를 y축으로 theta만큼, x축으로 pi만큼 회전한 것을 의미한다.
+// 축의 회전에 따라 x축, y축도 같이 회전되어 바뀐 벡터를 구해주면
+// 이것들이 곧 새로운 시점의 기저벡터들이 된다.
 // 카메라 시점의 world 기저벡터를 구하는 과정
 void	get_cam_basis(t_cam *cam)
 {
@@ -68,7 +74,6 @@ void	get_cam_basis(t_cam *cam)
 	printf("base up vector: %lf, %lf, %lf\n", cam->up_vec->x, cam->up_vec->y, cam->up_vec->z);
 }
 
-// 카메라 시점의 world 기저벡터를 구하는 과정
 // void	get_cam_basis(t_cam *cam)
 // {
 // 	t_vector	v;
@@ -163,4 +168,3 @@ void	get_cam_basis(t_cam *cam)
 // 	cam->corner_vec->z = -(v.z + u->z);
 // 	normalize_vec(cam->corner_vec);
 // }
-
