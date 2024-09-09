@@ -103,6 +103,28 @@ int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam)
 // t의 관한 이차방정식의 해가 존재할 조건은
 // D/4 >= 0 => Y**2 - XZ >= 0
 
+int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius)
+{
+	t_vector	vec1;
+	t_vector	vec2;
+	double		det[3];
+	double		res;
+
+	vec1.x = p2->x - p1->x;
+	vec1.y = p2->y - p1->y;
+	vec1.z = p2->z - p1->z;
+	vec2.x = p1->x - sphere->x;
+	vec2.y = p1->y - sphere->y;
+	vec2.z = p1->z - sphere->z;
+	det[0] = dot_product(&vec1, &vec1);
+	det[1] = dot_product(&vec1, &vec2);
+	det[2] = dot_product(&vec2, &vec2) - radius * radius;
+	res = det[1] * det[1] - det[0] * det[2];
+	if (res >= 0 || res > -0.001)
+		return (1);
+	return (0);
+}
+
 int	intersect_cylinder(t_fig *cy)
 {
 
