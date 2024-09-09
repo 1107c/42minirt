@@ -25,15 +25,15 @@ void	print_err(t_msg	msg, t_rt *rt)
 {
 	ft_putendl_fd("Error\n", 2);
 	if (msg == NO_ARG)
-		close_all(rt, "Error\n=> no input, enter only *.rt.");
+		close_all(rt, "=> no input, enter only *.rt.");
 	else if (msg == MUCH_ARG)
-		close_all(rt, "Error\n=> too many input, enter only *.rt.");
+		close_all(rt, "=> too many input, enter only *.rt.");
 	else if (msg == EXTEN_ERR)
-		close_all(rt, "Error\n=> input is not .rt, enter only *.rt.");
+		close_all(rt, "=> input is not .rt, enter only *.rt.");
 	else if (msg == FATAL_ERR)
-		close_all(rt, "Error\n=> fatal error.");
+		close_all(rt, "=> fatal error.");
 	else if (msg == OPEN_ERR)
-		close_all(rt, "Error\n=> file open failed.");
+		close_all(rt, "=> file open failed.");
 }
 
 int	open_err(int *arg, char **args, t_rt *rt)

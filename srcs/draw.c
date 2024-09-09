@@ -33,11 +33,6 @@ void	draw(t_rt *rt)
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
 
-// ∗ identifier: pl
-// ∗ x,y,z coordinates of a point in the plane: 0.0,0.0,-10.0
-// ∗ 3d normalized normal vector. In range [-1,1] for each x,y,z axis: 0.0,1.0,0.0
-// ∗ R,G,B colors in range [0-255]: 0,0,225
-
 void	pixel_to_image(t_image *img, double x, double y, int color)
 {
 	int	pixel;
@@ -109,7 +104,7 @@ void	draw_sphere(t_rt *rt)
 		for (int i = 0; i < WINDOW_WIDTH; i++)
 		{
 			// ray = cam_ray(rt->cam, rt, i, j);
-			if (intersect_sphere(rt->fig->next->xyz, rt->cam->coords, start_point, (rt->fig->next->diameter / 2)))
+			if (intersect_sphere(rt->fig->next->xyz, rt->cam->coords, &start_point, (rt->fig->next->diameter / 2)))
 				pixel_to_image(rt->img, i, j, 0x0000e1);
 			// if (intersect_sphere(ray, rt->fig->next))
 			start_point.x += rt->cam->right_vec->x;
