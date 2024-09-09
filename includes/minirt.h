@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/08 12:52:36 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:13:50 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,14 +230,14 @@ int	key_handle(int keycode, t_rt *rt);
 // comment -> yeojukim
 // : 벡터 유틸들의 함수목록들입니다.
 /* vector_utils.c */
-t_vector	*normalize_vec(t_vector *rhs);
+t_vector	normalize_vec(t_vector *rhs);
 double		dot_product(t_vector *lhs, t_vector *rhs);
-t_vector	*cross_product(t_vector *lhs, t_vector *rhs);
+t_vector	cross_product(t_vector *lhs, t_vector *rhs);
 double		udistance_vec(t_vector *lhs, t_vector *rhs);
 void		invert_vec(t_vector *rhs);
-t_vector	*add_vec(t_vector *lhs, t_vector *rhs);
-t_vector	*sub_vec(t_vector *lhs, t_vector *rhs);
-t_vector	*mul_vec(t_vector *lhs, double rhs);
+t_vector	add_vec(t_vector *lhs, t_vector *rhs);
+t_vector	sub_vec(t_vector *lhs, t_vector *rhs);
+t_vector	mul_vec(t_vector *lhs, double rhs);
 // void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
 // t_vector	cross_product(t_vector lhs, t_vector rhs);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_util.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeojukim <yeojukim@student.42gyeongsan.kr  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 10:53:53 by yeojukim          #+#    #+#             */
-/*   Updated: 2024/09/05 10:53:53 by yeojukim         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:13:50 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,18 +15,19 @@
 // comment -> yeojukim
 // : 이 함수는 벡터의 정규화를 담당하고있습니다. 벡터의 크기를 1로 만들면서 방향을 유지시켜 줍니다.
 // : 계산의 단순화와 이로 인해 생기는 안정성을 높이기 위해 만들었습니다.
-t_vector	*normalize_vec(t_vector *rhs)
+t_vector	normalize_vec(t_vector *rhs)
 {
 	double	l;
 
-	l = sqrt(rhs->x * rhs->x + rhs->y * rhs->y + rhs->z * rhs->z);
+	
+	l = sqrt(dot_product(rhs, rhs));
 	if (l != 0)
 	{
 		rhs->x /= l;
 		rhs->y /= l;
 		rhs->z /= l;
 	}
-	return (rhs);
+	return (*rhs);
 }
 
 // comment -> yeojukim
@@ -40,16 +41,10 @@ double	dot_product(t_vector *lhs, t_vector *rhs)
 // comment -> yeojukim
 // : 이 함수는 두 벡터에 모두 수직인 새로운 벡터를 생성하는데 사용되는 외적입니다.
 // : 법선 벡터를 계산 혹은 면의 방향을 결정하는데 유용합니다.
-t_vector	*cross_product(t_vector *lhs, t_vector *rhs)
+t_vector	cross_product(t_vector *lhs, t_vector *rhs)
 {
-	t_vector	*res;
-
-	res = malloc(sizeof(t_vector));
-	res->x = lhs->y * rhs->z - lhs->z * rhs->y;
-	res->y = lhs->z * rhs->x - lhs->x * rhs->z;
-	res->z = lhs->x * rhs->y - lhs->y * rhs->x;
-
-	return (res);
+	return ((t_vector){lhs->y * rhs->z - lhs->z * rhs->y, \
+	lhs->z * rhs->x - lhs->x * rhs->z, lhs->x * rhs->y - lhs->y * rhs->x, NULL});
 }
 
 // comment -> yeojukim

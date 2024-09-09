@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yeojukim <yeojukim@student.42gyeongsan.kr  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:12:41 by yeojukim          #+#    #+#             */
-/*   Updated: 2024/09/05 17:15:23 by yeojukim         ###   ########.fr       */
+/*   Updated: 2024/09/09 15:02:49 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 // : 여기서 NDC좌표로 변환을 시켜주는 데 NDC란 3D 공간의 객체들을 2D 화면에 매핑하기 위해 사용되는 좌표 체계입니다.
 // : -1.0 ~ 1.0의 범위로 표준화를 시켜 일관된 처리를 가능하게 합니다.
 // : 매개변수의 x, y는 화면의 좌표를 나타 냅니다. (x = 0 ~ width - 1) (y = 0 ~ height - 1)
-t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
+/*t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 {
 	t_ray	*tray;
 	double	u;
@@ -36,9 +36,8 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 					mul_vec(cam->up_vec, v)));
 	tray->direction = sub_vec(tray->direction, cam->coords);
 	normalize_vec(tray->direction);
-
 	return (tray);
-}
+}*/
 
 // 카메라 시점의 기저벡터를 구하는 과정
 // 카메라의 orient_vec의 yz, xz로의 정사영과 z축이 이루는 각 theta, pi를 구한다. 
@@ -46,7 +45,6 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 // 해당 벡터를 y축으로 theta만큼, x축으로 pi만큼 회전한 것을 의미한다.
 // 축의 회전에 따라 x축, y축도 같이 회전되어 바뀐 벡터를 구해주면
 // 이것들이 곧 새로운 시점의 기저벡터들이 된다.
-// 카메라 시점의 world 기저벡터를 구하는 과정
 void	get_cam_basis(t_cam *cam)
 {
 	t_vector	vec;
