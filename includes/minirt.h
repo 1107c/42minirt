@@ -3,10 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/09/05 10:17:54 by ksuh             ###   ########.fr       */
+=======
+/*   Updated: 2024/09/08 12:52:36 by myeochoi         ###   ########.fr       */
+>>>>>>> c0480da9e35e5cc7db7951fd805aacfe978d1365
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -221,10 +225,10 @@ void	parse_plane(t_rt *rt, char **args);
 void	parse_sphere(t_rt *rt, char **args);
 void	parse_cylinder(t_rt *rt, char **args);
 
-/* rt_utils.c */
-void	print_rt(t_rt *rt);
+/* ft_atod.c */
+double ft_atod(char *str);
 
-/* key_handle.c */
+/* key_handle.c 	*/
 int	key_handle(int keycode, t_rt *rt);
 
 // comment -> yeojukim
@@ -251,4 +255,5 @@ int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam);
 
 int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius);
 
+void	print_rt(t_rt *rt);
 #endif

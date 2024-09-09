@@ -40,6 +40,7 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 	return (tray);
 }
 
+<<<<<<< HEAD
 // 카메라 시점의 기저벡터를 구하는 과정
 // 카메라의 orient_vec의 yz, xz로의 정사영과 z축이 이루는 각 theta, pi를 구한다. 
 // 카메라의 orient_vec가 z축 위에 있다고 가정했을 때,
@@ -168,3 +169,5 @@ void	get_cam_basis(t_cam *cam)
 // 	normalize_vec(cam->corner_vec);
 // }
 
+=======
+>>>>>>> c0480da9e35e5cc7db7951fd805aacfe978d1365
