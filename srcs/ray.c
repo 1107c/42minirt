@@ -36,7 +36,6 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 					mul_vec(cam->up_vec, v)));
 	tray->direction = sub_vec(tray->direction, cam->coords);
 	normalize_vec(tray->direction);
-
 	return (tray);
 }
 
@@ -46,7 +45,6 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 // 해당 벡터를 y축으로 theta만큼, x축으로 pi만큼 회전한 것을 의미한다.
 // 축의 회전에 따라 x축, y축도 같이 회전되어 바뀐 벡터를 구해주면
 // 이것들이 곧 새로운 시점의 기저벡터들이 된다.
-// 카메라 시점의 world 기저벡터를 구하는 과정
 void	get_cam_basis(t_cam *cam)
 {
 	t_vector	vec;

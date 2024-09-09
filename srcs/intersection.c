@@ -125,7 +125,16 @@ int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius
 	return (0);
 }
 
-int	intersect_cylinder(t_fig *cy)
+int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
 {
+	t_vector	vec1;
+	t_vector	vec2;
+	t_vector	vec3;
+	double		dist;
 
+	vec1 = sub_vec(p1, cy->xyz);
+	vec2 = sub_vec(p2, p1);
+	vec3 = cross_product(cy->normal_vec, &vec2);
+	dist = abs(dot_product(&vec1, &vec3)) / dot_product(&vec3, &vec3);
+	printf("dist: %lf\n", dist);
 }

@@ -27,7 +27,7 @@ void	draw(t_rt *rt)
 	// cam_ray(rt->cam, rt, 1920, 0);
 	// cam_ray(rt->cam, rt, 0, 1080);
 	// cam_ray(rt->cam, rt, 1920, 1080);
-	// draw_plane(rt);
+	draw_plane(rt);
 	draw_sphere(rt);
 	// draw_cylinder();
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
@@ -37,7 +37,6 @@ void	pixel_to_image(t_image *img, double x, double y, int color)
 {
 	int	pixel;
 
-	// printf("x, y: %lf, %lf\n", x, y);
 	pixel = ((int)y * img->size_line) + ((int)x * 4);
 	img->buffer[pixel + 0] = (color) & 0xff;
 	img->buffer[pixel + 1] = (color >> 8) & 0xff;
@@ -85,14 +84,12 @@ void	draw_sphere(t_rt *rt)
 	t_vector	save_point;
 	t_ray		*ray;
 
-	printf("figure type: %d\n", rt->fig->next->type);
 	start_point.x = rt->cam->coords->x + rt->cam->as_ratio * rt->cam->orient_vec->x - 960 * rt->cam->right_vec->x + 540 * rt->cam->up_vec->x;
 	start_point.y = rt->cam->coords->y + rt->cam->as_ratio * rt->cam->orient_vec->y - 960 * rt->cam->right_vec->y + 540 * rt->cam->up_vec->y;
 	start_point.z = rt->cam->coords->z + rt->cam->as_ratio * rt->cam->orient_vec->z - 960 * rt->cam->right_vec->z + 540 * rt->cam->up_vec->z;
 	save_point.x = start_point.x;
 	save_point.y = start_point.y;
 	save_point.z = start_point.z;
-	printf("start point: %lf, %lf, %lf\n", start_point.x, start_point.y, start_point.z);
 	for (int j = 0; j < WINDOW_HEIGHT; j++)
 	{
 		for (int i = 0; i < WINDOW_WIDTH; i++)
