@@ -132,6 +132,87 @@ int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius
 	return (0);
 }
 
+int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
+{
+	t_vector	vec1;
+	t_vector	vec2;
+	t_vector	vec3;
+	double		dist;
+	double		h;
+	double		c;
+	double		s;
+
+	vec1 = sub_vec(p2, p1);
+	vec2 = cross_product(&vec1, cy->normal_vec);
+	vec3 = sub_vec(cy->xyz, p1);
+	dist = dot_product(&vec2, &vec3) / sqrt(dot_product(&vec3, &vec3));
+	if (dist < 0)
+		dist = -dist;
+	if (dist > cy->diameter / 2)
+		return (0);
+	if (dist == 0)
+	{
+		h = sqrt(dot_product(&vec3, &vec3));
+		c = dot_product(&vec1, &vec3) / (sqrt(dot_product(&vec3, &vec3)) * sqrt(dot_product(&vec1, &vec1)));
+		s = sqrt(1 - c*c);
+		dist = h * s/c;
+		if (dist < 0)
+			dist = -dist;
+		return (dist <= cy->diameter / 2);
+	}
+	// if (dist != 0)
+	// 	printf("dist, radius: %lf, %lf\n", dist, cy->diameter / 2);
+	return (0);
+}
+
+double	get_matrix(t_fig *cy, t_vector *p1, t_vector *p2)
+{
+	// a', b', c' => 실린더의 center점(CY)
+	// a'', b'', c'' => 실린더의 normal_vec(CYN)
+	// a, b, c => 카메라의 위치(C)
+	// p, q, r => 카메라의 orient_vec(CN)
+	// A = dot_product(cy_normal_vec, cam_orient_vec)
+	// B = -dot_product(cam_orient_vec, cam_orient_vec)
+	// C = dot_product(cy_normal_vec, cy_normal_vec)
+	// D = -dot_product(A)
+	// E = dot_product(CY - C, CN)
+	// F = dot_product(CY - C, CYN)
+
+	// t = (DE - BF) / (AD - BC)
+	// 0 < t <= 1 -> true
+	// t = 0 false
+	// t < 0 => h = -t * sqrt(C)
+	// t > 1 => h = (t - 1) * sqrt(C)
+	// cos(theta) = A / (sqrt(C) * sqrt(-B))
+	// sin(theta) = sqrt(1 - cos(theta) * cos(theta))
+	// tan(theta) = sin(theta) / cos(theta)
+	// r' = r + tan(theta) * h
+}
+
+// 구 구조체
+// {
+
+// }
+// 원기둥
+// {
+
+// }
+// 땅
+// {
+
+// }
+// 물체
+// {
+// 	타입 변수
+// 	union obj
+// 	{
+// 		구	구변수
+// 		원기둥 원기둥변수
+// 		땅 땅변수
+// 	};
+// 	물체 next
+	
+// }
 // int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
 // {
 // 	t_vector	vec1;

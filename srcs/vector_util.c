@@ -19,7 +19,6 @@ t_vector	normalize_vec(t_vector *rhs)
 {
 	double	l;
 
-	
 	l = sqrt(dot_product(rhs, rhs));
 	if (l != 0)
 	{
