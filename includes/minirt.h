@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/09 15:13:50 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/10 10:58:01 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ typedef struct s_cam
 	t_vector	*up_vec;
 	double		fov;
 	double		as_ratio;
+	double		distance_to_view;
 	double		vp_w;
 	double		vp_h;
 	//int		move_x;
@@ -251,5 +252,8 @@ int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam);
 
 int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius);
 int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2);
+void	draw_sphere(t_rt *rt, t_fig *tmp);
+void	draw_plane(t_rt *rt);
 
+int	encode_rgb(double red, double green, double blue);
 #endif

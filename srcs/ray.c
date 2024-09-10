@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:12:41 by yeojukim          #+#    #+#             */
-/*   Updated: 2024/09/09 15:02:49 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/09 16:59:07 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,27 @@
 // 이것들이 곧 새로운 시점의 기저벡터들이 된다.
 void	get_cam_basis(t_cam *cam)
 {
-	t_vector	vec;
-	t_vector	temp;
+	t_vector	proj_vector_yzx;
+	t_vector	z_unit_vector;
 	double		theta;
-	double		pi;
+	//double		pi;
 
-	vec.x = 0;
-	vec.y = cam->orient_vec->y;
-	vec.z = cam->orient_vec->z;
-	temp.x = 0;
-	temp.y = 0;
-	temp.z = 1;
-	theta = dot_product(&vec, &temp) / sqrt(dot_product(&vec, &vec));
+	proj_vector_yzx.x = 0;
+	proj_vector_yzx.y = cam->orient_vec->y;
+	proj_vector_yzx.z = cam->orient_vec->z;
+	z_unit_vector.x = 0;
+	z_unit_vector.y = 0;
+	z_unit_vector.z = 1;
+	theta = dot_product(&proj_vector_yzx, &z_unit_vector) / sqrt(dot_product(&proj_vector_yzx, &proj_vector_yzx));
 	cam->right_vec->x = 0;
 	cam->right_vec->y = theta;
 	cam->right_vec->z = -sqrt(1 - theta * theta);
-	vec.x = cam->orient_vec->x;
-	vec.y = 0;
-	pi = dot_product(&vec, &temp) / sqrt(dot_product(&vec, &vec));
-	cam->up_vec->x = pi;
+	proj_vector_yzx.x = cam->orient_vec->x;
+	proj_vector_yzx.y = 0;
+	theta = dot_product(&proj_vector_yzx, &z_unit_vector) / sqrt(dot_product(&proj_vector_yzx, &proj_vector_yzx));
+	cam->up_vec->x = theta;
 	cam->up_vec->y = 0;
-	cam->up_vec->z = -sqrt(1 - pi * pi);
+	cam->up_vec->z = -sqrt(1 - theta * theta);
 	printf("base right vector: %lf, %lf, %lf\n", cam->right_vec->x, cam->right_vec->y, cam->right_vec->z);
 	printf("base up vector: %lf, %lf, %lf\n", cam->up_vec->x, cam->up_vec->y, cam->up_vec->z);
 }

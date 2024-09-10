@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/09 15:02:49 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/10 10:22:56 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,41 +182,6 @@ double	get_matrix(t_fig *cy, t_vector *p1, t_vector *p2)
 	// r' = r + tan(theta) * h
 }
 
-int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
-{
-	t_vector	vec1;
-	t_vector	vec2;
-	double		det[3];
-	double		res;
-	double		temp;
-	double		t;
-
-	vec1 = sub_vec(p2, p1);
-	vec2 = normalize_vec(cy->normal_vec);
-	det[0] = dot_product(&vec1, &vec1) - dot_product(&vec1, &vec2) * dot_product(&vec1, &vec2);
-	det[1] = dot_product(&vec1, cy->xyz) - dot_product(cy->xyz, &vec2) * dot_product(&vec1, &vec2);
-	det[2] = dot_product(cy->xyz, cy->xyz) - (dot_product(cy->xyz, &vec2)) * (dot_product(cy->xyz, &vec2)) \
-			- cy->diameter * cy->diameter / 4;
-	//q = At + B
-	//q * q = A2t2 + 2ABt + B2 <= r2
-	// A2t2 + 2ABt + B2 - r2 <= 0
-	res = det[1] * det[1] - det[0] * det[2];
-	if (res < 0)
-		return (0);
-	t = (-det[1] + sqrt(res)) / det[0];
-	temp = dot_product(p1, &vec2) + t * dot_product(&vec1, &vec2) - dot_product(cy->xyz, &vec2);
-	// printf("t1, temp: %lf, %lf\n", t, temp);
-	if (temp > -0.001 && temp <= cy->height + 0.001)
-		return (1);
-	// printf("t2: %lf, %lf\n", t, temp);
-	t = (-det[1] - sqrt(res)) / det[0];
-	temp = dot_product(p1, &vec2) + t * dot_product(&vec1, &vec2) - dot_product(cy->xyz, &vec2);
-	if (temp > -0.001 && temp <= cy->height + 0.001)
-		return (1);
-	det[2] += cy->diameter * cy->diameter / 4;
-	return (0);
-}
-
 // 구 구조체
 // {
 
@@ -240,4 +205,17 @@ int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
 // 	};
 // 	물체 next
 	
+// }
+// int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
+// {
+// 	t_vector	vec1;
+// 	t_vector	vec2;
+// 	t_vector	vec3;
+// 	double		dist;
+
+// 	vec1 = sub_vec(p1, cy->xyz);
+// 	vec2 = sub_vec(p2, p1);
+// 	vec3 = cross_product(cy->normal_vec, &vec2);
+// 	dist = abs(dot_product(&vec1, &vec3)) / dot_product(&vec3, &vec3);
+// 	printf("dist: %lf\n", dist);
 // }
