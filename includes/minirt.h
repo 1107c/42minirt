@@ -196,6 +196,9 @@ void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
 
 /* draw.c */
 void	draw(t_rt *rt);
+void	draw_cylinder(t_rt *rt, t_fig *tmp);
+void	draw_sphere(t_rt *rt, t_fig *tmp);
+void	draw_plane(t_rt *rt);
 
 /* parse.c */
 void	parse_data(t_rt *rt);
@@ -252,8 +255,6 @@ int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam);
 
 int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius);
 int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2);
-void	draw_sphere(t_rt *rt, t_fig *tmp);
-void	draw_plane(t_rt *rt);
 
 int	encode_rgb(double red, double green, double blue);
 #endif
