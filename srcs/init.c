@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/05 11:04:12 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/10 10:07:30 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ t_cam	*init_cam()
 	cam->vp_h = 0;
 	cam->vp_w = 0;
 	cam->as_ratio = 0;
+	cam->distance_to_view = 0;
 	cam->ch = 0;
 	return (cam);
 }
