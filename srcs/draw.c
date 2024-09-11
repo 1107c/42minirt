@@ -134,25 +134,27 @@ void	draw_cylinder(t_rt *rt, t_fig *tmp)
 	t_vector	save_point;
 	int			i;
 	int			j;
+	int			k;
 	//t_ray		*ray;
 
 	i = -1;
 	j = -1;
-	//printf("figure type: %d\n", rt->fig->next->type);
 	start_point.x = rt->cam->coords->x + rt->cam->distance_to_view * rt->cam->orient_vec->x - 960 * rt->cam->right_vec->x + 540 * rt->cam->up_vec->x;
 	start_point.y = rt->cam->coords->y + rt->cam->distance_to_view * rt->cam->orient_vec->y - 960 * rt->cam->right_vec->y + 540 * rt->cam->up_vec->y;
 	start_point.z = rt->cam->coords->z + rt->cam->distance_to_view * rt->cam->orient_vec->z - 960 * rt->cam->right_vec->z + 540 * rt->cam->up_vec->z;
 	save_point.x = start_point.x;
 	save_point.y = start_point.y;
 	save_point.z = start_point.z;
-	// printf("%d\n", tmp->type);
-	
+	printf("start: %lf %lf %lf\n", start_point.x, start_point.y, start_point.z);
 	while (++j < WINDOW_HEIGHT)
 	{
 		while (++i < WINDOW_WIDTH)
 		{
-			if (intersect_cylinder(tmp, rt->cam->coords, &start_point))
+			k = intersect_cylinder(tmp, rt->cam->coords, &start_point);
+			if (k == 2)
 				pixel_to_image(rt->img, i, j, encode_rgb(tmp->rgb->x, tmp->rgb->y, tmp->rgb->z));
+			else if (k == 1)
+				pixel_to_image(rt->img, i, j, encode_rgb(191, 54, 12));
 			start_point.x += rt->cam->right_vec->x;
 			start_point.y += rt->cam->right_vec->y;
 			start_point.z += rt->cam->right_vec->z;
