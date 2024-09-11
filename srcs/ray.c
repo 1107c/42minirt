@@ -59,15 +59,15 @@ void	get_cam_basis(t_cam *cam)
 	z_unit_vector.y = 0;
 	z_unit_vector.z = 1;
 	theta = dot_product(&proj_vector_yzx, &z_unit_vector) / sqrt(dot_product(&proj_vector_yzx, &proj_vector_yzx));
-	cam->right_vec->x = 0;
-	cam->right_vec->y = theta;
-	cam->right_vec->z = -sqrt(1 - theta * theta);
+	cam->up_vec->x = 0;
+	cam->up_vec->y = theta;
+	cam->up_vec->z = -sqrt(1 - theta * theta);
 	proj_vector_yzx.x = cam->orient_vec->x;
 	proj_vector_yzx.y = 0;
 	theta = dot_product(&proj_vector_yzx, &z_unit_vector) / sqrt(dot_product(&proj_vector_yzx, &proj_vector_yzx));
-	cam->up_vec->x = theta;
-	cam->up_vec->y = 0;
-	cam->up_vec->z = -sqrt(1 - theta * theta);
+	cam->right_vec->x = theta;
+	cam->right_vec->y = 0;
+	cam->right_vec->z = -sqrt(1 - theta * theta);
 	printf("base right vector: %lf, %lf, %lf\n", cam->right_vec->x, cam->right_vec->y, cam->right_vec->z);
 	printf("base up vector: %lf, %lf, %lf\n", cam->up_vec->x, cam->up_vec->y, cam->up_vec->z);
 }

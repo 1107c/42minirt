@@ -65,6 +65,7 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 	|| !is_double_range(vec->y, range_min, range_max)
 	|| !is_double_range(vec->z, range_min, range_max))
 	{
+		printf("d: %lf, %lf, %lf, %lf, %lf\n", vec->x, vec->y, vec->z, range_min, range_max);
 		vec->error = RANGE_ERR;
 		return (free_args(tmp), 0);
 	}
