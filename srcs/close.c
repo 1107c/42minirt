@@ -12,23 +12,26 @@
 
 #include "../includes/minirt.h"
 
+void	close_mlx(t_rt *rt)
+{
+	mlx_destroy_image(rt->mlx, rt->img->img);
+	mlx_destroy_window(rt->mlx, rt->win);
+	mlx_destroy_display(rt->mlx);
+	free(rt->mlx);
+	free(rt->img);
+}
+
 void	close_all(t_rt *rt, char *error_msg)
 {
-	if (rt)
-	{
-		mlx_destroy_image(rt->mlx, rt->img->img);
-		mlx_destroy_window(rt->mlx, rt->win);
-		mlx_destroy_display(rt->mlx);
-		free(rt->img);
-		free(rt->cam);
-		free(rt->fig);
-		free(rt->light);
-		free(rt->amblight);
-		free(rt->mlx);
-		free(rt->line);
-		rt->mlx = NULL;
-		free(rt);
-	}
+	close_mlx(rt);
+	free(rt->amblight);
+	free(rt->cam);
+	free(rt->light);
+	free(rt->fig);
+	free(rt->line);
+	if (rt->file_fd)
+		close(rt->file_fd);
+	free(rt);
 	error(error_msg);
 }
 

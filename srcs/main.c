@@ -17,30 +17,28 @@ static int	close_win(t_rt *rt);
 int	main(int arg, char **args)
 {
 	t_rt	*rt;
+	int		fd;
 
 	if (arg <= 1)
-		return (print_err(NO_ARG, NULL), 1);
+		return (print_err(NO_ARG));
 	else if (arg >= 3)
-		return (print_err(MUCH_ARG, NULL), 1);
-	else
-	{
-		rt = init_rt();
-		if (!rt)
-			return (print_err(FATAL_ERR, rt), 1);
-		if (open_err(&arg, args, rt))
-			return (1);
-		parse_data(rt);
-		print_rt(rt);
-		draw(rt);
-		mlx_key_hook(rt->win, &key_handle, rt);
-		mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
-		mlx_loop(rt->mlx);
-	}
-	return (0);
+		return (print_err(MUCH_ARG));
+	fd = open_file(args[1]);
+	rt = init_rt(fd);
+	if (!rt)
+		return (close(fd), print_err(FATAL_ERR));
+	parse_data(rt);
+	ft_memset(rt->t_array, 0, sizeof(rt->t_array));
+	// print_rt(rt);
+	draw(rt);
+	mlx_key_hook(rt->win, &key_handle, rt);
+	mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
+	mlx_loop(rt->mlx);
+	return (EXIT_SUCCESS);
 }
 
 int	close_win(t_rt *rt)
 {
 	close_all(rt, NULL);
-	return (0);
+	return (EXIT_SUCCESS);
 }

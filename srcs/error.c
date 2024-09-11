@@ -16,41 +16,39 @@ int	error(char *error_msg)
 {
 	if (!error_msg)
 		exit(EXIT_SUCCESS);
-	// "usage: ./miniRT [*.rt]"
 	ft_putendl_fd(error_msg, STDERR_FILENO);
 	exit(EXIT_FAILURE);
 }
 
-void	print_err(t_msg	msg, t_rt *rt)
+int	print_err(t_msg	msg)
 {
-	ft_putendl_fd("Error\n", 2);
+	printf("Error\n");
 	if (msg == NO_ARG)
-		close_all(rt, "=> no input, enter only *.rt.");
+		printf("=> no input, enter only *.rt");
 	else if (msg == MUCH_ARG)
-		close_all(rt, "=> too many input, enter only *.rt.");
+		printf("=> too many input, enter only *.rt");
 	else if (msg == EXTEN_ERR)
-		close_all(rt, "=> input is not .rt, enter only *.rt.");
+		printf("=> input is not .enter only *.rt");
 	else if (msg == FATAL_ERR)
-		close_all(rt, "=> fatal error.");
+		printf("=> fatal error");
 	else if (msg == OPEN_ERR)
-		close_all(rt, "=> file open failed.");
+		printf("=> file open error");
+	exit(EXIT_FAILURE);
+	return (EXIT_FAILURE);
 }
 
-int	open_err(int *arg, char **args, t_rt *rt)
+int	open_file(char *filename)
 {
+	int	fd;
 	int	i;
 
-	args += 1;
-	*arg -= 1;
-	i = ft_strlen(args[0]);
+	i = ft_strlen(filename);
 	if (i < 3)
-		return (print_err(EXTEN_ERR, rt), 1);
-	if (!((args[0][i - 3] == '.') && (args[0][i - 2] == 'r') && \
-	(args[0][i - 1] == 't')))
-		return (print_err(EXTEN_ERR, rt), 1);
-	rt->file_name = args[0];
-	rt->file_fd = open(rt->file_name, O_RDONLY);
-	if (rt->file_fd < 0)
-		return (print_err(OPEN_ERR, rt), 1);
-	return (0);
+		print_err(EXTEN_ERR);
+	if (ft_strcmp(filename + i - 3, ".rt"))
+		print_err(EXTEN_ERR);
+	fd = open(filename, O_RDONLY);
+	if (fd < 0)
+		print_err(OPEN_ERR);
+	return (fd);
 }

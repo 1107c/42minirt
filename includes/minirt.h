@@ -27,10 +27,18 @@
 
 # define ANG	0.0174533
 
-# define KEY_ESC 65307
+# define KEY_ESC 	65307
+# define KEY_UP		65362
+# define KEY_DOWN	65364
+# define KEY_LEFT	65361
+# define KEY_RIGHT	65363
 
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
+# define EPSILON	0.001
+
+# define LIGHT_MAX	10
+# define FIG_MAX	50
 
 # define MEM_ALLOC_ERR			"Error\n=> memory allocation failed"
 # define FORMAT_ERR				"Error\n=> invalid format"
@@ -50,6 +58,10 @@
 # define LIGHT_LEN_ERR			"Error\n=> invalid light format"
 # define LIGHT_INPUT_ERR		"Error\n=> no light input"
 # define FIG_INPUT_ERR			"Error\n=> no figure input"
+# define NORM_VEC_ERR			"Error\n=> not a normalized vector"
+
+# define LIGHT_MAX_ERR			"Error\n=> light maximum count exceeded"
+# define FIG_MAX_ERR			"Error\n=> figure maximum count exceeded"
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -92,13 +104,13 @@ typedef struct s_vector
 // : origin은 광선의 원점(시작점)을 의미하고 direction은 광선의 방향을 의미합니다.
 typedef	struct s_ray
 {
-	t_vector	*origin;
-	t_vector	*direction;
+	t_vector	origin;
+	t_vector	direction;
 }	t_ray;
 
 typedef struct s_amblight
 {
-	t_vector	*rgb;
+	t_vector	rgb;
 	double		light_ratio;
 	int		ch;
 }	t_amblight;
@@ -116,10 +128,11 @@ typedef struct s_amblight
 // : corner_vec - 뷰포트의 좌하단 모서리 좌표를 나타냅니다. 광선 생성의 기준점으로 사용됩니다.
 typedef struct s_cam
 {
-	t_vector	*coords;
-	t_vector	*orient_vec;
-	t_vector	*right_vec;
-	t_vector	*up_vec;
+	t_vector	coords;
+	t_vector	orient_vec;
+	t_vector	right_vec;
+	t_vector	up_vec;
+	t_vector	corner_vec;
 	double		fov;
 	double		as_ratio;
 	double		distance_to_view;
@@ -127,14 +140,13 @@ typedef struct s_cam
 	double		vp_h;
 	//int		move_x;
 	//int		move_y;
-	t_vector	*corner_vec;
 	int		ch;
 }	t_cam;
 
 typedef struct s_light
 {
-	t_vector	*xyz;
-	t_vector	*rgb;
+	t_vector	xyz;
+	t_vector	rgb;
 	double	brightness;
 	int		ch;
 	struct s_light	*next;
@@ -142,9 +154,9 @@ typedef struct s_light
 
 typedef struct s_fig
 {
-	t_vector	*xyz;
-	t_vector	*normal_vec;
-	t_vector	*rgb;
+	t_vector	xyz;
+	t_vector	normal_vec;
+	t_vector	rgb;
 	int		type;
 	double	diameter;
 	double	height;
@@ -167,30 +179,33 @@ typedef struct s_rt
 	t_fig		*fig;	// figure
 	t_light		*light;	// light
 	t_amblight	*amblight;
-	char		*file_name;
-	char		*line;
-	char		*error;
-	int			file_fd;
-	int			win_x;
-	int			win_y;
+	double		t_array[1920][1080];
 	void		*mlx;
 	void		*win;
+	int			win_x;
+	int			win_y;
+	int			file_fd;
+	int			fig_cnt;
+	int			light_cnt;
+	char		*line;
+	char		*error;
 }	t_rt;
 
 /* error.c */
 int		error(char *error_msg);
-void	print_err(t_msg	msg, t_rt *rt);
-int		open_err(int *arg, char **args, t_rt *rt);
+int		print_err(t_msg	msg);
+int		open_file(char *filename);
 
 /* init.c */
-t_rt		*init_rt();
-t_vector	*init_vector();
+t_rt		*init_rt(int fd);
+// t_vector	*init_vector();
 
 /* init_utils.c */
 t_light	*init_light();
 t_fig	*init_fig();
 
 /* close.c */
+void	close_mlx(t_rt *rt);
 void	close_all(t_rt *rt, char *error_msg);
 void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
 
@@ -204,11 +219,9 @@ void	draw_plane(t_rt *rt);
 void	parse_data(t_rt *rt);
 
 /* parse_utils.c */
-int		ft_iscomma(int c);
 int		is_double_range(double d, double range_min, double range_max);
 int		is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double range_max);
 int		is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max);
-void	*lst_addback(t_rt *rt, t_type type);
 
 /* 2d_array_utils.c */
 int		get_arg_len(char **args);
@@ -234,14 +247,15 @@ int	key_handle(int keycode, t_rt *rt);
 // comment -> yeojukim
 // : 벡터 유틸들의 함수목록들입니다.
 /* vector_utils.c */
-t_vector	normalize_vec(t_vector *rhs);
-double		dot_product(t_vector *lhs, t_vector *rhs);
-t_vector	cross_product(t_vector *lhs, t_vector *rhs);
-double		udistance_vec(t_vector *lhs, t_vector *rhs);
-void		invert_vec(t_vector *rhs);
-t_vector	add_vec(t_vector *lhs, t_vector *rhs);
-t_vector	sub_vec(t_vector *lhs, t_vector *rhs);
-t_vector	mul_vec(t_vector *lhs, double rhs);
+t_vector	normalize_vec(t_vector rhs);
+double		dot_product(t_vector lhs, t_vector rhs);
+t_vector	cross_product(t_vector lhs, t_vector rhs);
+double		udistance_vec(t_vector lhs, t_vector rhs);
+t_vector	invert_vec(t_vector rhs);
+t_vector	add_vec(t_vector lhs, t_vector rhs);
+t_vector	sub_vec(t_vector lhs, t_vector rhs);
+t_vector	mul_vec(t_vector lhs, double rhs);
+int			is_normalized_vec(t_vector vec);
 // void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
 // t_vector	cross_product(t_vector lhs, t_vector rhs);
 
@@ -250,12 +264,16 @@ t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
 void	get_cam_basis(t_cam *cam);
 
 /* intersection.c */
-int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam);
-int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius);
+int	intersect_plane(t_fig *plane, t_vector point, t_vector cam);
+int	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
-int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2);
+int	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2);
 void	draw_fig(t_rt *rt, t_fig *tmp, int i, int j);
 // void	draw_plane(t_rt *rt);
 
 int	encode_rgb(double red, double green, double blue);
+
+/* lst_utils.c */
+void	*lst_addback(t_rt *rt, t_type type);
+
 #endif
