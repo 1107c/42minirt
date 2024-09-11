@@ -1,16 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atod.c                                          :+:      :+:    :+:   */
+/*   test.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 09:19:02 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/11 13:56:47 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/11 14:37:00 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minirt.h"
+#include <stdio.h>
+#include <limits.h>
+#include <math.h>
 
 static ssize_t	ft_atoss(const char *s);
 
@@ -52,15 +54,22 @@ double ft_atod(char *str)
 		i++;
 	if (str[i] == '\0')
 		return ((double)ft_atoss(str));
-	// str[i] = '\0';
+	str[i] = '\0';
 	front = (double)ft_atoss(str);
 	k = i + 1;
 	while (str[++i])
 		j *= 10;
 	back = (double)ft_atoss(str + k) / (double)j;
-	if (front < 0)
+	if (str[0] == '-')
 		front -= back;
 	else
 		front += back;
+	str[k - 1] = '.';
 	return(roundf(front * 10) / 10);
+}
+int main()
+{
+	char a[] = "-1.1";
+	printf("%f\n", ft_atod(a));
+	printf("%f\n", ft_atod(a));
 }

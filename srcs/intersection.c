@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/10 16:29:05 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/11 14:57:55 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,8 @@ int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam)
 	res = plane->normal_vec->x * (point->x - cam->x) + \
 		plane->normal_vec->y * (point->y - cam->y) + \
 		plane->normal_vec->z * (point->z - cam->z);
-	if (res == 0)
-		return (res == d);
 	if (res < 0.001 && res > -0.001)
-		return (1);
+		return (d == 0);
 	d /= res;
 	return (d > 0);
 }
@@ -103,7 +101,52 @@ int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam)
 // t의 관한 이차방정식의 해가 존재할 조건은
 // D/4 >= 0 => Y**2 - XZ >= 0
 
-int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius)
+// double intersect_sphere(t_vector *sphere_center, t_vector *ray_origin, t_vector *ray_direction, double radius)
+// {
+//     t_vector oc;
+//     double a, b, c, discriminant;
+
+//     // oc는 광선의 시작점에서 구의 중심을 향하는 벡터
+//     oc.x = ray_origin->x - sphere_center->x;
+//     oc.y = ray_origin->y - sphere_center->y;
+//     oc.z = ray_origin->z - sphere_center->z;
+
+//     // 레이-구 교차 방정식의 계수 계산
+//     a = dot_product(ray_direction, ray_direction);
+//     b = 2.0 * dot_product(&oc, ray_direction);
+//     c = dot_product(&oc, &oc) - radius * radius;
+
+//     // 판별식 계산
+//     discriminant = b * b - 4 * a * c;
+
+//     if (discriminant < 0)
+//     {
+//         // 교차점 없음
+//         return -1.0;
+//     }
+//     else if (discriminant == 0)
+//     {
+//         // 한 점에서 접함
+//         return -b / (2.0 * a);
+//     }
+//     else
+//     {
+//         // 두 교차점 중 가까운 것 선택
+//         double t1 = (-b - sqrt(discriminant)) / (2.0 * a);
+//         double t2 = (-b + sqrt(discriminant)) / (2.0 * a);
+        
+//         if (t1 > 0 && t2 > 0)
+//             return (t1 < t2) ? t1 : t2;
+//         else if (t1 > 0)
+//             return t1;
+//         else if (t2 > 0)
+//             return t2;
+//         else
+//             return -1.0;  // 둘 다 음수면 레이의 반대 방향에 구가 있음
+//     }
+// }
+
+double	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius)
 {
 	t_vector	vec1;
 	t_vector	vec2;
@@ -125,7 +168,7 @@ int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius
 		return (0);
 	d = (-det[1] - sqrt(res)) / det[0];
 	if (d > 0)
-		return (1);
+		return (d);
 	d = (-det[1] + sqrt(res)) / det[0];
 	if (d > 0)
 		return (1);

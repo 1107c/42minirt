@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/10 18:39:47 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/11 13:31:01 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,14 @@ typedef struct s_amblight
 // : vp_w, vp_h - 카메라가 볼 수 있는 가상 화면의 너비와 높이를 정의합니다(width * height).
 //		값이 클 수록 더 큰 장면을 뷰포트에서 볼 수 있습니다.
 // : corner_vec - 뷰포트의 좌하단 모서리 좌표를 나타냅니다. 광선 생성의 기준점으로 사용됩니다.
+
+typedef struct s_hit_info {
+    int hit;
+    double t;
+    t_vector point;
+    t_vector normal;
+} t_hit_info;
+
 typedef struct s_cam
 {
 	t_vector	*coords;
@@ -176,6 +184,8 @@ typedef struct s_rt
 	void		*mlx;
 	void		*win;
 }	t_rt;
+
+
 
 /* error.c */
 int		error(char *error_msg);
@@ -248,7 +258,7 @@ void	get_cam_basis(t_cam *cam);
 
 /* intersection.c */
 int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam);
-int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius);
+double intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
 
 
@@ -256,4 +266,6 @@ void	draw_fig(t_rt *rt, t_fig *tmp, int i, int j);
 // void	draw_plane(t_rt *rt);
 
 int	encode_rgb(double red, double green, double blue);
+
+
 #endif
