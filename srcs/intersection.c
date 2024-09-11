@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/10 10:22:56 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:29:05 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius
 	t_vector	vec2;
 	double		det[3];
 	double		res;
+	double		d;
 
 	vec1.x = p2->x - p1->x;
 	vec1.y = p2->y - p1->y;
@@ -122,7 +123,13 @@ int	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius
 	det[1] = dot_product(&vec1, &vec2);
 	det[2] = dot_product(&vec2, &vec2) - radius * radius;
 	res = det[1] * det[1] - det[0] * det[2];
-	if (res >= 0 || res > -0.001)
+	if (res < -0.001)
+		return (0);
+	d = (-det[1] - sqrt(res)) / det[0];
+	if (d > 0)
+		return (1);
+	d = (-det[1] + sqrt(res)) / det[0];
+	if (d > 0)
 		return (1);
 	return (0);
 }
