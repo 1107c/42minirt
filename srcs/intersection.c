@@ -6,11 +6,13 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/11 14:57:55 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/11 16:22:14 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "../includes/minirt.h"
+
+// static int	get_matrix(t_fig *cy, t_vector *p1, t_vector *p2, double h);
 
 // p: plane->normal_vec->x, q: plane->normal_vec->y, r: plane->normal_vec->z
 // a: point->x, b: point->y, c: point->z
@@ -181,10 +183,159 @@ double	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double rad
 // 	t_vector	vec2;
 // 	t_vector	vec3;
 // 	double		dist;
+// 	double		h;
+// 	double		c;
+// 	double		s;
 
-// 	vec1 = sub_vec(p1, cy->xyz);
-// 	vec2 = sub_vec(p2, p1);
-// 	vec3 = cross_product(cy->normal_vec, &vec2);
-// 	dist = abs(dot_product(&vec1, &vec3)) / dot_product(&vec3, &vec3);
-// 	printf("dist: %lf\n", dist);
+// 	if (cy->height == 0)
+// 		return (0);
+// 	vec1 = sub_vec(p2, p1);
+// 	vec2 = cross_product(&vec1, cy->normal_vec);
+// 	vec3 = sub_vec(cy->xyz, p1);
+// 	dist = dot_product(&vec2, &vec3) / sqrt(dot_product(&vec3, &vec3));
+// 	if (dist < 0)
+// 		dist = -dist;
+// 	if (dist > cy->diameter / 2)
+// 		return (0);
+// 	if (dist == 0)
+// 	{
+// 		h = sqrt(dot_product(&vec3, &vec3));
+// 		c = dot_product(&vec1, &vec3) / (sqrt(dot_product(&vec3, &vec3)) * sqrt(dot_product(&vec1, &vec1)));
+// 		s = sqrt(1 - c*c);
+// 		dist = h * s/c;
+// 		if (dist < 0)
+// 			dist = -dist;
+// 		return (dist <= cy->diameter / 2);
+// 	}
+// 	// return (1);
+// 	// return (0);
+// 	return get_matrix(cy, p1, p2, dist);
 // }
+
+// a', b', c' => 실린더의 center점(CY)
+// a'', b'', c'' => 실린더의 normal_vec(CYN)
+// a, b, c => 카메라의 위치(C)
+// p, q, r => 카메라의 ray의 방향벡터(CN)
+// A = dot_product(CYN, CN)
+// B = -dot_product(CN, CN)
+// C = dot_product(CYN, CYN)
+// D = -dot_product(A)
+// E = dot_product(C - CY, CN)
+// F = dot_product(C - CY, CYN)
+
+// t = (DE - BF) / (AD - BC)
+// 0 < t <= 1 -> true
+// t = 0 false
+// t < 0 => h = -t * sqrt(C)
+// t > 1 => h = (t - 1) * sqrt(C)
+// cos(theta) = A / (sqrt(C) * sqrt(-B))
+// sin(theta) = sqrt(1 - cos(theta) * cos(theta))
+// tan(theta) = sin(theta) / cos(theta)
+// r' = r + tan(theta) * h
+// int	get_matrix(t_fig *cy, t_vector *p1, t_vector *p2, double h)
+// {
+// 	t_vector	vec1;
+// 	t_vector	vec2;
+// 	double		arr[6];
+// 	double		t;
+// 	double		det;
+
+// 	vec1 = sub_vec(p2, p1);
+// 	arr[0] = dot_product(cy->normal_vec, &vec1);
+// 	arr[1] = -dot_product(&vec1, &vec1);
+// 	arr[2] = dot_product(cy->normal_vec, cy->normal_vec);
+// 	arr[3] = -arr[0];
+// 	vec2 = sub_vec(p1, cy->xyz);
+// 	arr[4] = dot_product(&vec2, &vec1);
+// 	arr[5] = dot_product(&vec2, cy->normal_vec);
+// 	det = arr[0] * arr[3] - arr[1] * arr[2];
+// 	if (det > -0.001 && det < 0.001)
+// 		return (1);
+// 	t = (arr[3] * arr[4] - arr[1] * arr[5]) / det;
+// 	if (t > 0 && t <= cy->height)
+// 		return (1);
+// 	if (t < 0)
+// 		arr[3] = -t + cy->height;
+// 	else
+// 		arr[3] = t;
+// 	arr[4] = arr[0] / (sqrt(arr[2]) * sqrt(-arr[1]));
+// 	arr[5] = sqrt(1 - arr[4] * arr[4]);
+// 	arr[5] /= arr[4];
+// 	arr[3] = arr[3] * arr[5] + h;
+// 	printf("t, r': %lf, %lf, %lf, %lf\n", t, arr[3], arr[5], h);
+// 	return (arr[3] >= cy->diameter / 2);
+// }
+
+// 구 구조체
+// {
+
+// }
+// 원기둥
+// {
+
+// }
+// 땅
+// {
+
+// }
+// 물체
+// {
+// 	타입 변수
+// 	union obj
+// 	{
+// 		구	구변수
+// 		원기둥 원기둥변수
+// 		땅 땅변수
+// 	};
+// 	물체 next
+	
+// }
+// n = cy->normal_vec
+
+int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
+{
+	t_vector	vec1;
+	t_vector	vec2;
+	t_vector	vec3;
+	double		det[3];
+	double		dn;
+	double		res;
+	double		t;
+	double		alpha;
+	double		beta;
+	double		dist;
+
+	vec1 = sub_vec(p2, p1); // d
+	vec2 = sub_vec(p1, cy->xyz); // e - c
+	vec3 = cross_product(&vec1, cy->normal_vec);
+	dist = dot_product(&vec2, &vec3) / sqrt(dot_product(&vec3, &vec3));
+	if (dist < 0)
+		dist = -dist;
+	res = dot_product(&vec1, cy->normal_vec) / dot_product(&vec1, &vec1);
+	if ((res == 1 || res == -1) && dist <= cy->diameter / 2)
+		return (2);
+	dn = dot_product(&vec1, cy->normal_vec);
+	det[0] = dot_product(&vec1, &vec1) - dn * dn;
+	det[1] = dot_product(&vec1, &vec2) - dot_product(&vec2, cy->normal_vec) * dn;
+	det[2] = dot_product(&vec2, &vec2) - dot_product(&vec2,	cy->normal_vec) * \
+			dot_product(&vec2, cy->normal_vec) - (cy->diameter * cy->diameter) / 4;
+	res = det[1] * det[1] - det[0] * det[2];
+	if (res < 0)
+		return (0);
+	t = (-det[1] + sqrt(res)) / det[0];
+	alpha = dot_product(p1, cy->normal_vec) + t * dn - dot_product(cy->xyz, cy->normal_vec);
+	beta = alpha - t * dn;
+	t = (-det[1] - sqrt(res)) / det[0];
+	beta += t * dn;
+	if ((alpha < 0 && beta < 0) || (alpha > cy->height && beta > cy->height))
+		return (0);
+	// if (res < 100000 && res > -100000)
+		// return (1);
+	if ((alpha > -0.1 && alpha < 0.1) || (alpha > cy->height - 0.1 && alpha < cy->height + 0.1))
+		return (1);
+	if ((beta > -0.1 && beta < 0.1) || (beta > cy->height - 0.1 && beta < cy->height + 0.1))
+		return (1);
+	// printf("alpha, beta, res: %lf, %lf, %lf\n", alpha, beta, res);
+	// printf("norm: %lf, %lf, %lf\n", cy->normal_vec->x, cy->normal_vec->y, cy->normal_vec->z);
+	return (2);
+}

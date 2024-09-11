@@ -12,9 +12,9 @@
 
 #include "../includes/minirt.h"
 
-static ssize_t	ft_atoss(const char *s);
+static ssize_t	ft_atoss(char *s);
 
-ssize_t	ft_atoss(const char *s)
+ssize_t	ft_atoss(char *s)
 {
 	ssize_t	res;
 	ssize_t	sign;
@@ -58,9 +58,10 @@ double ft_atod(char *str)
 	while (str[++i])
 		j *= 10;
 	back = (double)ft_atoss(str + k) / (double)j;
-	if (front < 0)
+	if (str[0] == '-')
 		front -= back;
 	else
 		front += back;
-	return(roundf(front * 10) / 10);
+	return (front);
+	// return(roundf(front * 10) / 10);
 }

@@ -206,6 +206,9 @@ void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
 
 /* draw.c */
 void	draw(t_rt *rt);
+void	draw_cylinder(t_rt *rt, t_fig *tmp);
+void	draw_sphere(t_rt *rt, t_fig *tmp);
+void	draw_plane(t_rt *rt);
 
 /* parse.c */
 void	parse_data(t_rt *rt);
@@ -260,8 +263,7 @@ void	get_cam_basis(t_cam *cam);
 int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam);
 double intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
-
-
+int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2);
 void	draw_fig(t_rt *rt, t_fig *tmp, int i, int j);
 // void	draw_plane(t_rt *rt);
 
