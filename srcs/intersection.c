@@ -6,13 +6,13 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/11 16:22:14 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/10 16:29:05 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "../includes/minirt.h"
+#include "../includes/minirt.h"
 
-// static int	get_matrix(t_fig *cy, t_vector *p1, t_vector *p2, double h);
+static int	get_matrix(t_fig *cy, t_vector *p1, t_vector *p2, double h);
 
 // p: plane->normal_vec->x, q: plane->normal_vec->y, r: plane->normal_vec->z
 // a: point->x, b: point->y, c: point->z
@@ -40,18 +40,20 @@
 // ((pa'' + qb'' + rc'') - (pa + qb + rc)) / p(a' - a) + q(b' - b) + r(c' - c) > 0이면 
 // 카메라 시야에서 평면과 교점이 발생
 
-int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam)
+int	intersect_plane(t_fig *plane, t_vector point, t_vector cam)
 {
-	double	d;
-	double	res;
+	t_vector	vec;
+	double		d;
+	double		res;
 
+	vec = sub_vec(point, cam);
 	d = dot_product(plane->normal_vec, plane->xyz) \
 		- dot_product(plane->normal_vec, cam);
-	res = plane->normal_vec->x * (point->x - cam->x) + \
-		plane->normal_vec->y * (point->y - cam->y) + \
-		plane->normal_vec->z * (point->z - cam->z);
+	res = dot_product(plane->normal_vec, vec);
+	if (res == 0)
+		return (res == d);
 	if (res < 0.001 && res > -0.001)
-		return (d == 0);
+		return (1);
 	d /= res;
 	return (d > 0);
 }
@@ -103,52 +105,7 @@ int	intersect_plane(t_fig *plane, t_vector *point, t_vector *cam)
 // t의 관한 이차방정식의 해가 존재할 조건은
 // D/4 >= 0 => Y**2 - XZ >= 0
 
-// double intersect_sphere(t_vector *sphere_center, t_vector *ray_origin, t_vector *ray_direction, double radius)
-// {
-//     t_vector oc;
-//     double a, b, c, discriminant;
-
-//     // oc는 광선의 시작점에서 구의 중심을 향하는 벡터
-//     oc.x = ray_origin->x - sphere_center->x;
-//     oc.y = ray_origin->y - sphere_center->y;
-//     oc.z = ray_origin->z - sphere_center->z;
-
-//     // 레이-구 교차 방정식의 계수 계산
-//     a = dot_product(ray_direction, ray_direction);
-//     b = 2.0 * dot_product(&oc, ray_direction);
-//     c = dot_product(&oc, &oc) - radius * radius;
-
-//     // 판별식 계산
-//     discriminant = b * b - 4 * a * c;
-
-//     if (discriminant < 0)
-//     {
-//         // 교차점 없음
-//         return -1.0;
-//     }
-//     else if (discriminant == 0)
-//     {
-//         // 한 점에서 접함
-//         return -b / (2.0 * a);
-//     }
-//     else
-//     {
-//         // 두 교차점 중 가까운 것 선택
-//         double t1 = (-b - sqrt(discriminant)) / (2.0 * a);
-//         double t2 = (-b + sqrt(discriminant)) / (2.0 * a);
-        
-//         if (t1 > 0 && t2 > 0)
-//             return (t1 < t2) ? t1 : t2;
-//         else if (t1 > 0)
-//             return t1;
-//         else if (t2 > 0)
-//             return t2;
-//         else
-//             return -1.0;  // 둘 다 음수면 레이의 반대 방향에 구가 있음
-//     }
-// }
-
-double	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double radius)
+int	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius)
 {
 	t_vector	vec1;
 	t_vector	vec2;
@@ -156,21 +113,17 @@ double	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double rad
 	double		res;
 	double		d;
 
-	vec1.x = p2->x - p1->x;
-	vec1.y = p2->y - p1->y;
-	vec1.z = p2->z - p1->z;
-	vec2.x = p1->x - sphere->x;
-	vec2.y = p1->y - sphere->y;
-	vec2.z = p1->z - sphere->z;
-	det[0] = dot_product(&vec1, &vec1);
-	det[1] = dot_product(&vec1, &vec2);
-	det[2] = dot_product(&vec2, &vec2) - radius * radius;
+	vec1 = sub_vec(p2, p1);
+	vec2 = sub_vec(p1, sphere);
+	det[0] = dot_product(vec1, vec1);
+	det[1] = dot_product(vec1, vec2);
+	det[2] = dot_product(vec2, vec2) - radius * radius;
 	res = det[1] * det[1] - det[0] * det[2];
 	if (res < -0.001)
 		return (0);
 	d = (-det[1] - sqrt(res)) / det[0];
 	if (d > 0)
-		return (d);
+		return (1);
 	d = (-det[1] + sqrt(res)) / det[0];
 	if (d > 0)
 		return (1);
@@ -292,7 +245,7 @@ double	intersect_sphere(t_vector *sphere, t_vector *p1, t_vector *p2, double rad
 // }
 // n = cy->normal_vec
 
-int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
+int	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 {
 	t_vector	vec1;
 	t_vector	vec2;
@@ -307,18 +260,18 @@ int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
 
 	vec1 = sub_vec(p2, p1); // d
 	vec2 = sub_vec(p1, cy->xyz); // e - c
-	vec3 = cross_product(&vec1, cy->normal_vec);
-	dist = dot_product(&vec2, &vec3) / sqrt(dot_product(&vec3, &vec3));
+	vec3 = cross_product(vec1, cy->normal_vec);
+	dist = dot_product(vec2, vec3) / sqrt(dot_product(vec3, vec3));
 	if (dist < 0)
 		dist = -dist;
-	res = dot_product(&vec1, cy->normal_vec) / dot_product(&vec1, &vec1);
+	res = dot_product(vec1, cy->normal_vec) / dot_product(vec1, vec1);
 	if ((res == 1 || res == -1) && dist <= cy->diameter / 2)
 		return (2);
-	dn = dot_product(&vec1, cy->normal_vec);
-	det[0] = dot_product(&vec1, &vec1) - dn * dn;
-	det[1] = dot_product(&vec1, &vec2) - dot_product(&vec2, cy->normal_vec) * dn;
-	det[2] = dot_product(&vec2, &vec2) - dot_product(&vec2,	cy->normal_vec) * \
-			dot_product(&vec2, cy->normal_vec) - (cy->diameter * cy->diameter) / 4;
+	dn = dot_product(vec1, cy->normal_vec);
+	det[0] = dot_product(vec1, vec1) - dn * dn;
+	det[1] = dot_product(vec1, vec2) - dot_product(vec2, cy->normal_vec) * dn;
+	det[2] = dot_product(vec2, vec2) - dot_product(vec2,	cy->normal_vec) * \
+			dot_product(vec2, cy->normal_vec) - (cy->diameter * cy->diameter) / 4;
 	res = det[1] * det[1] - det[0] * det[2];
 	if (res < 0)
 		return (0);
@@ -331,9 +284,9 @@ int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
 		return (0);
 	// if (res < 100000 && res > -100000)
 		// return (1);
-	if ((alpha > -0.1 && alpha < 0.1) || (alpha > cy->height - 0.1 && alpha < cy->height + 0.1))
+	if (alpha > -0.1 && alpha < 0.1 || (alpha > cy->height - 0.1 && alpha < cy->height + 0.1))
 		return (1);
-	if ((beta > -0.1 && beta < 0.1) || (beta > cy->height - 0.1 && beta < cy->height + 0.1))
+	if (beta > -0.1 && beta < 0.1 || (beta > cy->height - 0.1 && beta < cy->height + 0.1))
 		return (1);
 	// printf("alpha, beta, res: %lf, %lf, %lf\n", alpha, beta, res);
 	// printf("norm: %lf, %lf, %lf\n", cy->normal_vec->x, cy->normal_vec->y, cy->normal_vec->z);

@@ -12,16 +12,18 @@
 
 #include "../includes/minirt.h"
 
+static void	key_translate(int keycode, t_rt *rt);
+
 int	key_handle(int keycode, t_rt *rt)
 {
 	// printf("keycode: %d\n", keycode);
 	if (keycode == KEY_ESC)
 		close_all(rt, NULL);
+	else if (keycode == KEY_UP || keycode == KEY_DOWN || \
+			keycode == KEY_LEFT || keycode == KEY_RIGHT)
+		key_translate(keycode, rt);
 	/*else if (keycode == KEY_R)
 		rt_reset(rt);
-	else if (keycode == KEY_UP || keycode == KEY_DOWN || \
-				keycode == KEY_LEFT || keycode == KEY_RIGHT)
-		key_translate(keycode, rt);
 	else if (keycode == KEY_Q || keycode == KEY_W || keycode == KEY_E || \
 				keycode == KEY_A || keycode == KEY_S || keycode == KEY_D)
 		key_rotate(keycode, rt);
@@ -32,4 +34,17 @@ int	key_handle(int keycode, t_rt *rt)
 		key_project(keycode, rt);
 	draw(rt);*/
 	return (0);
+}
+
+void	key_translate(int keycode, t_rt *rt)
+{
+	if (keycode == KEY_UP)
+		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->orient_vec, 3));
+	else if (keycode == KEY_DOWN)
+		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->orient_vec, -3));
+	else if (keycode == KEY_LEFT)
+		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->right_vec, -3));
+	else if (keycode == KEY_RIGHT)
+		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->right_vec, 3));
+	draw(rt);
 }

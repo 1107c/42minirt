@@ -13,7 +13,7 @@
 #include "../includes/minirt.h"
 
 // 2차원 배열의 길이를 구하는 함수
-int		get_arg_len(char **args)
+int	get_arg_len(char **args)
 {
 	int	n;
 
@@ -32,11 +32,11 @@ void	print_args(char **args)
 		return ;
 	while (*args)
 	{
-		ft_putstr_fd(*args++, 1);
+		printf("%s", *args++);
 		if (*args)
-			write(1, " ", 1);
+			printf(" ");
 	}
-	write(1, "\n", 1);
+	printf("\n");
 }
 
 // 2차원 배열을 free하는 함수

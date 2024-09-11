@@ -12,8 +12,8 @@
 
 #include "minirt.h"
 
-static int	is_valid_data(char **args);
-static int	is_valid(char **s, int *dot, int *comma);
+static int	is_valid_nums(char **args);
+static int	is_valid_num(char **s, int *dot, int *comma);
 static void	parse_args(t_rt *rt, char **args);
 
 // ◦ Each type of element can be separated by one or more line break(s).
@@ -26,14 +26,12 @@ static void	parse_args(t_rt *rt, char **args);
 // 3. 순서는 상관없이
 // 4. 도형을 제외한 A, C, L(영어 대문자로 구성된 요소)들은 단 한번만 나와야 합니다.
 
-
 // .rt 파일을 get_next_line함수로 한 줄씩 읽으면서 유효한지 검사하는 함수
-
 void	check_len(t_rt *rt)
 {
-	if (rt->amblight->ch < 1)
+	if (rt->amblight->ch != 1)
 		close_all(rt, AMB_INPUT_ERR);
-	if (rt->cam->ch < 1)
+	if (rt->cam->ch != 1)
 		close_all(rt, CAM_INPUT_ERR);
 	if (!rt->light)
 		close_all(rt, LIGHT_INPUT_ERR);
@@ -53,12 +51,11 @@ void	parse_data(t_rt *rt)
 		if (rt->line[0] != '\n')
 		{
 			args = ft_split(rt->line, ft_isspace);
-			// print_args(args);
 			if (!args)
 				close_all(rt, MEM_ALLOC_ERR);
-			if (!is_valid_data(args))
+			if (!is_valid_nums(args))
 				close_all(rt, FORMAT_ERR);
-			// print_args(args);
+			print_args(args);
 			parse_args(rt, args);
 			free_args(args);
 		}
@@ -67,6 +64,7 @@ void	parse_data(t_rt *rt)
 	check_len(rt);
 	rt->line = NULL;
 	close(rt->file_fd);
+	rt->file_fd = 0;
 }
 
 // func_valid_data(arg) char값의 유효성을 검사하는 함수
@@ -77,7 +75,7 @@ void	parse_data(t_rt *rt)
 // 4. 쉼표가 3개 이상 나오는 경우
 // 5. 숫자가 아닌 값이 오는 경우
 
-int	is_valid_data(char **args)
+int	is_valid_nums(char **args)
 {
 	char	*s;
 	int		dot;
@@ -95,7 +93,7 @@ int	is_valid_data(char **args)
 			return (0);
 		while (*s)
 		{
-			if (!is_valid(&s, &dot, &comma))
+			if (!is_valid_num(&s, &dot, &comma))
 				return (0);
 			s++;
 		}
@@ -105,7 +103,7 @@ int	is_valid_data(char **args)
 	return (1);
 }
 
-int	is_valid(char **s, int *dot, int *comma)
+int	is_valid_num(char **s, int *dot, int *comma)
 {
 	if (**s == '.')
 	{
@@ -132,7 +130,7 @@ int	is_valid(char **s, int *dot, int *comma)
 void	parse_args(t_rt *rt, char **args)
 {
 	if (!ft_strcmp(args[0], "A"))
-		parse_amb(rt, args);	
+		parse_amb(rt, args);
 	else if (!ft_strcmp(args[0], "C"))
 		parse_cam(rt, args);
 	else if (!ft_strcmp(args[0], "L"))

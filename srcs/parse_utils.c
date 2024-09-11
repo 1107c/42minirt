@@ -12,11 +12,6 @@
 
 #include "../includes/minirt.h"
 
-int	ft_iscomma(int c)
-{
-	return (c == ',');
-}
-
 // double 자료형이 주어진 범위에 있는지 검사
 int	is_double_range(double d, double range_min, double range_max)
 {
@@ -45,67 +40,28 @@ int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double r
 // vector의 double 자료형(3개) 유효성 검사
 int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max)
 {
-	char	**tmp;
+	char	**nums;
 
-	tmp = ft_split(arg, ft_iscomma);
-	if (!tmp)
+	nums = ft_split(arg, ft_iscomma);
+	if (!nums)
 	{
 		vec->error = MEM_ALLOC_ERR;
 		return (0);
 	}
-	if (get_arg_len(tmp) != 3)
+	if (get_arg_len(nums) != 3)
 	{
 		vec->error = FORMAT_ERR;
-		return (free_args(tmp), 0);
+		return (free_args(nums), 0);
 	}
-	vec->x = ft_atod(tmp[0]);
-	vec->y = ft_atod(tmp[1]);
-	vec->z = ft_atod(tmp[2]);
-	if (!is_double_range(vec->x, range_min, range_max)
-	|| !is_double_range(vec->y, range_min, range_max)
-	|| !is_double_range(vec->z, range_min, range_max))
+	vec->x = ft_atod(nums[0]);
+	vec->y = ft_atod(nums[1]);
+	vec->z = ft_atod(nums[2]);
+	if (!is_double_range(vec->x, range_min, range_max) \
+		|| !is_double_range(vec->y, range_min, range_max) \
+		|| !is_double_range(vec->z, range_min, range_max))
 	{
-		printf("d: %lf, %lf, %lf, %lf, %lf\n", vec->x, vec->y, vec->z, range_min, range_max);
 		vec->error = RANGE_ERR;
-		return (free_args(tmp), 0);
+		return (free_args(nums), 0);
 	}
-	return (free_args(tmp), 1);
-}
-
-void	*lst_addback(t_rt *rt, t_type type)
-{
-	void	*tmp;
-	void	*alloc;
-
-	if (type == FIG)
-	{
-		alloc = init_fig();
-		if (!alloc)
-			return (NULL);
-		if (!rt->fig)
-			rt->fig = alloc;
-		else
-		{
-			tmp = rt->fig;
-			while (((t_fig *)tmp)->next)
-				tmp = ((t_fig *)tmp)->next;
-			((t_fig *)tmp)->next = (t_fig *)alloc;
-		}
-	}
-	if (type == LIGHT)
-	{
-		alloc = init_light();
-		if (!alloc)
-			return (NULL);
-		if (!rt->light)
-			rt->light = alloc;
-		else
-		{
-			tmp = rt->light;
-			while (((t_light *)tmp)->next)
-				tmp = ((t_light *)tmp)->next;
-			((t_light *)tmp)->next = (t_light *)alloc;
-		}
-	}
-	return (alloc);
+	return (free_args(nums), 1);
 }
