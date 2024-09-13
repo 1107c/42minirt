@@ -22,10 +22,11 @@ int	key_handle(int keycode, t_rt *rt)
 		close_all(rt, NULL);
 	else if (keycode == KEY_UP || keycode == KEY_DOWN || \
 			keycode == KEY_LEFT || keycode == KEY_RIGHT)
-		key_translate(keycode, rt);
-	else if (keycode == KEY_W || keycode == KEY_A || \
-		keycode == KEY_S || keycode == KEY_D)
 		key_rotate(keycode, rt);
+	else if (keycode == KEY_W || keycode == KEY_A || \
+		keycode == KEY_S || keycode == KEY_D || \
+		keycode == KEY_Q || keycode == KEY_E)
+		key_translate(keycode, rt);
 	/*else if (keycode == KEY_R)
 		rt_reset(rt);
 	else if (keycode == KEY_Z || keycode == KEY_X || \
@@ -40,25 +41,28 @@ int	key_handle(int keycode, t_rt *rt)
 
 void	key_translate(int keycode, t_rt *rt)
 {
-	if (keycode == KEY_UP)
+	if (keycode == KEY_W)
 		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->orient_vec, 3));
-	else if (keycode == KEY_DOWN)
+	else if (keycode == KEY_S)
 		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->orient_vec, -3));
-	else if (keycode == KEY_LEFT)
+	else if (keycode == KEY_A)
 		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->right_vec, -3));
-	else if (keycode == KEY_RIGHT)
+	else if (keycode == KEY_D)
 		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->right_vec, 3));
-	// draw(rt);
+	else if (keycode == KEY_Q)
+		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->up_vec, 3));
+	else if (keycode == KEY_E)
+		rt->cam->coords = add_vec(rt->cam->coords, mul_vec(rt->cam->up_vec, -3));
 }
 
 void	key_rotate(int keycode, t_rt *rt)
 {
-	if (keycode == KEY_W)
+	if (keycode == KEY_UP)
 		rt->cam->phi += 10;
-	else if (keycode == KEY_A)
-		rt->cam->theta -= 10;
-	else if (keycode == KEY_S)
+	else if (keycode == KEY_DOWN)
 		rt->cam->phi -= 10;
-	else if (keycode == KEY_D)
+	else if (keycode == KEY_LEFT)
+		rt->cam->theta -= 10;
+	else if (keycode == KEY_RIGHT)
 		rt->cam->theta += 10;
 }
