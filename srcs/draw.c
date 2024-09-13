@@ -12,6 +12,8 @@
 
 #include "../includes/minirt.h"
 
+static void	clear_image(t_image *img);
+
 void	draw(t_rt *rt)
 {
 	t_fig	*fig;
@@ -19,8 +21,9 @@ void	draw(t_rt *rt)
 	fig = rt->fig;
 	rt->cam->distance_to_view = WINDOW_WIDTH / \
 								(2 * tan(ANG * (rt->cam->fov / 2)));
-	printf("ratio: %lf\n", rt->cam->distance_to_view);
-	get_cam_basis(rt->cam);
+	update_basis(rt->cam);
+	// printf("ratio: %lf\n", rt->cam->distance_to_view);
+	clear_image(rt->img);
 	while (fig)
 	{
 		draw_fig(rt, fig, -1, -1);
@@ -56,16 +59,34 @@ void	draw_fig(t_rt *rt, t_fig *tmp, int i, int j)
 	{
 		while (++i < WINDOW_WIDTH)
 		{
-			if (tmp->type == 0 && intersect_plane(tmp, start_point, rt->cam->coords))
+			if (tmp->type == 0 && intersect_plane(tmp, start_point, rt->cam->coords) != -1)
 				pixel_to_image(rt->img, i, j, encode_rgb(tmp->rgb.x, tmp->rgb.y, tmp->rgb.z));
-			if (tmp->type == 1 && intersect_sphere(tmp->xyz, rt->cam->coords, start_point, tmp->diameter / 2))
+			if (tmp->type == 1 && intersect_sphere(tmp->xyz, rt->cam->coords, start_point, tmp->diameter / 2) != -1)
 				pixel_to_image(rt->img, i, j, encode_rgb(tmp->rgb.x, tmp->rgb.y, tmp->rgb.z));
-			if (tmp->type == 2 && intersect_cylinder(tmp, rt->cam->coords, start_point))
+			if (tmp->type == 2 && intersect_cylinder(tmp, rt->cam->coords, start_point) != -1)
 				pixel_to_image(rt->img, i, j, encode_rgb(tmp->rgb.x, tmp->rgb.y, tmp->rgb.z));
 			start_point = add_vec(start_point, rt->cam->right_vec);
 		}
 		start_point = sub_vec(start_point, add_vec(mul_vec(rt->cam->right_vec, i), \
 		rt->cam->up_vec));
 		i = -1;
+	}
+}
+
+void	clear_image(t_image *img)
+{
+	int	x;
+	int	y;
+
+	y = 0;
+	while (y < WINDOW_HEIGHT)
+	{
+		x = 0;
+		while (x < WINDOW_WIDTH)
+		{
+			pixel_to_image(img, x, y, 0);
+			x++;
+		}
+		y++;
 	}
 }

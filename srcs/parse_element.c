@@ -64,7 +64,6 @@ void	parse_light(t_rt *rt, char **args)
 
 	if (rt->light_cnt == LIGHT_MAX)
 		free_2d_and_close_all(rt, args, LIGHT_MAX_ERR);
-	printf("here\n");
 	light = lst_addback(rt, LIGHT);
 	if (!light)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);

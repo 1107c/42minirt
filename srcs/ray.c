@@ -47,28 +47,53 @@
 // 이것들이 곧 새로운 시점의 기저벡터들이 된다.
 void	get_cam_basis(t_cam *cam)
 {
-	t_vector	proj_vector_yzx;
-	t_vector	z_unit_vector;
-	double		theta;
+	t_vector	y_unit_vector;
+	t_vector	z_inv;
 
-	proj_vector_yzx.x = 0;
-	proj_vector_yzx.y = cam->orient_vec.y;
-	proj_vector_yzx.z = cam->orient_vec.z;
-	z_unit_vector.x = 0;
-	z_unit_vector.y = 0;
-	z_unit_vector.z = 1;
-	theta = dot_product(proj_vector_yzx, z_unit_vector) / \
-			sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
-	cam->up_vec.x = 0;
-	cam->up_vec.y = theta;
-	cam->up_vec.z = -sqrt(1 - theta * theta);
-	proj_vector_yzx.x = cam->orient_vec.x;
-	proj_vector_yzx.y = 0;
-	theta = dot_product(proj_vector_yzx, z_unit_vector) / \
-			sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
-	cam->right_vec.x = theta;
-	cam->right_vec.y = 0;
-	cam->right_vec.z = -sqrt(1 - theta * theta);
+	y_unit_vector = (t_vector) {0, 1, 0, 0};
+	z_inv = invert_vec(cam->orient_vec);
+	cam->right_vec = cross_product(y_unit_vector, z_inv);
+	cam->up_vec = cross_product(z_inv, cam->right_vec);
+	// t_vector	proj_vector_yzx;
+	// t_vector	z_unit_vector;
+	// double		theta;
+
+	// proj_vector_yzx = (t_vector) {0, cam->orient_vec.y, cam->orient_vec.z, 0};
+	// z_unit_vector = (t_vector) {0, 0, 1, 0};
+	// theta = dot_product(proj_vector_yzx, z_unit_vector) / \
+	// 		sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
+	// cam->up_vec = (t_vector) {0, theta, -sqrt(1 - theta * theta), 0};
+	// proj_vector_yzx.x = cam->orient_vec.x;
+	// proj_vector_yzx.y = 0;
+	// theta = dot_product(proj_vector_yzx, z_unit_vector) / \
+	// 		sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
+	// cam->right_vec = (t_vector) {theta, 0, -sqrt(1 - theta * theta), 0};
+	if (!cam->p)
+	{
+		cam->origin_orient_vec = cam->orient_vec;
+		cam->origin_right_vec = cam->right_vec;
+		cam->origin_up_vec = cam->up_vec;
+		cam->p = 1;
+	}
 	printf("base right vector: %lf, %lf, %lf\n", cam->right_vec.x, cam->right_vec.y, cam->right_vec.z);
 	printf("base up vector: %lf, %lf, %lf\n", cam->up_vec.x, cam->up_vec.y, cam->up_vec.z);
+}
+
+void	update_basis(t_cam *cam)
+{	
+	t_vector	v;
+
+	if (cam->p)
+	{
+		v = add_vec(mul_vec(cam->origin_orient_vec, cos(ANG * cam->phi) * cos(ANG * cam->theta)), \
+			mul_vec(cam->origin_right_vec, cos(ANG * cam->phi) * sin(ANG * cam->theta)));
+		v = add_vec(v, mul_vec(cam->origin_up_vec, sin(ANG * cam->phi)));
+		cam->orient_vec.x = v.x;
+		cam->orient_vec.y = v.y;
+		cam->orient_vec.z = v.z;
+	}
+	printf("%lf %lf\n", cam->phi, cam->theta);
+	printf("orient vector: %lf, %lf, %lf\n", cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
+	// cam->orient_vec = v;
+	get_cam_basis(cam);
 }

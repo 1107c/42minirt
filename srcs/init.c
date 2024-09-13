@@ -80,7 +80,10 @@ t_cam	*init_cam(void)
 	cam->vp_w = 0;
 	cam->as_ratio = 0;
 	cam->distance_to_view = 0;
+	cam->theta = 0;
+	cam->phi = 0;
 	cam->ch = 0;
+	cam->p = 0;
 	return (cam);
 }
 

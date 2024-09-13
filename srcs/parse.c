@@ -55,7 +55,6 @@ void	parse_data(t_rt *rt)
 				close_all(rt, MEM_ALLOC_ERR);
 			if (!is_valid_nums(args))
 				close_all(rt, FORMAT_ERR);
-			print_args(args);
 			parse_args(rt, args);
 			free_args(args);
 		}

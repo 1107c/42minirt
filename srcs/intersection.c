@@ -40,7 +40,7 @@ static int	get_matrix(t_fig *cy, t_vector *p1, t_vector *p2, double h);
 // ((pa'' + qb'' + rc'') - (pa + qb + rc)) / p(a' - a) + q(b' - b) + r(c' - c) > 0이면 
 // 카메라 시야에서 평면과 교점이 발생
 
-int	intersect_plane(t_fig *plane, t_vector point, t_vector cam)
+double	intersect_plane(t_fig *plane, t_vector point, t_vector cam)
 {
 	t_vector	vec;
 	double		d;
@@ -51,11 +51,12 @@ int	intersect_plane(t_fig *plane, t_vector point, t_vector cam)
 		- dot_product(plane->normal_vec, cam);
 	res = dot_product(plane->normal_vec, vec);
 	if (res == 0)
-		return (res == d);
-	if (res < 0.001 && res > -0.001)
-		return (1);
-	d /= res;
-	return (d > 0);
+	{
+		if (d == 0)
+			return (0.0);
+		return (-1.0);
+	}
+	return (d / res);
 }
 
 // int	intersect_sphere(t_ray *ray, t_fig *fig)
@@ -105,13 +106,13 @@ int	intersect_plane(t_fig *plane, t_vector point, t_vector cam)
 // t의 관한 이차방정식의 해가 존재할 조건은
 // D/4 >= 0 => Y**2 - XZ >= 0
 
-int	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius)
+double	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius)
 {
 	t_vector	vec1;
 	t_vector	vec2;
 	double		det[3];
 	double		res;
-	double		d;
+	double		t[2];
 
 	vec1 = sub_vec(p2, p1);
 	vec2 = sub_vec(p1, sphere);
@@ -119,15 +120,15 @@ int	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius)
 	det[1] = dot_product(vec1, vec2);
 	det[2] = dot_product(vec2, vec2) - radius * radius;
 	res = det[1] * det[1] - det[0] * det[2];
-	if (res < -0.001)
-		return (0);
-	d = (-det[1] - sqrt(res)) / det[0];
-	if (d > 0)
-		return (1);
-	d = (-det[1] + sqrt(res)) / det[0];
-	if (d > 0)
-		return (1);
-	return (0);
+	if (res < 0)
+		return (-1.0);
+	t[0] = (-det[1] - sqrt(res)) / det[0];
+	if (t[0] > 0)
+		return (t[0]);
+	t[1] = (-det[1] + sqrt(res)) / det[0];
+	if (t[1] > 0)
+		return (t[1]);
+	return (-1.0);
 }
 
 // int	intersect_cylinder(t_fig *cy, t_vector *p1, t_vector *p2)
@@ -245,7 +246,12 @@ int	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius)
 // }
 // n = cy->normal_vec
 
-int	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
+double	cy_parallel()
+{
+
+}
+
+double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 {
 	t_vector	vec1;
 	t_vector	vec2;
@@ -253,7 +259,7 @@ int	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 	double		det[3];
 	double		dn;
 	double		res;
-	double		t;
+	double		t[2];
 	double		alpha;
 	double		beta;
 	double		dist;
@@ -274,20 +280,27 @@ int	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 			dot_product(vec2, cy->normal_vec) - (cy->diameter * cy->diameter) / 4;
 	res = det[1] * det[1] - det[0] * det[2];
 	if (res < 0)
-		return (0);
-	t = (-det[1] + sqrt(res)) / det[0];
-	alpha = dot_product(p1, cy->normal_vec) + t * dn - dot_product(cy->xyz, cy->normal_vec);
-	beta = alpha - t * dn;
-	t = (-det[1] - sqrt(res)) / det[0];
-	beta += t * dn;
+		return (-1.0);
+	t[0] = (-det[1] + sqrt(res)) / det[0];
+	alpha = dot_product(p1, cy->normal_vec) + t[0] * dn - dot_product(cy->xyz, cy->normal_vec);
+	beta = alpha - t[0] * dn;
+	t[1] = (-det[1] - sqrt(res)) / det[0];
+	beta += t[1] * dn;
 	if ((alpha < 0 && beta < 0) || (alpha > cy->height && beta > cy->height))
-		return (0);
+		return (-1.0);
+	if (t[0] <= 0 && t[1] <= 0)
+		return (-1.0);
+	if (t[0] > 0 && (t[0] < t[1] || t[1] <= 0))
+		return (t[0]);
+	if (t[1] > 0 && (t[1] < t[0] || t[0] <= 0))
+		return (t[1]);
+	return (-1.0);
 	// if (res < 100000 && res > -100000)
 		// return (1);
-	if (alpha > -0.1 && alpha < 0.1 || (alpha > cy->height - 0.1 && alpha < cy->height + 0.1))
-		return (1);
-	if (beta > -0.1 && beta < 0.1 || (beta > cy->height - 0.1 && beta < cy->height + 0.1))
-		return (1);
+	// if (alpha > -0.1 && alpha < 0.1 || (alpha > cy->height - 0.1 && alpha < cy->height + 0.1))
+	// 	return (1);
+	// if (beta > -0.1 && beta < 0.1 || (beta > cy->height - 0.1 && beta < cy->height + 0.1))
+	// 	return (1);
 	// printf("alpha, beta, res: %lf, %lf, %lf\n", alpha, beta, res);
 	// printf("norm: %lf, %lf, %lf\n", cy->normal_vec->x, cy->normal_vec->y, cy->normal_vec->z);
 	return (2);

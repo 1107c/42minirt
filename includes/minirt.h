@@ -32,6 +32,10 @@
 # define KEY_DOWN	65364
 # define KEY_LEFT	65361
 # define KEY_RIGHT	65363
+# define KEY_W		119
+# define KEY_S		115
+# define KEY_A		97
+# define KEY_D		100
 
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
@@ -133,14 +137,20 @@ typedef struct s_cam
 	t_vector	right_vec;
 	t_vector	up_vec;
 	t_vector	corner_vec;
+	t_vector	origin_orient_vec;
+	t_vector	origin_right_vec;
+	t_vector	origin_up_vec;
 	double		fov;
 	double		as_ratio;
 	double		distance_to_view;
 	double		vp_w;
 	double		vp_h;
+	double		theta;
+	double		phi;
 	//int		move_x;
 	//int		move_y;
 	int		ch;
+	int		p;
 }	t_cam;
 
 typedef struct s_light
@@ -262,12 +272,13 @@ int			is_normalized_vec(t_vector vec);
 /* ray.c */
 t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
 void	get_cam_basis(t_cam *cam);
+void	update_basis(t_cam *cam);
 
 /* intersection.c */
-int	intersect_plane(t_fig *plane, t_vector point, t_vector cam);
-int	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius);
+double	intersect_plane(t_fig *plane, t_vector point, t_vector cam);
+double	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
-int	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2);
+double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2);
 void	draw_fig(t_rt *rt, t_fig *tmp, int i, int j);
 // void	draw_plane(t_rt *rt);
 
