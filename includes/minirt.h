@@ -113,6 +113,10 @@ typedef	struct s_ray
 {
 	t_vector	origin;
 	t_vector	direction;
+	t_vector	unit;
+	t_vector	u;
+	t_vector	v;
+	t_vector	save;
 }	t_ray;
 
 typedef struct s_amblight
@@ -143,6 +147,7 @@ typedef struct s_cam
 	t_vector	origin_orient_vec;
 	t_vector	origin_right_vec;
 	t_vector	origin_up_vec;
+	t_ray		ray;
 	double		fov;
 	double		as_ratio;
 	double		distance_to_view;
@@ -153,7 +158,6 @@ typedef struct s_cam
 	//int		move_x;
 	//int		move_y;
 	int		ch;
-	int		p;
 }	t_cam;
 
 typedef struct s_light
@@ -210,7 +214,6 @@ int		open_file(char *filename);
 
 /* init.c */
 t_rt		*init_rt(int fd);
-// t_vector	*init_vector();
 
 /* init_utils.c */
 t_light	*init_light();
@@ -223,9 +226,7 @@ void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
 
 /* draw.c */
 void	draw(t_rt *rt);
-void	draw_cylinder(t_rt *rt, t_fig *tmp);
-void	draw_sphere(t_rt *rt, t_fig *tmp);
-void	draw_plane(t_rt *rt);
+void	clear_image(t_image *img);
 
 /* parse.c */
 void	parse_data(t_rt *rt);
@@ -271,22 +272,19 @@ int			is_normalized_vec(t_vector vec);
 // void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
 // t_vector	cross_product(t_vector lhs, t_vector rhs);
 
-/* ray.c */
-t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
-void	get_cam_basis(t_cam *cam);
-void	update_basis(t_cam *cam);
-
 /* intersection.c */
-double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
+double	intersect_plane(t_fig *pl, t_ray ray);
+// double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
 double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
 double	intersect_cylinder(t_fig *cy, t_vector cam, t_vector point);
-void	draw_fig(t_rt *rt, int i, int j);
-// void	draw_plane(t_rt *rt);
-
-int	encode_rgb(double red, double green, double blue);
 
 /* lst_utils.c */
 void	*lst_addback(t_rt *rt, t_type type);
+
+/* cam_utils.c */
+void	set_cam(t_cam *cam, double x, double y);
+void	get_cam_basis(t_cam *cam);
+void	update_ray(t_ray *ray, int right);
 
 #endif

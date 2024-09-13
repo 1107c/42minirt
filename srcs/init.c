@@ -83,7 +83,6 @@ t_cam	*init_cam(void)
 	cam->theta = 0;
 	cam->phi = 0;
 	cam->ch = 0;
-	cam->p = 0;
 	return (cam);
 }
 

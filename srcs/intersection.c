@@ -15,11 +15,6 @@
 static double	get_traingle_height(t_fig *cy, t_vector point);
 static t_vector	get_point(t_fig *cy, t_vector p1, t_vector p2, double t);
 
-// p: plane->normal_vec->x, q: plane->normal_vec->y, r: plane->normal_vec->z
-// a: point->x, b: point->y, c: point->z
-// a': cam->x, b': point->y, c': point->z
-// d: p*plane->x + q*plane->y+ r*plane->z
-
 // 두 점 P(a, b, c), P'(a', b', c')을 지나는 직선의 방정식은 다음과 같다.
 // x - a / (a' - a) = y - b / (b' - b) = z - c / (c' - c)		---- 1
 
@@ -41,16 +36,14 @@ static t_vector	get_point(t_fig *cy, t_vector p1, t_vector p2, double t);
 // ((pa'' + qb'' + rc'') - (pa + qb + rc)) / p(a' - a) + q(b' - b) + r(c' - c) > 0이면 
 // 카메라 시야에서 평면과 교점이 발생
 
-double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
+double	intersect_plane(t_fig *pl, t_ray ray)
 {
-	t_vector	vec;
 	double		d;
 	double		res;
 
-	vec = sub_vec(point, cam);
 	d = dot_product(pl->normal_vec, pl->xyz) \
-		- dot_product(pl->normal_vec, cam);
-	res = dot_product(pl->normal_vec, vec);
+		- dot_product(pl->normal_vec, ray.origin);
+	res = dot_product(pl->normal_vec, ray.direction);
 	if (res == 0)
 	{
 		if (d == 0)
@@ -60,10 +53,24 @@ double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
 	return (d / res);
 }
 
-// a = p1->x, b = p1->y, c = p1->z
-// a'= p2.x, b'= p2.y, c'= p2.z
-// a'' = sphere->x, b'' = sphere->y, c'' = sphere->z
-// r = radius
+// double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
+// {
+// 	t_vector	vec;
+// 	double		d;
+// 	double		res;
+
+// 	vec = sub_vec(point, cam);
+// 	d = dot_product(pl->normal_vec, pl->xyz) \
+// 		- dot_product(pl->normal_vec, cam);
+// 	res = dot_product(pl->normal_vec, vec);
+// 	if (res == 0)
+// 	{
+// 		if (d == 0)
+// 			return (0.0);
+// 		return (-1.0);
+// 	}
+// 	return (d / res);
+// }
 
 // 두 점 P(a, b, c), P'(a', b', c')을 지나는 직선의 방정식
 // x - a / (a' - a) = y - b / (b' - b) = z - c / (c' - c)		---- 1

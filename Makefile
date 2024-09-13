@@ -17,8 +17,9 @@ MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 
 PRE_MEN_C = 2d_array_utils.c close.c error.c init.c key_handle.c main.c parse.c \
-			parse_element.c parse_figure.c parse_utils.c init_utils.c rt_utils.c \
-			draw.c ray.c vector_util.c vector_util2.c intersection.c lst_utils.c
+			parse_element.c parse_figure.c parse_utils.c init_utils.c print_data.c \
+			draw.c vector_util.c vector_util2.c intersection.c lst_utils.c \
+			cam_utils.c
 PRE_MEN_O = $(PRE_MEN_C:%.c=%.o)
 
 MEN_C	=	$(addprefix $(MEN_DIR),$(PRE_MEN_C))

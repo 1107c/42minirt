@@ -28,8 +28,8 @@ int	main(int arg, char **args)
 	if (!rt)
 		return (close(fd), print_err(FATAL_ERR));
 	parse_data(rt);
+	set_cam(rt->cam, rt->win_x, rt->win_y);
 	// print_rt(rt);
-	// get_cam_basis(rt->cam);
 	draw(rt);
 	mlx_key_hook(rt->win, &key_handle, rt);
 	mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
