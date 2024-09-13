@@ -36,9 +36,12 @@
 # define KEY_S		115
 # define KEY_A		97
 # define KEY_D		100
+# define KEY_Q		113
+# define KEY_E		101
 
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
+# define INF		999999999999
 # define EPSILON	0.001
 
 # define LIGHT_MAX	10
@@ -189,7 +192,6 @@ typedef struct s_rt
 	t_fig		*fig;	// figure
 	t_light		*light;	// light
 	t_amblight	*amblight;
-	double		t_array[1920][1080];
 	void		*mlx;
 	void		*win;
 	int			win_x;
@@ -275,11 +277,11 @@ void	get_cam_basis(t_cam *cam);
 void	update_basis(t_cam *cam);
 
 /* intersection.c */
-double	intersect_plane(t_fig *plane, t_vector point, t_vector cam);
-double	intersect_sphere(t_vector sphere, t_vector p1, t_vector p2, double radius);
+double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
+double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
-double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2);
-void	draw_fig(t_rt *rt, t_fig *tmp, int i, int j);
+double	intersect_cylinder(t_fig *cy, t_vector cam, t_vector point);
+void	draw_fig(t_rt *rt, int i, int j);
 // void	draw_plane(t_rt *rt);
 
 int	encode_rgb(double red, double green, double blue);

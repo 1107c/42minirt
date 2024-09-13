@@ -28,7 +28,6 @@ int	main(int arg, char **args)
 	if (!rt)
 		return (close(fd), print_err(FATAL_ERR));
 	parse_data(rt);
-	ft_memset(rt->t_array, 0, sizeof(rt->t_array));
 	// print_rt(rt);
 	// get_cam_basis(rt->cam);
 	draw(rt);
