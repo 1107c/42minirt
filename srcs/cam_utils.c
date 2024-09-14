@@ -13,13 +13,14 @@
 #include "../includes/minirt.h"
 
 static void	update_orient(t_cam *cam);
-static t_ray	get_cam_ray(t_cam *cam);
+// static t_ray	get_cam_ray(t_cam *cam);
 
 void	set_cam(t_cam *cam, double x, double y)
 {
 	printf("set cam: %lf, %lf\n", x, y);
 	cam->distance_to_view = WINDOW_WIDTH / \
 							(2 * tan(ANG * (cam->fov / 2)));
+	printf("dist: %lf\n", cam->distance_to_view);
 	cam->origin_orient_vec = cam->orient_vec;
 	get_cam_basis(cam);
 	cam->origin_right_vec = cam->right_vec;
@@ -65,8 +66,8 @@ void	get_cam_basis(t_cam *cam)
 	printf("base up vector: %lf, %lf, %lf\n", \
 			cam->up_vec.x, cam->up_vec.y, cam->up_vec.z);
 	inv_right = invert_vec(cam->right_vec);
-	cam->corner_vec = add_vec(inv_right, cam->up_vec);
-	cam->ray = get_cam_ray(cam);
+	cam->corner_vec = sub_vec(inv_right, cam->up_vec);
+	// cam->ray = get_cam_ray(cam);
 }
 
 void	update_orient(t_cam *cam)
@@ -90,24 +91,64 @@ void	update_orient(t_cam *cam)
 // : -1.0 ~ 1.0의 범위로 표준화를 시켜 일관된 처리를 가능하게 합니다.
 // : 매개변수의 x, y는 화면의 좌표를 나타 냅니다. (x = 0 ~ width - 1) (y = 0 ~ height - 1)
 
-t_ray	get_cam_ray(t_cam *cam)
+t_ray	cam_ray(t_cam *cam, t_rt *rt, double x, double y)
 {
-	t_ray	tray;
+	t_ray	ray;
+	t_vector	vec;
+	double	vh;
+	double	vw;
 	double	u;
 	double	v;
 
-	u = (2.0 * (1 / (double) WINDOW_WIDTH - 1.0) * cam->fov \
-			* (double) WINDOW_WIDTH / (double) WINDOW_HEIGHT);
-	v = (1.0 - 2.0 * (1 / (double) WINDOW_HEIGHT)) * cam->fov;
-	printf("ray u, v: %lf, %lf\n", u, v);
-	tray.origin = cam->coords;
-	tray.u = mul_vec(cam->right_vec, u);
-	tray.v = mul_vec(cam->up_vec, v);
-	tray.direction = sub_vec(cam->corner_vec, cam->coords);
-	tray.unit = normalize_vec(tray.direction);
-	tray.save = tray.direction;
-	return (tray);
+	ray.origin = cam->coords;
+	vh = 2.0 * tan(cam->fov * ANG / 2.0);
+	vw = vh * 16 / 9;
+	u = (x + 0.5) / (double) WINDOW_WIDTH;
+	v = (y + 0.5) / (double) WINDOW_HEIGHT;
+	double screen_x = (2.0 * u - 1.0) * vw;
+	double screen_y = (1.0 - 2.0 * v) * vh;
+	// printf("screen_x, screen_y: %lf %lf %lf %lf\n", vw, vh, screen_x, screen_y);
+	vec = add_vec(add_vec(mul_vec(cam->right_vec, screen_x), \
+			mul_vec(cam->up_vec, screen_y)), \
+			cam->orient_vec);
+	ray.direction = normalize_vec(vec);
+	// u = (2.0 * ((x + 0.5) / (double) rt->win_x - 1.0) * cam->fov \
+	// 		* (double) rt->win_x / (double) rt->win_y);
+	// v = (1.0 - 2.0 * ((y + 0.5) / (double) rt->win_y)) * cam->fov;
+	// tray.origin = cam->coords;
+	// tray.direction = add_vec(cam->corner_vec, \
+	// 		  add_vec(mul_vec(cam->right_vec, u), \
+	// 				mul_vec(cam->up_vec, v)));
+	// tray.direction = sub_vec(tray.direction, cam->coords);
+	// normalize_vec(tray.direction);
+
+	return (ray);
 }
+
+// t_ray	get_cam_ray(t_cam *cam)
+// {
+// 	t_ray	tray;
+// 	double	u;
+// 	double	v;
+
+// 	u = 2.0 * cam->fov / WINDOW_HEIGHT;
+// 	v = -2.0 * cam->fov / WINDOW_HEIGHT;
+// 	printf("ray u, v: %lf, %lf\n", u, v);
+// 	tray.u = mul_vec(cam->right_vec, u);
+// 	tray.v = mul_vec(cam->up_vec, v);
+// 	u = cam->fov * (-2.0 * WINDOW_WIDTH + 1.0) / WINDOW_HEIGHT;
+// 	v = cam->fov * (1.0 - 1.0 / WINDOW_HEIGHT);
+// 	printf("u, v: %lf, %lf\n", u, v);
+// 	tray.origin = cam->coords;
+// 	tray.direction = add_vec(add_vec(mul_vec(cam->right_vec, u), \
+// 					mul_vec(cam->up_vec, v)), \
+// 					cam->corner_vec);
+// 	tray.direction = sub_vec(tray.direction, cam->coords);
+// 	tray.unit = normalize_vec(tray.direction);
+// 	printf("unit: %lf %lf %lf\n", tray.unit.x, tray.unit.y, tray.unit.z);
+// 	tray.save = tray.direction;
+// 	return (tray);
+// }
 
 void	update_ray(t_ray *ray, int right)
 {

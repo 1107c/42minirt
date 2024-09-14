@@ -12,8 +12,8 @@
 
 #include "../includes/minirt.h"
 
-static void	draw_line(t_rt *rt, t_vector point, int i, int j);
 static void	pixel_to_image(t_image *img, double x, double y, t_vector rgb);
+static void	draw_line(t_rt *rt, t_vector point, int i, int j);
 static int	encode_rgb(double red, double green, double blue);
 
 void	draw(t_rt *rt)
@@ -22,22 +22,22 @@ void	draw(t_rt *rt)
 	int			i;
 	int			j;
 
+	i = -1;
 	j = -1;
 	point = (t_vector){rt->cam->coords.x + rt->cam->distance_to_view * rt->cam->orient_vec.x - 960 * rt->cam->right_vec.x + 540 * rt->cam->up_vec.x,
 		rt->cam->coords.y + rt->cam->distance_to_view * rt->cam->orient_vec.y - 960 * rt->cam->right_vec.y + 540 * rt->cam->up_vec.y,
 		rt->cam->coords.z + rt->cam->distance_to_view * rt->cam->orient_vec.z - 960 * rt->cam->right_vec.z + 540 * rt->cam->up_vec.z, NULL};
 	while (++j < WINDOW_HEIGHT)
 	{
-		i = -1;
 		while (++i < WINDOW_WIDTH)
 		{
+			rt->cam->ray = cam_ray(rt->cam, rt, i, j);
 			draw_line(rt, point, i, j);
 			point = add_vec(point, rt->cam->right_vec);
-			update_ray(&(rt->cam->ray), 1);
 		}
 		point = sub_vec(point, add_vec(mul_vec(rt->cam->right_vec, i), \
 		rt->cam->up_vec));
-		update_ray(&(rt->cam->ray), 0);
+		i = -1;
 	}
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
@@ -53,7 +53,8 @@ void	draw_line(t_rt *rt, t_vector point, int i, int j)
 	while (fig)
 	{
 		if (fig->type == 0)
-			t = intersect_plane(fig, rt->cam->ray);
+			// t = intersect_plane(fig, rt->cam->ray);
+			t = intersect_plane(fig, rt->cam->coords, point);
 		else if (fig->type == 1)
 			t = intersect_sphere(fig, rt->cam->coords, point);
 		else if (fig->type == 2)
@@ -66,6 +67,25 @@ void	draw_line(t_rt *rt, t_vector point, int i, int j)
 		fig = fig->next;
 	}
 }
+
+void	pixel_to_image(t_image *img, double x, double y, t_vector rgb)
+{
+	int	pixel;
+	int	color;
+
+	color = encode_rgb(rgb.x, rgb.y, rgb.z);
+	pixel = ((int)y * img->size_line) + ((int)x * 4);
+	img->buffer[pixel + 0] = (color) & 0xff;
+	img->buffer[pixel + 1] = (color >> 8) & 0xff;
+	img->buffer[pixel + 2] = (color >> 16) & 0xff;
+	img->buffer[pixel + 3] = (color >> 24);
+}
+
+int	encode_rgb(double red, double green, double blue)
+{
+	return ((int)red << 16 | (int)green << 8 | (int)blue);
+}
+
 
 void	clear_image(t_image *img)
 {
@@ -85,22 +105,4 @@ void	clear_image(t_image *img)
 		}
 		y++;
 	}
-}
-
-void	pixel_to_image(t_image *img, double x, double y, t_vector rgb)
-{
-	int	color;
-	int	pixel;
-
-	color = encode_rgb(rgb.x, rgb.y, rgb.z);
-	pixel = ((int)y * img->size_line) + ((int)x * 4);
-	img->buffer[pixel + 0] = (color) & 0xff;
-	img->buffer[pixel + 1] = (color >> 8) & 0xff;
-	img->buffer[pixel + 2] = (color >> 16) & 0xff;
-	img->buffer[pixel + 3] = (color >> 24);
-}
-
-int	encode_rgb(double red, double green, double blue)
-{
-	return ((int)red << 16 | (int)green << 8 | (int)blue);
 }

@@ -36,33 +36,14 @@ static t_vector	get_point(t_fig *cy, t_vector p1, t_vector p2, double t);
 // ((pa'' + qb'' + rc'') - (pa + qb + rc)) / p(a' - a) + q(b' - b) + r(c' - c) > 0이면 
 // 카메라 시야에서 평면과 교점이 발생
 
-double	intersect_plane(t_fig *pl, t_ray ray)
-{
-	double		d;
-	double		res;
-
-	d = dot_product(pl->normal_vec, pl->xyz) \
-		- dot_product(pl->normal_vec, ray.origin);
-	res = dot_product(pl->normal_vec, ray.direction);
-	if (res == 0)
-	{
-		if (d == 0)
-			return (0.0);
-		return (-1.0);
-	}
-	return (d / res);
-}
-
-// double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
+// double	intersect_plane(t_fig *pl, t_ray ray)
 // {
-// 	t_vector	vec;
 // 	double		d;
 // 	double		res;
 
-// 	vec = sub_vec(point, cam);
 // 	d = dot_product(pl->normal_vec, pl->xyz) \
-// 		- dot_product(pl->normal_vec, cam);
-// 	res = dot_product(pl->normal_vec, vec);
+// 		- dot_product(pl->normal_vec, ray.origin);
+// 	res = dot_product(pl->normal_vec, ray.direction);
 // 	if (res == 0)
 // 	{
 // 		if (d == 0)
@@ -71,6 +52,25 @@ double	intersect_plane(t_fig *pl, t_ray ray)
 // 	}
 // 	return (d / res);
 // }
+
+double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
+{
+	t_vector	vec;
+	double		d;
+	double		res;
+
+	vec = sub_vec(point, cam);
+	d = dot_product(pl->normal_vec, pl->xyz) \
+		- dot_product(pl->normal_vec, cam);
+	res = dot_product(pl->normal_vec, vec);
+	if (res == 0)
+	{
+		if (d == 0)
+			return (0.0);
+		return (-1.0);
+	}
+	return (d / res);
+}
 
 // 두 점 P(a, b, c), P'(a', b', c')을 지나는 직선의 방정식
 // x - a / (a' - a) = y - b / (b' - b) = z - c / (c' - c)		---- 1
@@ -218,8 +218,10 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 	{
 		if (t[0] < t[1])
 		{
+			// 옆
 			if (alpha > 0 && alpha <= cy->height)
 				return (t[0]);
+			// 위
 			else
 			{
 				_t[0] = t[0];
@@ -229,8 +231,10 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 		}
 		else
 		{
+			// 옆
 			if (beta > 0 && beta <= cy->height)
 				return (t[1]);
+			// 위
 			else
 			{
 				_t[0] = t[1];
@@ -239,5 +243,6 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 			}
 		}
 	}
+	// 내부
 	return (0.0);
 }

@@ -273,8 +273,8 @@ int			is_normalized_vec(t_vector vec);
 // t_vector	cross_product(t_vector lhs, t_vector rhs);
 
 /* intersection.c */
-double	intersect_plane(t_fig *pl, t_ray ray);
-// double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
+// double	intersect_plane(t_fig *pl, t_ray ray);
+double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
 double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
 double	intersect_cylinder(t_fig *cy, t_vector cam, t_vector point);
@@ -286,5 +286,6 @@ void	*lst_addback(t_rt *rt, t_type type);
 void	set_cam(t_cam *cam, double x, double y);
 void	get_cam_basis(t_cam *cam);
 void	update_ray(t_ray *ray, int right);
+t_ray	cam_ray(t_cam *cam, t_rt *rt, double x, double y);
 
 #endif
