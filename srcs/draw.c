@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/10 18:39:47 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/14 15:48:53 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,29 +42,63 @@ int	encode_rgb(double red, double green, double blue)
 	return ((int)red << 16 | (int)green << 8 | (int)blue);
 }
 
-void	draw_line(t_rt *rt, t_vector point, int i, int j)
+void draw_line(t_rt *rt, t_vector point, int i, int j)
 {
-	t_fig	*fig;
-	double	d;
-	double	t;
+    t_fig *fig;
+    double d, t;
+    t_vector inter_vec, n_vec, l_vec, e_vec, r_vec, amb;
+    t_vector diffuse_color, specular_color, final_color;
 
-	fig = rt->fig;
-	d = INF;
-	while (fig)
-	{
-		if (fig->type == 0)
+    fig = rt->fig;
+    d = INF;
+    while (fig)
+    {
+        if (fig->type == 0)
+		{
 			t = intersect_plane(fig, rt->cam->coords, point);
+			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
+			l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
+			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));
+			n_vec = invert_vec(fig->normal_vec);
+			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
+		}
 		else if (fig->type == 1)
-			t = intersect_sphere(fig, rt->cam->coords, point);
+		{
+            t = intersect_sphere(fig, rt->cam->coords, point);
+			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
+			l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
+			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));
+			n_vec = normalize_vec(sub_vec(inter_vec, fig->xyz));
+			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
+		}
 		else if (fig->type == 2)
 			t = intersect_cylinder(fig, rt->cam->coords, point);
-		if (t >= 0 && t < d)
+		if (t > 0 && t < d)
 		{
 			d = t;
-			pixel_to_image(rt->img, i, j, fig->rgb);
+			double ambient_strength = 0.3;
+			double diffuse_strength = 0.9;
+			double specular_strength = 0.8;
+			double shininess = 64.0;
+
+			amb = mul_vec(rt->amblight->rgb, rt->amblight->light_ratio * ambient_strength);
+			diffuse_color = mul_vec(fig->rgb, fmax(0.0, dot_product(n_vec, l_vec)) * rt->light->brightness * diffuse_strength);
+			specular_color = mul_vec(rt->light->rgb, pow(fmax(0.0, dot_product(e_vec, r_vec)), shininess) * rt->light->brightness * specular_strength);
+
+			final_color.x = fmin(255, amb.x + diffuse_color.x + specular_color.x);
+			final_color.y = fmin(255, amb.y + diffuse_color.y + specular_color.y);
+			final_color.z = fmin(255, amb.z + diffuse_color.z + specular_color.z);
+
+			pixel_to_image(rt->img, i, j, final_color);
+
+			// 디버깅을 위한 벡터 출력
+			// printf("n_vec: %f %f %f\n", n_vec.x, n_vec.y, n_vec.z);
+			// printf("l_vec: %f %f %f\n", l_vec.x, l_vec.y, l_vec.z);
+			// printf("e_vec: %f %f %f\n", e_vec.x, e_vec.y, e_vec.z);
+			// printf("r_vec: %f %f %f\n", r_vec.x, r_vec.y, r_vec.z);
 		}
-		fig = fig->next;
-	}
+        fig = fig->next;
+    }
 }
 
 void	draw_fig(t_rt *rt, int i, int j)
