@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/10 16:29:05 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/14 20:37:35 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ double	get_traingle_height(t_fig *cy, t_vector point)
 	return (t[1] * c);
 }
 
-double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
+double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 {
 	t_vector	vec1;
 	t_vector	vec2;
@@ -217,20 +217,23 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2)
 			{
 				_t[0] = t[0];
 				_t[1] = t[1];
+				*flg = 1;
 				return (find_eqution(cy, p1, p2, _t));
 			}
 		}
 		else
 		{
-			if (beta > 0 && beta <= cy->height)
+			if (beta > 0 && beta <= cy->height) // 옆면
 				return (t[1]);
 			else
 			{
 				_t[0] = t[1];
 				_t[1] = t[0];
+				*flg = 1;
 				return (find_eqution(cy, p1, p2, _t));
 			}
 		}
 	}
+	//*flg = 1;
 	return (0.0);
 }

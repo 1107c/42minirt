@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/14 15:48:53 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/14 22:17:19 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,19 @@ int	encode_rgb(double red, double green, double blue)
 	return ((int)red << 16 | (int)green << 8 | (int)blue);
 }
 
+t_vector apply_tone_mapping(t_vector color) {
+    double exposure = 1.0;
+    t_vector mapped_color;
+    mapped_color.x = color.x * exposure / (color.x * exposure + 1.0);
+    mapped_color.y = color.y * exposure / (color.y * exposure + 1.0);
+    mapped_color.z = color.z * exposure / (color.z * exposure + 1.0);
+    return mapped_color;
+}
+
+double apply_gamma(double value, double gamma) {
+    return pow(value / 255.0, 1.0 / gamma) * 255.0;
+}
+
 void draw_line(t_rt *rt, t_vector point, int i, int j)
 {
     t_fig *fig;
@@ -51,6 +64,8 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 
     fig = rt->fig;
     d = INF;
+	int	flg;
+	flg = 0;
     while (fig)
     {
         if (fig->type == 0)
@@ -72,30 +87,39 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
 		}
 		else if (fig->type == 2)
-			t = intersect_cylinder(fig, rt->cam->coords, point);
-		if (t > 0 && t < d)
+		{
+			t = intersect_cylinder(fig, rt->cam->coords, point, &flg);
+			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
+			l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
+			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));
+			if (flg == 1)
+				n_vec = fig->normal_vec;
+			else
+			{
+				n_vec = sub_vec(inter_vec, fig->xyz);
+				double theta = dot_product(n_vec, fig->normal_vec) / sqrt(dot_product(n_vec, n_vec));
+				n_vec = sub_vec(n_vec, mul_vec(fig->normal_vec, theta));
+				n_vec = normalize_vec(n_vec);
+			}
+			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
+		}
+		if (t >= 0 && t <= d)
 		{
 			d = t;
-			double ambient_strength = 0.3;
-			double diffuse_strength = 0.9;
-			double specular_strength = 0.8;
-			double shininess = 64.0;
+			double ambient_strength = 0.85;
+			double diffuse_strength = 0.35;
+			double specular_strength = 0.9;
+			double shininess = 128.0;
 
-			amb = mul_vec(rt->amblight->rgb, rt->amblight->light_ratio * ambient_strength);
+			amb = mul_vec(fig->rgb, rt->amblight->light_ratio * ambient_strength);
 			diffuse_color = mul_vec(fig->rgb, fmax(0.0, dot_product(n_vec, l_vec)) * rt->light->brightness * diffuse_strength);
 			specular_color = mul_vec(rt->light->rgb, pow(fmax(0.0, dot_product(e_vec, r_vec)), shininess) * rt->light->brightness * specular_strength);
 
+			//printf("amb : %f %f %f\n", amb.x, amb.y, amb.z);
 			final_color.x = fmin(255, amb.x + diffuse_color.x + specular_color.x);
 			final_color.y = fmin(255, amb.y + diffuse_color.y + specular_color.y);
 			final_color.z = fmin(255, amb.z + diffuse_color.z + specular_color.z);
-
 			pixel_to_image(rt->img, i, j, final_color);
-
-			// 디버깅을 위한 벡터 출력
-			// printf("n_vec: %f %f %f\n", n_vec.x, n_vec.y, n_vec.z);
-			// printf("l_vec: %f %f %f\n", l_vec.x, l_vec.y, l_vec.z);
-			// printf("e_vec: %f %f %f\n", e_vec.x, e_vec.y, e_vec.z);
-			// printf("r_vec: %f %f %f\n", r_vec.x, r_vec.y, r_vec.z);
 		}
         fig = fig->next;
     }

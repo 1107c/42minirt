@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:12:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/09 14:49:50 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/14 22:04:32 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,11 @@ void	key_translate(int keycode, t_rt *rt)
 void	key_rotate(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_UP)
-		rt->cam->phi += 10;
+		rt->cam->phi += 3;
 	else if (keycode == KEY_DOWN)
-		rt->cam->phi -= 10;
+		rt->cam->phi -= 3;
 	else if (keycode == KEY_LEFT)
-		rt->cam->theta -= 10;
+		rt->cam->theta -= 3;
 	else if (keycode == KEY_RIGHT)
-		rt->cam->theta += 10;
+		rt->cam->theta += 3;
 }

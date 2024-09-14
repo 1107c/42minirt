@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/10 18:39:47 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/14 16:56:26 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,7 +280,7 @@ void	update_basis(t_cam *cam);
 double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
 double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
-double	intersect_cylinder(t_fig *cy, t_vector cam, t_vector point);
+double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
 void	draw_fig(t_rt *rt, int i, int j);
 // void	draw_plane(t_rt *rt);
 

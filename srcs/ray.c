@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 16:12:41 by yeojukim          #+#    #+#             */
-/*   Updated: 2024/09/09 16:59:07 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/14 22:02:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ void	get_cam_basis(t_cam *cam)
 
 	y_unit_vector = (t_vector) {0, 1, 0, 0};
 	z_inv = invert_vec(cam->orient_vec);
-	cam->right_vec = cross_product(y_unit_vector, z_inv);
-	cam->up_vec = cross_product(z_inv, cam->right_vec);
+	cam->right_vec = invert_vec(cross_product(y_unit_vector, z_inv));
+	cam->up_vec = invert_vec(cross_product(z_inv, cam->right_vec));
 	// t_vector	proj_vector_yzx;
 	// t_vector	z_unit_vector;
 	// double		theta;
@@ -75,8 +75,8 @@ void	get_cam_basis(t_cam *cam)
 		cam->origin_up_vec = cam->up_vec;
 		cam->p = 1;
 	}
-	printf("base right vector: %lf, %lf, %lf\n", cam->right_vec.x, cam->right_vec.y, cam->right_vec.z);
-	printf("base up vector: %lf, %lf, %lf\n", cam->up_vec.x, cam->up_vec.y, cam->up_vec.z);
+	//printf("base right vector: %lf, %lf, %lf\n", cam->right_vec.x, cam->right_vec.y, cam->right_vec.z);
+	//printf("base up vector: %lf, %lf, %lf\n", cam->up_vec.x, cam->up_vec.y, cam->up_vec.z);
 }
 
 void	update_basis(t_cam *cam)
@@ -92,8 +92,8 @@ void	update_basis(t_cam *cam)
 		cam->orient_vec.y = v.y;
 		cam->orient_vec.z = v.z;
 	}
-	printf("%lf %lf\n", cam->phi, cam->theta);
-	printf("orient vector: %lf, %lf, %lf\n", cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
+	//printf("%lf %lf\n", cam->phi, cam->theta);
+	//printf("orient vector: %lf, %lf, %lf\n", cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
 	// cam->orient_vec = v;
 	get_cam_basis(cam);
 }
