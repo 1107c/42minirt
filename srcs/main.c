@@ -3,16 +3,74 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:48:58 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/15 15:17:40 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minirt.h"
 
 static int	close_win(t_rt *rt);
+
+
+int	mouse_handle(int keycode, int x, int y, t_rt *rt)
+{
+	t_fig *tmp;
+	int idx;
+
+	tmp = rt->fig;
+	idx = rt->map[y][x] - 48;
+	while (tmp)
+	{
+		if (tmp->idx == idx && tmp->is_click == -1)
+		{
+			tmp->rgb = (t_vector){tmp->rgb.x * 0.75, tmp->rgb.y * 0.75, tmp->rgb.z * 0.75, 0};
+			tmp->is_click *= -1;
+			rt->selected = tmp;
+		}
+		else if ((tmp->idx != idx && tmp->is_click == 1) || (tmp->idx == idx && tmp->is_click == 1))
+		{
+			tmp->rgb = tmp->rgb2;
+			tmp->is_click *= -1;
+		}
+		if (rt->selected_light)
+			rt->selected_light = NULL;
+		tmp = tmp->next;
+	}
+	draw(rt);
+	// if (tmp->is_click)
+	// {
+	// 	mlx_key_hook(rt->win, &key_handle, rt);
+	// }
+	//printf("%d %d %d %d\n",x, y, idx, keycode);
+}
+
+void	get_fig_idx(t_rt *rt)
+{
+	t_fig	*tmp, *tmp2;
+	int		i;
+
+	tmp = rt->fig;
+	tmp2 = tmp;
+	i = 1;
+	while (tmp)
+	{
+		tmp->rgb2 = tmp->rgb;
+		tmp->idx = i++;
+		tmp = tmp->next;
+	}
+	// while (tmp2)
+	// {
+	// 	printf("%d\n", tmp2->idx);
+	// 	tmp2 = tmp2->next;
+	// }	
+	i = -1;
+	rt->map = (char **)ft_calloc((WINDOW_HEIGHT + 1), sizeof(char *));
+	while (++i < WINDOW_HEIGHT)
+		rt->map[i] = (char *)ft_calloc((WINDOW_WIDTH + 1), sizeof(char));
+}
 
 int	main(int arg, char **args)
 {
@@ -30,8 +88,16 @@ int	main(int arg, char **args)
 	parse_data(rt);
 	// print_rt(rt);
 	// get_cam_basis(rt->cam);
+	get_fig_idx(rt);
 	draw(rt);
+		// for (int i = 0; rt->map[i];++i)
+		// {
+		// 	for (int j = 0; rt->map[i][j]; ++j)
+		// 		printf("%c ",rt->map[i][j]);
+		// 	printf("\n");
+		// }
 	mlx_key_hook(rt->win, &key_handle, rt);
+	mlx_mouse_hook(rt->win, &mouse_handle, rt);
 	mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
 	mlx_loop(rt->mlx);
 	return (EXIT_SUCCESS);

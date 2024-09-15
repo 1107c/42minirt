@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/14 22:17:19 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 13:20:13 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
     fig = rt->fig;
     d = INF;
 	int	flg;
-	flg = 0;
     while (fig)
     {
+		flg = 0;
         if (fig->type == 0)
 		{
 			t = intersect_plane(fig, rt->cam->coords, point);
@@ -114,13 +114,15 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			amb = mul_vec(fig->rgb, rt->amblight->light_ratio * ambient_strength);
 			diffuse_color = mul_vec(fig->rgb, fmax(0.0, dot_product(n_vec, l_vec)) * rt->light->brightness * diffuse_strength);
 			specular_color = mul_vec(rt->light->rgb, pow(fmax(0.0, dot_product(e_vec, r_vec)), shininess) * rt->light->brightness * specular_strength);
-
 			//printf("amb : %f %f %f\n", amb.x, amb.y, amb.z);
 			final_color.x = fmin(255, amb.x + diffuse_color.x + specular_color.x);
 			final_color.y = fmin(255, amb.y + diffuse_color.y + specular_color.y);
 			final_color.z = fmin(255, amb.z + diffuse_color.z + specular_color.z);
 			pixel_to_image(rt->img, i, j, final_color);
+			// rt->map[j][i] = rt->fig->type + 48;
+			rt->map[j][i] = fig->idx + 48;
 		}
+		//printf("%d %d\n", i, j);
         fig = fig->next;
     }
 }
