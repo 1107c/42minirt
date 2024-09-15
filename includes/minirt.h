@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/14 16:56:26 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,23 @@
 # define KEY_D		100
 # define KEY_Q		113
 # define KEY_E		101
+# define KEY_LIGHT	108
+# define KEY_PLUS	61
+# define KEY_MINUS	45
+
+
+
+
+# define NUM_UP		65431
+# define NUM_DOWN	65433
+# define NUM_LEFT	65430
+# define NUM_RIGHT	65432
+# define NUM_FRONT	65435
+# define NUM_BACK	65434
+# define NUM_ROT_X	65436
+# define NUM_ROT_Y	65429
+# define NUM_PLUS	65451
+# define NUM_MINUS	65453
 
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
@@ -169,6 +186,8 @@ typedef struct s_light
 	t_vector	rgb;
 	double	brightness;
 	int		ch;
+	int		idx;
+	int		is_click;
 	struct s_light	*next;
 }	t_light;
 
@@ -177,9 +196,14 @@ typedef struct s_fig
 	t_vector	xyz;
 	t_vector	normal_vec;
 	t_vector	rgb;
+	t_vector	rgb2;
 	int		type;
 	double	diameter;
 	double	height;
+	t_vector	right_vec;
+	t_vector	up_vec;
+	int		idx;
+	int		is_click;
 	struct s_fig	*next;
 }	t_fig;
 
@@ -206,8 +230,11 @@ typedef struct s_rt
 	int			file_fd;
 	int			fig_cnt;
 	int			light_cnt;
+	t_fig		*selected;
+	t_light		*selected_light;
 	char		*line;
 	char		*error;
+	char		**map;
 }	t_rt;
 
 /* error.c */

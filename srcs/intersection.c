@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/14 20:37:35 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 11:36:57 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,42 +355,42 @@ double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 }
 
 
-bool is_close(double a, double b) 
-{
-	return (fabs(a - b) < EPSILON);
-}
+// bool is_close(double a, double b) 
+// {
+// 	return (fabs(a - b) < EPSILON);
+// }
 
-// 점이 직선 위에 있는지 확인하는 함수
-double is_point_on_line(t_vector line, t_vector point, t_vector p) {
-	double t_x, t_y, t_z;
+// // 점이 직선 위에 있는지 확인하는 함수
+// double is_point_on_line(t_vector line, t_vector point, t_vector p) {
+// 	double t_x, t_y, t_z;
 
-	// 방향 벡터가 0이 아닌 축에 대해서 t 값 계산
-	if (fabs(line.x) > EPSILON)
-		t_x = (p.x - point.x) / line.x;
-	else
-		t_x = NAN; // 방향 벡터가 0인 경우 t_x 계산 불가
+// 	// 방향 벡터가 0이 아닌 축에 대해서 t 값 계산
+// 	if (fabs(line.x) > EPSILON)
+// 		t_x = (p.x - point.x) / line.x;
+// 	else
+// 		t_x = NAN; // 방향 벡터가 0인 경우 t_x 계산 불가
 
-	if (fabs(line.y) > EPSILON)
-		t_y = (p.y - point.y) / line.y;
-	else
-		t_y = NAN; // 방향 벡터가 0인 경우 t_y 계산 불가
+// 	if (fabs(line.y) > EPSILON)
+// 		t_y = (p.y - point.y) / line.y;
+// 	else
+// 		t_y = NAN; // 방향 벡터가 0인 경우 t_y 계산 불가
 
-	if (fabs(line.z) > EPSILON)
-		t_z = (p.z - point.z) / line.z;
-	else
-		t_z = NAN; // 방향 벡터가 0인 경우 t_z 계산 불가
+// 	if (fabs(line.z) > EPSILON)
+// 		t_z = (p.z - point.z) / line.z;
+// 	else
+// 		t_z = NAN; // 방향 벡터가 0인 경우 t_z 계산 불가
 
-	// 유효한 t 값이 있을 경우 비교 (x, y, z 중 하나라도 t 값이 있으면 됨)
-	if (!isnan(t_x)) {
-		if ((!isnan(t_y) && !is_close(t_x, t_y)) || \
-			(!isnan(t_z) && !is_close(t_x, t_z)))
-			return (-);
-		return true;
-	} else if (!isnan(t_y)) {
-		if (!isnan(t_z) && !is_close(t_y, t_z)) 
-			return (-);
-		return true;
-	} else if (!isnan(t_z))
-		return true; // z만 유효한 경우
-	return (-); // 어느 방향 벡터도 0이 아니면서 비교할 t값이 없는 경우
-}
+// 	// 유효한 t 값이 있을 경우 비교 (x, y, z 중 하나라도 t 값이 있으면 됨)
+// 	if (!isnan(t_x)) {
+// 		if ((!isnan(t_y) && !is_close(t_x, t_y)) || \
+// 			(!isnan(t_z) && !is_close(t_x, t_z)))
+// 			return (-);
+// 		return true;
+// 	} else if (!isnan(t_y)) {
+// 		if (!isnan(t_z) && !is_close(t_y, t_z)) 
+// 			return (-);
+// 		return true;
+// 	} else if (!isnan(t_z))
+// 		return true; // z만 유효한 경우
+// 	return (-); // 어느 방향 벡터도 0이 아니면서 비교할 t값이 없는 경우
+// }

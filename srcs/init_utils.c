@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:21:15 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:21:24 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_light	*init_light(void)
 	light->brightness = 0;
 	light->ch = 0;
 	light->next = NULL;
+	light->is_click = -1;
 	return (light);
 }
 
@@ -36,5 +37,6 @@ t_fig	*init_fig(void)
 	fig->diameter = 0;
 	fig->height = 0;
 	fig->next = NULL;
+	fig->is_click = -1;
 	return (fig);
 }
