@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/10 18:39:47 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define PLANE		0
 # define SPHERE		1
 # define CYLINDER	2
+# define CONE		3
 
 # ifndef WINDOW_WIDTH
 #  define WINDOW_WIDTH	1920
@@ -38,11 +39,28 @@
 # define KEY_D		100
 # define KEY_Q		113
 # define KEY_E		101
+# define KEY_LIGHT	108
+# define KEY_PLUS	61
+# define KEY_MINUS	45
+
+
+
+
+# define NUM_UP		65431
+# define NUM_DOWN	65433
+# define NUM_LEFT	65430
+# define NUM_RIGHT	65432
+# define NUM_FRONT	65435
+# define NUM_BACK	65434
+# define NUM_ROT_X	65436
+# define NUM_ROT_Y	65429
+# define NUM_PLUS	65451
+# define NUM_MINUS	65453
 
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
-# define INF		999999999999
-# define EPSILON	0.001
+# define INF		1e13
+# define EPSILON	1e-3
 
 # define LIGHT_MAX	10
 # define FIG_MAX	50
@@ -65,6 +83,7 @@
 # define LIGHT_LEN_ERR			"Error\n=> invalid light format"
 # define LIGHT_INPUT_ERR		"Error\n=> no light input"
 # define FIG_INPUT_ERR			"Error\n=> no figure input"
+# define FIG_LEN_ERR			"Error\n=> invalid figure format"
 # define NORM_VEC_ERR			"Error\n=> not a normalized vector"
 
 # define LIGHT_MAX_ERR			"Error\n=> light maximum count exceeded"
@@ -75,6 +94,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <math.h>
+# include <stdbool.h>
 
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
@@ -113,6 +133,10 @@ typedef	struct s_ray
 {
 	t_vector	origin;
 	t_vector	direction;
+	t_vector	unit;
+	t_vector	u;
+	t_vector	v;
+	t_vector	save;
 }	t_ray;
 
 typedef struct s_amblight
@@ -143,6 +167,7 @@ typedef struct s_cam
 	t_vector	origin_orient_vec;
 	t_vector	origin_right_vec;
 	t_vector	origin_up_vec;
+	t_ray		ray;
 	double		fov;
 	double		as_ratio;
 	double		distance_to_view;
@@ -153,7 +178,6 @@ typedef struct s_cam
 	//int		move_x;
 	//int		move_y;
 	int		ch;
-	int		p;
 }	t_cam;
 
 typedef struct s_light
@@ -162,6 +186,8 @@ typedef struct s_light
 	t_vector	rgb;
 	double	brightness;
 	int		ch;
+	int		idx;
+	int		is_click;
 	struct s_light	*next;
 }	t_light;
 
@@ -170,9 +196,14 @@ typedef struct s_fig
 	t_vector	xyz;
 	t_vector	normal_vec;
 	t_vector	rgb;
+	t_vector	rgb2;
 	int		type;
 	double	diameter;
 	double	height;
+	t_vector	right_vec;
+	t_vector	up_vec;
+	int		idx;
+	int		is_click;
 	struct s_fig	*next;
 }	t_fig;
 
@@ -199,8 +230,11 @@ typedef struct s_rt
 	int			file_fd;
 	int			fig_cnt;
 	int			light_cnt;
+	t_fig		*selected;
+	t_light		*selected_light;
 	char		*line;
 	char		*error;
+	char		**map;
 }	t_rt;
 
 /* error.c */
@@ -210,7 +244,6 @@ int		open_file(char *filename);
 
 /* init.c */
 t_rt		*init_rt(int fd);
-// t_vector	*init_vector();
 
 /* init_utils.c */
 t_light	*init_light();
@@ -223,9 +256,7 @@ void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
 
 /* draw.c */
 void	draw(t_rt *rt);
-void	draw_cylinder(t_rt *rt, t_fig *tmp);
-void	draw_sphere(t_rt *rt, t_fig *tmp);
-void	draw_plane(t_rt *rt);
+void	clear_image(t_image *img);
 
 /* parse.c */
 void	parse_data(t_rt *rt);
@@ -246,9 +277,9 @@ void	parse_cam(t_rt *rt, char **args);
 void	parse_light(t_rt *rt, char **args);
 
 /* parse_figure.c */
-void	parse_plane(t_rt *rt, char **args);
-void	parse_sphere(t_rt *rt, char **args);
-void	parse_cylinder(t_rt *rt, char **args);
+void	parse_plane(t_rt *rt, char **args, int type);
+void	parse_sphere(t_rt *rt, char **args, int type);
+void	parse_cylinder(t_rt *rt, char **args, int type);
 
 /* rt_utils.c */
 void	print_rt(t_rt *rt);
@@ -271,22 +302,23 @@ int			is_normalized_vec(t_vector vec);
 // void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
 // t_vector	cross_product(t_vector lhs, t_vector rhs);
 
-/* ray.c */
-t_ray	*cam_ray(t_cam *cam, t_rt *rt, double x, double y);
-void	get_cam_basis(t_cam *cam);
-void	update_basis(t_cam *cam);
-
 /* intersection.c */
+// double	intersect_plane(t_fig *pl, t_ray ray);
 double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
 double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
-double	intersect_cylinder(t_fig *cy, t_vector cam, t_vector point);
+double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
+double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg);
 void	draw_fig(t_rt *rt, int i, int j);
 // void	draw_plane(t_rt *rt);
 
-int	encode_rgb(double red, double green, double blue);
-
 /* lst_utils.c */
 void	*lst_addback(t_rt *rt, t_type type);
+
+/* cam_utils.c */
+void	set_cam(t_cam *cam, double x, double y);
+void	get_cam_basis(t_cam *cam);
+void	update_ray(t_ray *ray, int right);
+t_ray	cam_ray(t_cam *cam, t_rt *rt, double x, double y);
 
 #endif

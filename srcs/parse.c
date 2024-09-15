@@ -135,11 +135,13 @@ void	parse_args(t_rt *rt, char **args)
 	else if (!ft_strcmp(args[0], "L"))
 		parse_light(rt, args);
 	else if (!ft_strcmp(args[0], "pl"))
-		parse_plane(rt, args);
+		parse_plane(rt, args, PLANE);
 	else if (!ft_strcmp(args[0], "sp"))
-		parse_sphere(rt, args);
+		parse_sphere(rt, args, SPHERE);
 	else if (!ft_strcmp(args[0], "cy"))
-		parse_cylinder(rt, args);
+		parse_cylinder(rt, args, CYLINDER);
+	else if (!ft_strcmp(args[0], "co"))
+		parse_cylinder(rt, args, CONE);
 	else
 		free_2d_and_close_all(rt, args, INVALID_OPT);
 }
