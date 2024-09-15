@@ -56,7 +56,8 @@ void	get_cam_basis(t_cam *cam)
 
 	y_unit_vector = (t_vector) {0, 1, 0, 0};
 	update_orient(cam);
-	z_inv = invert_vec(cam->orient_vec);
+	z_inv = cam->orient_vec;
+	// z_inv = invert_vec(cam->orient_vec);
 	printf("orient vector: %lf, %lf, %lf\n", \
 			cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
 	cam->right_vec = cross_product(y_unit_vector, z_inv);

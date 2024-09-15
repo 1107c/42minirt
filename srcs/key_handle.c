@@ -59,11 +59,12 @@ void	key_translate(int keycode, t_rt *rt)
 void	key_rotate(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_UP)
-		rt->cam->phi += 3;
+		rt->cam->phi += 10;
 	else if (keycode == KEY_DOWN)
-		rt->cam->phi -= 3;
+		rt->cam->phi -= 10;
 	else if (keycode == KEY_LEFT)
-		rt->cam->theta -= 3;
+		rt->cam->theta -= 10;
 	else if (keycode == KEY_RIGHT)
-		rt->cam->theta += 3;
+		rt->cam->theta += 10;
+	get_cam_basis(rt->cam);
 }

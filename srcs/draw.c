@@ -42,31 +42,33 @@ void	draw(t_rt *rt)
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
 
-void	draw_line(t_rt *rt, t_vector point, int i, int j)
-{
-	t_fig	*fig;
-	double	d;
-	double	t;
+// void	draw_line(t_rt *rt, t_vector point, int i, int j)
+// {
+// 	t_fig	*fig;
+// 	double	d;
+// 	double	t;
 
-	fig = rt->fig;
-	d = INF;
-	while (fig)
-	{
-		if (fig->type == 0)
-			// t = intersect_plane(fig, rt->cam->ray);
-			t = intersect_plane(fig, rt->cam->coords, point);
-		else if (fig->type == 1)
-			t = intersect_sphere(fig, rt->cam->coords, point);
-		else if (fig->type == 2)
-			t = intersect_cylinder(fig, rt->cam->coords, point);
-		if (t >= 0 && t < d)
-		{
-			d = t;
-			pixel_to_image(rt->img, i, j, fig->rgb);
-		}
-		fig = fig->next;
-	}
-}
+// 	fig = rt->fig;
+// 	d = INF;
+// 	while (fig)
+// 	{
+// 		if (fig->type == 0)
+// 			// t = intersect_plane(fig, rt->cam->ray);
+// 			t = intersect_plane(fig, rt->cam->coords, point);
+// 		else if (fig->type == 1)
+// 			t = intersect_sphere(fig, rt->cam->coords, point);
+// 		// else if (fig->type == 2)
+// 		// 	t = intersect_cylinder(fig, rt->cam->coords, point);
+// 		else if (fig->type == 3)
+// 			t = intersect_cone(fig, rt->cam->coords, point);
+// 		if (t >= 0 && t < d)
+// 		{
+// 			d = t;
+// 			pixel_to_image(rt->img, i, j, fig->rgb);
+// 		}
+// 		fig = fig->next;
+// 	}
+// }
 
 void	pixel_to_image(t_image *img, double x, double y, t_vector rgb)
 {
@@ -112,7 +114,7 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 	flg = 0;
     while (fig)
     {
-        if (fig->type == 0)
+        if (fig->type == PLANE)
 		{
 			t = intersect_plane(fig, rt->cam->coords, point);
 			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
@@ -121,7 +123,7 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			n_vec = invert_vec(fig->normal_vec);
 			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
 		}
-		else if (fig->type == 1)
+		else if (fig->type == SPHERE)
 		{
             t = intersect_sphere(fig, rt->cam->coords, point);
 			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
@@ -130,9 +132,12 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			n_vec = normalize_vec(sub_vec(inter_vec, fig->xyz));
 			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
 		}
-		else if (fig->type == 2)
+		else if (fig->type == CYLINDER || fig->type == CONE)
 		{
-			t = intersect_cylinder(fig, rt->cam->coords, point, &flg);
+			if (fig->type == CYLINDER)
+				t = intersect_cylinder(fig, rt->cam->coords, point, &flg);
+			else
+				t = intersect_cone(fig, rt->cam->coords, point, &flg);
 			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
 			l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
 			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));

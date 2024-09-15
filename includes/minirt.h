@@ -16,6 +16,7 @@
 # define PLANE		0
 # define SPHERE		1
 # define CYLINDER	2
+# define CONE		3
 
 # ifndef WINDOW_WIDTH
 #  define WINDOW_WIDTH	1920
@@ -41,8 +42,8 @@
 
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
-# define INF		999999999999
-# define EPSILON	0.001
+# define INF		1e13
+# define EPSILON	1e-3
 
 # define LIGHT_MAX	10
 # define FIG_MAX	50
@@ -65,6 +66,7 @@
 # define LIGHT_LEN_ERR			"Error\n=> invalid light format"
 # define LIGHT_INPUT_ERR		"Error\n=> no light input"
 # define FIG_INPUT_ERR			"Error\n=> no figure input"
+# define FIG_LEN_ERR			"Error\n=> invalid figure format"
 # define NORM_VEC_ERR			"Error\n=> not a normalized vector"
 
 # define LIGHT_MAX_ERR			"Error\n=> light maximum count exceeded"
@@ -75,6 +77,7 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <math.h>
+# include <stdbool.h>
 
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
@@ -247,9 +250,9 @@ void	parse_cam(t_rt *rt, char **args);
 void	parse_light(t_rt *rt, char **args);
 
 /* parse_figure.c */
-void	parse_plane(t_rt *rt, char **args);
-void	parse_sphere(t_rt *rt, char **args);
-void	parse_cylinder(t_rt *rt, char **args);
+void	parse_plane(t_rt *rt, char **args, int type);
+void	parse_sphere(t_rt *rt, char **args, int type);
+void	parse_cylinder(t_rt *rt, char **args, int type);
 
 /* rt_utils.c */
 void	print_rt(t_rt *rt);
@@ -278,10 +281,9 @@ double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
 double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
 double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
+double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg);
 void	draw_fig(t_rt *rt, int i, int j);
 // void	draw_plane(t_rt *rt);
-
-int	encode_rgb(double red, double green, double blue);
 
 /* lst_utils.c */
 void	*lst_addback(t_rt *rt, t_type type);
