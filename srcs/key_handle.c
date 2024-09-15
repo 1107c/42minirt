@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:12:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 16:07:36 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 20:27:58 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,16 @@ void	fig_light_rotate(int keycode, t_rt *rt)
 {
 	t_vector	v;
 
-	// if (keycode == NUM_ROT_X && rt->selected->type != 1)
-	// {
-	// 	rt->selected->phi += 20;
-	// 	v = add_vec(mul_vec(rt->selected->normal_vec, cos(ANG * rt->selected->phi) * cos(ANG * rt->selected->theta)), \
-	// 		mul_vec(rt->selected->normal_vec, cos(ANG * rt->selected->phi) * sin(ANG * rt->selected->theta)));
-	// 	v = add_vec(v, mul_vec(rt->selected->normal_vec, sin(ANG * rt->selected->phi)));
-	// 	rt->selected->normal_vec.x = v.x;
-	// 	rt->selected->normal_vec.y = v.y;
-	// 	rt->selected->normal_vec.z = v.z;
-	// }
-	
+	if (keycode == NUM_ROT_X && rt->selected && rt->selected->type != 1)
+	{
+		rt->selected->normal_vec = add_vec(mul_vec(rt->selected->right_vec, sin(ANG * 20)), mul_vec(rt->selected->normal_vec, cos(ANG * 20)));
+		rt->selected->right_vec = cross_product(rt->selected->up_vec, rt->selected->normal_vec);
+	}
+	if (keycode == NUM_ROT_Y && rt->selected && rt->selected->type != 1)
+	{
+		rt->selected->normal_vec = add_vec(invert_vec(mul_vec(rt->selected->up_vec, sin(ANG * 20))), mul_vec(rt->selected->normal_vec, cos(ANG * 20)));
+		rt->selected->up_vec = cross_product(rt->selected->normal_vec, rt->selected->right_vec);
+	}	
 }
 
 void	fig_resize_dia(int keycode, t_rt *rt)

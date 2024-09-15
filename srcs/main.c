@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 11:16:48 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 15:17:40 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 18:00:47 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,17 @@ void	get_fig_idx(t_rt *rt)
 	i = 1;
 	while (tmp)
 	{
+		t_vector	y_unit_vector;
+		t_vector	z_inv;
+
+		y_unit_vector = (t_vector) {0, 1, 0, 0};
+		z_inv = invert_vec(tmp->normal_vec);
+		tmp->right_vec = invert_vec(cross_product(y_unit_vector, z_inv));
+		tmp->up_vec = invert_vec(cross_product(z_inv, tmp->right_vec));
 		tmp->rgb2 = tmp->rgb;
 		tmp->idx = i++;
 		tmp = tmp->next;
 	}
-	// while (tmp2)
-	// {
-	// 	printf("%d\n", tmp2->idx);
-	// 	tmp2 = tmp2->next;
-	// }	
 	i = -1;
 	rt->map = (char **)ft_calloc((WINDOW_HEIGHT + 1), sizeof(char *));
 	while (++i < WINDOW_HEIGHT)

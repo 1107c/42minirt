@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 13:20:13 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,6 @@ void	pixel_to_image(t_image *img, double x, double y, t_vector rgb)
 int	encode_rgb(double red, double green, double blue)
 {
 	return ((int)red << 16 | (int)green << 8 | (int)blue);
-}
-
-t_vector apply_tone_mapping(t_vector color) {
-    double exposure = 1.0;
-    t_vector mapped_color;
-    mapped_color.x = color.x * exposure / (color.x * exposure + 1.0);
-    mapped_color.y = color.y * exposure / (color.y * exposure + 1.0);
-    mapped_color.z = color.z * exposure / (color.z * exposure + 1.0);
-    return mapped_color;
-}
-
-double apply_gamma(double value, double gamma) {
-    return pow(value / 255.0, 1.0 / gamma) * 255.0;
 }
 
 void draw_line(t_rt *rt, t_vector point, int i, int j)

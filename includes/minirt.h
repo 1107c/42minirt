@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 16:07:53 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,8 +193,8 @@ typedef struct s_fig
 	int		type;
 	double	diameter;
 	double	height;
-	double		theta;
-	double		phi;
+	t_vector	right_vec;
+	t_vector	up_vec;
 	int		idx;
 	int		is_click;
 	struct s_fig	*next;

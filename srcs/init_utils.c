@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:21:15 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 15:43:58 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,5 @@ t_fig	*init_fig(void)
 	fig->height = 0;
 	fig->next = NULL;
 	fig->is_click = -1;
-	fig->theta = 0;
-	fig->phi = 0;
 	return (fig);
 }
