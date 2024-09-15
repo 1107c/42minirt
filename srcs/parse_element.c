@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_element.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:27:14 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/05 09:38:10 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/16 03:37:18 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,16 @@ void	parse_light(t_rt *rt, char **args)
 	light = lst_addback(rt, LIGHT);
 	if (!light)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
-	if (rt->light->ch)
-		free_2d_and_close_all(rt, args, LIGHT_DUP_ERR);
+	// if (rt->light->ch)
+	// 	free_2d_and_close_all(rt, args, LIGHT_DUP_ERR);
 	if (get_arg_len(args) != 4)
 		free_2d_and_close_all(rt, args, LIGHT_LEN_ERR);
-	if (!is_valid_multi_double_value(&(rt->light->xyz), args[1], INT_MIN, INT_MAX))
-		free_2d_and_close_all(rt, args, rt->light->xyz.error);
+	if (!is_valid_multi_double_value(&(light->xyz), args[1], INT_MIN, INT_MAX))
+		free_2d_and_close_all(rt, args, light->xyz.error);
 	if (!is_valid_single_double_value(rt, args[2], 0, 1))
 		free_2d_and_close_all(rt, args, rt->error);
-	rt->light->brightness = ft_atod(args[2]);
-	if (!is_valid_multi_double_value(&(rt->light->rgb), args[3], 0, 255))
-		free_2d_and_close_all(rt, args, rt->light->rgb.error);
-	rt->light->ch = 1;
+	light->brightness = ft_atod(args[2]);
+	if (!is_valid_multi_double_value(&(light->rgb), args[3], 0, 255))
+		free_2d_and_close_all(rt, args, light->rgb.error);
+	light->ch = 1;
 }

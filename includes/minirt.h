@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 01:45:07 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,7 +186,6 @@ typedef struct s_light
 	t_vector	rgb;
 	double	brightness;
 	int		ch;
-	int		idx;
 	int		is_click;
 	struct s_light	*next;
 }	t_light;
@@ -310,6 +309,7 @@ double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
 double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg);
 void	draw_fig(t_rt *rt, int i, int j);
+
 // void	draw_plane(t_rt *rt);
 
 /* lst_utils.c */

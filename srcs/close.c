@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   close.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:07:25 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:40:47 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/16 03:44:40 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	close_all(t_rt *rt, char *error_msg)
 	if (rt->file_fd)
 		close(rt->file_fd);
 	free(rt);
+	free_args(rt->map);
 	error(error_msg);
 }
 

@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 11:36:57 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 00:06:57 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -308,10 +308,10 @@ double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 	double		alpha;
 	double		beta;
 
-	if (is_parallel_cone(cy, p1, p2))
-	{
+	// if (is_parallel_cone(cy, p1, p2))
+	// {
 
-	}
+	// }
 	vec1 = sub_vec(p2, p1); // d
 	vec2 = sub_vec(p1, cy->xyz); // e - c
 	dn = dot_product(vec1, cy->normal_vec);

@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 03:21:46 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,19 +105,17 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 		{
 			t = intersect_plane(fig, rt->cam->coords, point);
 			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
-			l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
+			// l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
 			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));
 			n_vec = invert_vec(fig->normal_vec);
-			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
 		}
 		else if (fig->type == SPHERE)
 		{
             t = intersect_sphere(fig, rt->cam->coords, point);
 			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
-			l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
+			// l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
 			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));
 			n_vec = normalize_vec(sub_vec(inter_vec, fig->xyz));
-			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
 		}
 		else if (fig->type == CYLINDER || fig->type == CONE)
 		{
@@ -126,7 +124,7 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			else
 				t = intersect_cone(fig, rt->cam->coords, point, &flg);
 			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
-			l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
+			// l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
 			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));
 			if (flg == 1)
 				n_vec = fig->normal_vec;
@@ -137,7 +135,6 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 				n_vec = sub_vec(n_vec, mul_vec(fig->normal_vec, theta));
 				n_vec = normalize_vec(n_vec);
 			}
-			r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
 		}
 		if (t >= 0 && t <= d)
 		{
@@ -147,13 +144,27 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			double specular_strength = 0.9;
 			double shininess = 128.0;
 
+			t_light *tmp;
+
+			tmp = rt->light;
+			t_vector	diffuse_sum = (t_vector){0,0,0, 0};
+			t_vector	specular_sum = (t_vector){0,0,0, 0};
+			while (tmp)
+			{
+				l_vec = normalize_vec(sub_vec(tmp->xyz, inter_vec));
+				r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
+				diffuse_color = mul_vec(fig->rgb, fmax(0.0, dot_product(n_vec, l_vec)) * tmp->brightness * diffuse_strength);
+				specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, dot_product(e_vec, r_vec)), shininess) * tmp->brightness * specular_strength);
+				diffuse_sum = add_vec(diffuse_sum, diffuse_color);
+				specular_sum = add_vec(specular_sum, specular_color);
+				//printf("amb : %f %f %f\n", amb.x, amb.y, amb.z);
+				tmp = tmp->next;
+				//break ;
+			}
 			amb = mul_vec(fig->rgb, rt->amblight->light_ratio * ambient_strength);
-			diffuse_color = mul_vec(fig->rgb, fmax(0.0, dot_product(n_vec, l_vec)) * rt->light->brightness * diffuse_strength);
-			specular_color = mul_vec(rt->light->rgb, pow(fmax(0.0, dot_product(e_vec, r_vec)), shininess) * rt->light->brightness * specular_strength);
-			//printf("amb : %f %f %f\n", amb.x, amb.y, amb.z);
-			final_color.x = fmin(255, amb.x + diffuse_color.x + specular_color.x);
-			final_color.y = fmin(255, amb.y + diffuse_color.y + specular_color.y);
-			final_color.z = fmin(255, amb.z + diffuse_color.z + specular_color.z);
+			final_color.x = fmin(255, amb.x + diffuse_sum.x + specular_sum.x);
+			final_color.y = fmin(255, amb.y + diffuse_sum.y + specular_sum.y);
+			final_color.z = fmin(255, amb.z + diffuse_sum.z + specular_sum.z);
 			pixel_to_image(rt->img, i, j, final_color);
 			// rt->map[j][i] = rt->fig->type + 48;
 			rt->map[j][i] = fig->idx + 48;

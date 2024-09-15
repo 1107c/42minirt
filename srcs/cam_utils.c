@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cam_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/13 16:43:32 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/13 16:46:31 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/16 00:37:23 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,11 @@ void	get_cam_basis(t_cam *cam)
 	t_vector	z_inv;
 	t_vector	inv_right;
 
-	y_unit_vector = (t_vector) {0, 1, 0, 0};
 	update_orient(cam);
+	if (fabs(cam->orient_vec.y) != 1)
+		y_unit_vector = (t_vector) {0, 1, 0, 0};
+	else
+		y_unit_vector = (t_vector) {0, 0, -1, 0};
 	z_inv = cam->orient_vec;
 	// z_inv = invert_vec(cam->orient_vec);
 	printf("orient vector: %lf, %lf, %lf\n", \
