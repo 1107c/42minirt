@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/16 03:21:46 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 06:03:39 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	draw(t_rt *rt)
 	{
 		while (++i < WINDOW_WIDTH)
 		{
-			rt->cam->ray = cam_ray(rt->cam, rt, i, j);
+			// rt->cam->ray = cam_ray(rt->cam, rt, i, j);
 			draw_line(rt, point, i, j);
 			point = add_vec(point, rt->cam->right_vec);
 		}
@@ -122,7 +122,7 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			if (fig->type == CYLINDER)
 				t = intersect_cylinder(fig, rt->cam->coords, point, &flg);
 			else
-				t = intersect_cone(fig, rt->cam->coords, point, &flg);
+				t = intersect_cone(fig, rt->cam->coords, point);
 			inter_vec = add_vec(rt->cam->coords, mul_vec(sub_vec(point, rt->cam->coords), t));
 			// l_vec = normalize_vec(sub_vec(rt->light->xyz, inter_vec));
 			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));

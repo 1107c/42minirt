@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:07:25 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/16 03:44:40 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 06:36:18 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,38 @@ void	close_mlx(t_rt *rt)
 	free(rt->img);
 }
 
+void	free_lst(t_rt *rt)
+{
+	t_fig	*fig;
+	t_light	*light;
+
+	while (rt->fig)
+	{
+		fig = rt->fig;
+		rt->fig = rt->fig->next;
+		free(fig);
+	}
+	while (rt->light)
+	{
+		light = rt->light;
+		rt->light = rt->light->next;
+		free(light);
+	}
+}
+
 void	close_all(t_rt *rt, char *error_msg)
 {
 	close_mlx(rt);
+	free_args(rt->map);
 	free(rt->amblight);
 	free(rt->cam);
-	free(rt->light);
-	free(rt->fig);
 	free(rt->line);
 	if (rt->file_fd)
 		close(rt->file_fd);
+	free_lst(rt);
+	free(rt->light);
+	free(rt->fig);
 	free(rt);
-	free_args(rt->map);
 	error(error_msg);
 }
 
@@ -41,4 +61,10 @@ void	free_2d_and_close_all(t_rt *rt, char **args, char *msg)
 {
 	free_args(args);
 	close_all(rt, msg);
+}
+
+int	close_win(t_rt *rt)
+{
+	close_all(rt, NULL);
+	return (EXIT_SUCCESS);
 }

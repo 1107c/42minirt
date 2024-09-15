@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:27:14 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/16 03:37:18 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 06:33:01 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,8 @@ void	parse_cam(t_rt *rt, char **args)
 		free_2d_and_close_all(rt, args, CAM_DUP_ERR);
 	if (get_arg_len(args) != 4)
 		free_2d_and_close_all(rt, args, CAM_LEN_ERR);
-	if (!is_valid_multi_double_value(&(rt->cam->coords), args[1], INT_MIN, INT_MAX))
+	if (!is_valid_multi_double_value(&(rt->cam->coords), args[1], \
+	INT_MIN, INT_MAX))
 		free_2d_and_close_all(rt, args, rt->cam->coords.error);
 	if (!is_valid_multi_double_value(&(rt->cam->orient_vec), args[2], -1, 1))
 		free_2d_and_close_all(rt, args, rt->cam->orient_vec.error);

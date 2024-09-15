@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 13:06:34 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 14:10:11 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 06:46:50 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,11 +34,13 @@ t_rt	*init_rt(int fd)
 	rt->fig = NULL;
 	rt->light = NULL;
 	rt->error = NULL;
-	rt->line = NULL;	
+	rt->line = NULL;
 	rt->file_fd = fd;
 	rt->light_cnt = 0;
 	rt->fig_cnt = 0;
 	rt->selected = NULL;
+	rt->selected_light = NULL;
+	init_map(rt);
 	return (rt);
 }
 
@@ -84,6 +86,14 @@ t_cam	*init_cam(void)
 	cam->theta = 0;
 	cam->phi = 0;
 	cam->ch = 0;
+	cam->coords = (t_vector){0, 0, 0, NULL};
+	cam->orient_vec = (t_vector){0, 0, 0, NULL};
+	cam->right_vec = (t_vector){0, 0, 0, NULL};
+	cam->up_vec = (t_vector){0, 0, 0, NULL};
+	cam->corner_vec = (t_vector){0, 0, 0, NULL};
+	cam->origin_orient_vec = (t_vector){0, 0, 0, NULL};
+	cam->origin_right_vec = (t_vector){0, 0, 0, NULL};
+	cam->origin_up_vec = (t_vector){0, 0, 0, NULL};
 	return (cam);
 }
 
