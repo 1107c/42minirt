@@ -308,10 +308,10 @@ double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 	double		alpha;
 	double		beta;
 
-	if (is_parallel_cone(cy, p1, p2))
-	{
+	// if (is_parallel_cone(cy, p1, p2))
+	// {
 
-	}
+	// }
 	vec1 = sub_vec(p2, p1); // d
 	vec2 = sub_vec(p1, cy->xyz); // e - c
 	dn = dot_product(vec1, cy->normal_vec);

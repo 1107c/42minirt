@@ -180,4 +180,5 @@ void	key_rotate(int keycode, t_rt *rt)
 		rt->cam->theta -= 20;
 	else if (keycode == KEY_RIGHT)
 		rt->cam->theta += 20;
+	get_cam_basis(rt->cam);
 }
