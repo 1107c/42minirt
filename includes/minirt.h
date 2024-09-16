@@ -6,12 +6,12 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 17:53:39 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 06:49:10 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINI_RT
-# define MINI_RT
+#ifndef MINIRT_H
+# define MINIRT_H
 
 # define PLANE		0
 # define SPHERE		1
@@ -42,9 +42,6 @@
 # define KEY_LIGHT	108
 # define KEY_PLUS	61
 # define KEY_MINUS	45
-
-
-
 
 # define NUM_UP		65431
 # define NUM_DOWN	65433
@@ -106,7 +103,6 @@ typedef enum e_msg
 	EXTEN_ERR,
 	FATAL_ERR,
 	OPEN_ERR,
-
 }	t_msg;
 
 typedef enum e_type
@@ -129,7 +125,7 @@ typedef struct s_vector
 // comment -> yeojukim
 // : 광선에 대한 정보를 담는 구조체입니다.
 // : origin은 광선의 원점(시작점)을 의미하고 direction은 광선의 방향을 의미합니다.
-typedef	struct s_ray
+typedef struct s_ray
 {
 	t_vector	origin;
 	t_vector	direction;
@@ -143,20 +139,9 @@ typedef struct s_amblight
 {
 	t_vector	rgb;
 	double		light_ratio;
-	int		ch;
+	int			ch;
 }	t_amblight;
 
-// comment -> yeojukim
-// : coords - 카메라의 위치. 즉, 이 좌표를 기준으로 광선을 계산해야합니다.
-// : orient_vec - 방향 벡터. 카메라가 어디를 바라보고있는지를 나타내는 방향 벡터입니다(정면 기준 (0, 0, -1)). z축을 담당합니다.
-// : right_vec - 오른쪽 벡터. 카메라 좌우의 기울기를 나타냅니다(정면 기준 (1, 0, 0)). x축을 담당합니다.
-// : up_vec - 위쪽 벡터. 카메라 상하의 기울기를 나타냅니다(정면 기준 (0, 1, 0)). y축을 담당합니다.
-// : fov - 시야각입니다. 클 수록 넓은 시야를 가지게 됩니다.
-// : as_ratio - 화면의 가로 세로 비율입니다. 이 비율에 따라 뷰포트의 높이/너비가 조정됩니다(width / height).
-//		fov와 함께 시야를 계산할 때 사용합니다.
-// : vp_w, vp_h - 카메라가 볼 수 있는 가상 화면의 너비와 높이를 정의합니다(width * height).
-//		값이 클 수록 더 큰 장면을 뷰포트에서 볼 수 있습니다.
-// : corner_vec - 뷰포트의 좌하단 모서리 좌표를 나타냅니다. 광선 생성의 기준점으로 사용됩니다.
 typedef struct s_cam
 {
 	t_vector	coords;
@@ -167,7 +152,6 @@ typedef struct s_cam
 	t_vector	origin_orient_vec;
 	t_vector	origin_right_vec;
 	t_vector	origin_up_vec;
-	t_ray		ray;
 	double		fov;
 	double		as_ratio;
 	double		distance_to_view;
@@ -175,35 +159,32 @@ typedef struct s_cam
 	double		vp_h;
 	double		theta;
 	double		phi;
-	//int		move_x;
-	//int		move_y;
-	int		ch;
+	int			ch;
 }	t_cam;
 
 typedef struct s_light
 {
-	t_vector	xyz;
-	t_vector	rgb;
-	double	brightness;
-	int		ch;
-	int		idx;
-	int		is_click;
+	t_vector		xyz;
+	t_vector		rgb;
+	double			brightness;
+	int				ch;
+	int				is_click;
 	struct s_light	*next;
 }	t_light;
 
 typedef struct s_fig
 {
-	t_vector	xyz;
-	t_vector	normal_vec;
-	t_vector	rgb;
-	t_vector	rgb2;
-	int		type;
-	double	diameter;
-	double	height;
-	t_vector	right_vec;
-	t_vector	up_vec;
-	int		idx;
-	int		is_click;
+	t_vector		xyz;
+	t_vector		normal_vec;
+	t_vector		rgb;
+	t_vector		rgb2;
+	t_vector		right_vec;
+	t_vector		up_vec;
+	int				type;
+	double			diameter;
+	double			height;
+	int				idx;
+	int				is_click;
 	struct s_fig	*next;
 }	t_fig;
 
@@ -218,10 +199,10 @@ typedef struct s_image
 
 typedef struct s_rt
 {
-	t_image		*img;	// mlx_image 
-	t_cam		*cam;	// camera
-	t_fig		*fig;	// figure
-	t_light		*light;	// light
+	t_image		*img;
+	t_cam		*cam;
+	t_fig		*fig;
+	t_light		*light;
 	t_amblight	*amblight;
 	void		*mlx;
 	void		*win;
@@ -238,54 +219,59 @@ typedef struct s_rt
 }	t_rt;
 
 /* error.c */
-int		error(char *error_msg);
-int		print_err(t_msg	msg);
-int		open_file(char *filename);
+int			error(char *error_msg);
+int			print_err(t_msg	msg);
+int			open_file(char *filename);
 
 /* init.c */
 t_rt		*init_rt(int fd);
 
 /* init_utils.c */
-t_light	*init_light();
-t_fig	*init_fig();
+t_light		*init_light(void);
+t_fig		*init_fig(void);
+void		init_map(t_rt *rt);
 
 /* close.c */
-void	close_mlx(t_rt *rt);
-void	close_all(t_rt *rt, char *error_msg);
-void	free_2d_and_close_all(t_rt *rt, char **args, char *msg);
+void		close_mlx(t_rt *rt);
+void		close_all(t_rt *rt, char *error_msg);
+void		free_2d_and_close_all(t_rt *rt, char **args, char *msg);
+int			close_win(t_rt *rt);
 
 /* draw.c */
-void	draw(t_rt *rt);
-void	clear_image(t_image *img);
+void		draw(t_rt *rt);
+void		clear_image(t_image *img);
 
 /* parse.c */
-void	parse_data(t_rt *rt);
+void		parse_data(t_rt *rt);
 
 /* parse_utils.c */
-int		is_double_range(double d, double range_min, double range_max);
-int		is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double range_max);
-int		is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max);
+int			is_double_range(double d, double range_min, double range_max);
+int			is_valid_single_double_value(t_rt *rt, char *arg, double \
+range_min, double range_max);
+int			is_valid_multi_double_value(t_vector *vec, char *arg, double \
+range_min, double range_max);
+void		get_fig_idx_vec(t_rt *rt);
 
 /* 2d_array_utils.c */
-int		get_arg_len(char **args);
-void	print_args(char **args);
-void	free_args(char **args);
+int			get_arg_len(char **args);
+void		print_args(char **args);
+void		free_args(char **args);
 
 /* parse_element.c */
-void	parse_amb(t_rt *rt, char **args);
-void	parse_cam(t_rt *rt, char **args);
-void	parse_light(t_rt *rt, char **args);
+void		parse_amb(t_rt *rt, char **args);
+void		parse_cam(t_rt *rt, char **args);
+void		parse_light(t_rt *rt, char **args);
 
 /* parse_figure.c */
-void	parse_plane(t_rt *rt, char **args, int type);
-void	parse_sphere(t_rt *rt, char **args, int type);
-void	parse_cylinder(t_rt *rt, char **args, int type);
+void		parse_plane(t_rt *rt, char **args, int type);
+void		parse_sphere(t_rt *rt, char **args, int type);
+void		parse_cylinder(t_rt *rt, char **args, int type);
 
 /* rt_utils.c */
-void	print_rt(t_rt *rt);
+void		print_rt(t_rt *rt);
 
 /* key_handle.c */
-int	key_handle(int keycode, t_rt *rt);
+int			key_handle(int keycode, t_rt *rt);
 
 // comment -> yeojukim
 // : 벡터 유틸들의 함수목록들입니다.
@@ -304,21 +290,31 @@ int			is_normalized_vec(t_vector vec);
 
 /* intersection.c */
 // double	intersect_plane(t_fig *pl, t_ray ray);
-double	intersect_plane(t_fig *pl, t_vector cam, t_vector point);
-double	intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
+double		intersect_plane(t_fig *pl, t_vector cam, t_vector point);
+double		intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
-double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
-double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg);
-void	draw_fig(t_rt *rt, int i, int j);
+double		intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
+double		intersect_cone(t_fig *cy, t_vector p1, t_vector p2);
+void		draw_fig(t_rt *rt, int i, int j);
+
 // void	draw_plane(t_rt *rt);
 
 /* lst_utils.c */
-void	*lst_addback(t_rt *rt, t_type type);
+void		*lst_addback(t_rt *rt, t_type type);
 
 /* cam_utils.c */
-void	set_cam(t_cam *cam, double x, double y);
-void	get_cam_basis(t_cam *cam);
-void	update_ray(t_ray *ray, int right);
-t_ray	cam_ray(t_cam *cam, t_rt *rt, double x, double y);
+void		set_cam(t_cam *cam, double x, double y);
+void		get_cam_basis(t_cam *cam);
+void		update_ray(t_ray *ray, int right);
+t_ray		cam_ray(t_cam *cam, t_rt *rt, double x, double y);
+
+/* key_handle_2.c */
+t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
+void		fig_light_translate(int keycode, t_fig *fig, t_light *light);
+void		key_light(int keycode, t_rt *rt);
+void		fig_rotate(int keycode, t_rt *rt);
+
+/* mouse_handle.c */
+int	mouse_handle(int keycode, int x, int y, t_rt *rt);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/07 13:08:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/15 11:36:57 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/16 06:04:03 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <math.h>
 
 static double	get_traingle_height(t_fig *cy, t_vector point);
-static t_vector	get_point(t_fig *cy, t_vector p1, t_vector p2, double t);
+static t_vector	get_point(t_vector p1, t_vector p2, double t);
 
 // 두 점 P(a, b, c), P'(a', b', c')을 지나는 직선의 방정식은 다음과 같다.
 // x - a / (a' - a) = y - b / (b' - b) = z - c / (c' - c)		---- 1
@@ -42,7 +42,7 @@ static t_vector	get_point(t_fig *cy, t_vector p1, t_vector p2, double t);
 // 	double		d;
 // 	double		res;
 
-// 	d = dot_product(pl->normal_vec, pl->xyz) \
+// 	d = dot_product(pl->normal_vec, pl->xyz) 
 // 		- dot_product(pl->normal_vec, ray.origin);
 // 	res = dot_product(pl->normal_vec, ray.direction);
 // 	if (res == 0)
@@ -137,12 +137,12 @@ double	find_eqution(t_fig *cy, t_vector p1, t_vector p2, double t[2])
 	if (c < 0)
 		c = -c;
 	tanh = sqrt(1 - c * c) / c;
-	h = get_traingle_height(cy, get_point(cy, p1, d, t[0]));
+	h = get_traingle_height(cy, get_point(p1, d, t[0]));
 	x = (cy->diameter / tanh);
 	return (t[1] * h / x + t[0] * (x - h) / x);
 }
 
-t_vector	get_point(t_fig *cy, t_vector p1, t_vector p2, double t)
+t_vector	get_point(t_vector p1, t_vector p2, double t)
 {
 	t_vector	p;
 
@@ -283,22 +283,21 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 	//*flg = 1;
 	return (0.0);
 }
-
-// det[0] = (cy->height * cy->height * \
-// 		(dot_product(vec1, vec1) - dn * dn)) - \
-// 		(cy->diameter * cy->diameter * dn * dn / 4);
-// det[1] = (cy->height * cy->height * (ecd - ecn * dn)) - \
-// 		(cy->diameter * cy->diameter * dn * (ecn - cy->height) / 4);
-// det[2] = cy->height * cy->height * (dot_product(vec2, vec2) - \
-// 		ecn * ecn - cy->diameter * cy->diameter / 4) - \
-// 		cy->diameter * cy->diameter * (ecn * ecn + cy->height * cy->height - \
-// 		2 * cy->height * ecn) / 4;
-
-double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg)
+/*
+det[0] = (cy->height * cy->height * \
+		(dot_product(vec1, vec1) - dn * dn)) - \
+		(cy->diameter * cy->diameter * dn * dn / 4);
+det[1] = (cy->height * cy->height * (ecd - ecn * dn)) - \
+		(cy->diameter * cy->diameter * dn * (ecn - cy->height) / 4);
+det[2] = cy->height * cy->height * (dot_product(vec2, vec2) - \
+		ecn * ecn - cy->diameter * cy->diameter / 4) - \
+		cy->diameter * cy->diameter * (ecn * ecn + cy->height * cy->height - \
+		2 * cy->height * ecn) / 4;
+*/
+double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2)
 {
 	t_vector	vec1;
 	t_vector	vec2;
-	t_vector	vec3;
 	double		dn;
 	double		ecn;
 	double		ecd;
@@ -354,43 +353,44 @@ double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 	return (-1.0);
 }
 
+/*
+bool is_close(double a, double b) 
+{
+	return (fabs(a - b) < EPSILON);
+}
 
-// bool is_close(double a, double b) 
-// {
-// 	return (fabs(a - b) < EPSILON);
-// }
+// 점이 직선 위에 있는지 확인하는 함수
+double is_point_on_line(t_vector line, t_vector point, t_vector p) {
+	double t_x, t_y, t_z;
 
-// // 점이 직선 위에 있는지 확인하는 함수
-// double is_point_on_line(t_vector line, t_vector point, t_vector p) {
-// 	double t_x, t_y, t_z;
+	// 방향 벡터가 0이 아닌 축에 대해서 t 값 계산
+	if (fabs(line.x) > EPSILON)
+		t_x = (p.x - point.x) / line.x;
+	else
+		t_x = NAN; // 방향 벡터가 0인 경우 t_x 계산 불가
 
-// 	// 방향 벡터가 0이 아닌 축에 대해서 t 값 계산
-// 	if (fabs(line.x) > EPSILON)
-// 		t_x = (p.x - point.x) / line.x;
-// 	else
-// 		t_x = NAN; // 방향 벡터가 0인 경우 t_x 계산 불가
+	if (fabs(line.y) > EPSILON)
+		t_y = (p.y - point.y) / line.y;
+	else
+		t_y = NAN; // 방향 벡터가 0인 경우 t_y 계산 불가
 
-// 	if (fabs(line.y) > EPSILON)
-// 		t_y = (p.y - point.y) / line.y;
-// 	else
-// 		t_y = NAN; // 방향 벡터가 0인 경우 t_y 계산 불가
+	if (fabs(line.z) > EPSILON)
+		t_z = (p.z - point.z) / line.z;
+	else
+		t_z = NAN; // 방향 벡터가 0인 경우 t_z 계산 불가
 
-// 	if (fabs(line.z) > EPSILON)
-// 		t_z = (p.z - point.z) / line.z;
-// 	else
-// 		t_z = NAN; // 방향 벡터가 0인 경우 t_z 계산 불가
-
-// 	// 유효한 t 값이 있을 경우 비교 (x, y, z 중 하나라도 t 값이 있으면 됨)
-// 	if (!isnan(t_x)) {
-// 		if ((!isnan(t_y) && !is_close(t_x, t_y)) || \
-// 			(!isnan(t_z) && !is_close(t_x, t_z)))
-// 			return (-);
-// 		return true;
-// 	} else if (!isnan(t_y)) {
-// 		if (!isnan(t_z) && !is_close(t_y, t_z)) 
-// 			return (-);
-// 		return true;
-// 	} else if (!isnan(t_z))
-// 		return true; // z만 유효한 경우
-// 	return (-); // 어느 방향 벡터도 0이 아니면서 비교할 t값이 없는 경우
-// }
+	// 유효한 t 값이 있을 경우 비교 (x, y, z 중 하나라도 t 값이 있으면 됨)
+	if (!isnan(t_x)) {
+		if ((!isnan(t_y) && !is_close(t_x, t_y)) || \
+			(!isnan(t_z) && !is_close(t_x, t_z)))
+			return (-);
+		return true;
+	} else if (!isnan(t_y)) {
+		if (!isnan(t_z) && !is_close(t_y, t_z)) 
+			return (-);
+		return true;
+	} else if (!isnan(t_z))
+		return true; // z만 유효한 경우
+	return (-); // 어느 방향 벡터도 0이 아니면서 비교할 t값이 없는 경우
+}
+*/

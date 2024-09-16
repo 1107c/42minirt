@@ -19,7 +19,8 @@ int	is_double_range(double d, double range_min, double range_max)
 }
 
 // 한 개의 double 자료형 유효성 검사
-int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double range_max)
+int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, \
+double range_max)
 {
 	double	d;
 
@@ -38,7 +39,8 @@ int	is_valid_single_double_value(t_rt *rt, char *arg, double range_min, double r
 }
 
 // vector의 double 자료형(3개) 유효성 검사
-int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, double range_max)
+int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, \
+double range_max)
 {
 	char	**nums;
 
@@ -64,4 +66,28 @@ int	is_valid_multi_double_value(t_vector *vec, char *arg, double range_min, doub
 		return (free_args(nums), 0);
 	}
 	return (free_args(nums), 1);
+}
+
+void	get_fig_idx_vec(t_rt *rt)
+{
+	t_fig		*tmp;
+	int			i;
+	t_vector	y_unit_vector;
+	t_vector	z_inv;
+
+	tmp = rt->fig;
+	i = 1;
+	while (tmp)
+	{
+		if (fabs(tmp->normal_vec.y) != 1)
+			y_unit_vector = (t_vector){0, 1, 0, 0};
+		else
+			y_unit_vector = (t_vector){0, 0, -1, 0};
+		z_inv = invert_vec(tmp->normal_vec);
+		tmp->right_vec = invert_vec(cross_product(y_unit_vector, z_inv));
+		tmp->up_vec = invert_vec(cross_product(z_inv, tmp->right_vec));
+		tmp->rgb2 = tmp->rgb;
+		tmp->idx = i++;
+		tmp = tmp->next;
+	}
 }

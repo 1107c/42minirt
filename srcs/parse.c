@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:55:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/04 17:45:47 by ksuh             ###   ########.fr       */
+/*   Updated: 2024/09/16 06:49:10 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,6 @@
 static int	is_valid_nums(char **args);
 static int	is_valid_num(char **s, int *dot, int *comma);
 static void	parse_args(t_rt *rt, char **args);
-
-// ◦ Each type of element can be separated by one or more line break(s).
-// ◦ Each type of information from an element can be separated by one or more space(s).
-// ◦ Each type of element can be set in any order in the file.
-// ◦ Elements which are defined by a capital letter can only be declared once in the scene.
 
 // 1. 각각의 요소들은 하나 이상의 개행으로 구분되어야 함
 // 2. 요소 각각의 정보들은 하나 이상의 공백으로 구분되어야 함
@@ -64,6 +59,7 @@ void	parse_data(t_rt *rt)
 	rt->line = NULL;
 	close(rt->file_fd);
 	rt->file_fd = 0;
+	get_fig_idx_vec(rt);
 }
 
 // func_valid_data(arg) char값의 유효성을 검사하는 함수
