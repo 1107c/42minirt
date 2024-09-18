@@ -24,9 +24,10 @@ void	draw(t_rt *rt)
 
 	i = -1;
 	j = -1;
-	point = (t_vector){rt->cam->coords.x + rt->cam->distance_to_view * rt->cam->orient_vec.x - 960 * rt->cam->right_vec.x + 540 * rt->cam->up_vec.x,
-		rt->cam->coords.y + rt->cam->distance_to_view * rt->cam->orient_vec.y - 960 * rt->cam->right_vec.y + 540 * rt->cam->up_vec.y,
-		rt->cam->coords.z + rt->cam->distance_to_view * rt->cam->orient_vec.z - 960 * rt->cam->right_vec.z + 540 * rt->cam->up_vec.z, NULL};
+	point = init_point(rt->cam);
+	// point = (t_vector){rt->cam->coords.x + rt->cam->distance_to_view * rt->cam->orient_vec.x - 960 * rt->cam->right_vec.x + 540 * rt->cam->up_vec.x,
+	// 	rt->cam->coords.y + rt->cam->distance_to_view * rt->cam->orient_vec.y - 960 * rt->cam->right_vec.y + 540 * rt->cam->up_vec.y,
+	// 	rt->cam->coords.z + rt->cam->distance_to_view * rt->cam->orient_vec.z - 960 * rt->cam->right_vec.z + 540 * rt->cam->up_vec.z, NULL};
 	while (++j < WINDOW_HEIGHT)
 	{
 		while (++i < WINDOW_WIDTH)
@@ -69,6 +70,23 @@ void	draw(t_rt *rt)
 // 		fig = fig->next;
 // 	}
 // }
+
+
+// 콘의 옆면에서 ray가 만났을 때의 법선벡터를 반환
+t_vector	get_cone_normal(t_fig *cn, t_vector inter_vec, t_vector eye, double t)
+{
+	t_vector	edge;
+	t_vector	side;
+	t_vector	norm;
+	double		d;
+
+	edge = add_vec(cn->xyz, mul_vec(cn->normal_vec, cn->height));
+	side = normalize_vec(sub_vec(inter_vec, edge));
+	d = dot_product(eye, side);
+	norm = add_vec(eye, mul_vec(side, d));
+	return (normalize_vec(norm));
+}
+
 
 void	pixel_to_image(t_image *img, double x, double y, t_vector rgb)
 {
