@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/19 23:24:09 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/19 23:47:18 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,7 +200,7 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			d = t;
 			double ambient_strength = 0.85;
 			double diffuse_strength = 0.35;
-			double specular_strength = 0.9;
+			double specular_strength = 0.2;
 			double shininess = 128.0;
 
 			t_light *tmp;
@@ -211,14 +211,19 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			while (tmp)
 			{
 				l_vec = normalize_vec(sub_vec(tmp->xyz, inter_vec));
+				if (fig->type == PLANE)
+					r_vec = normalize_vec(sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec));
+				else
+					r_vec = invert_vec(normalize_vec(sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec)));
 				if (!is_in_shadow(rt, inter_vec, l_vec, tmp))
 				{
-					r_vec = sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec);
 					diffuse_color = mul_vec((t_vector){fmin(255, fmax(0, fig->rgb.x * tmp->rgb.x)),fmin(255, fmax(0, fig->rgb.y * tmp->rgb.y)), fmin(255, fmax(0, fig->rgb.z * tmp->rgb.z)),0}, fmax(0.0, dot_product(n_vec, l_vec)) * tmp->brightness * diffuse_strength);
 					specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, dot_product(e_vec, r_vec)), shininess) * tmp->brightness * specular_strength);
 					diffuse_sum = add_vec(diffuse_sum, diffuse_color);
 					specular_sum = add_vec(specular_sum, specular_color);
 				}
+				specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, dot_product(e_vec, r_vec)), shininess) * tmp->brightness * specular_strength);
+				specular_sum = add_vec(specular_sum, specular_color);
 				tmp = tmp->next;
 			}
 			amb = mul_vec(fig->rgb, rt->amblight->light_ratio * ambient_strength);
