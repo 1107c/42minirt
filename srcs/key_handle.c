@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 14:12:55 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/16 06:31:23 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/19 13:45:30 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,24 @@ void	fig_resize_height(int keycode, t_rt *rt)
 		rt->selected->height -= 2;
 }
 
+void	key_checkboard(t_rt *rt)
+{
+	// double d, t;
+	// d = INF;
+	if (rt->selected && rt->selected->is_check == -1)
+	{
+		//rt->selected->checker *= -1;
+		rt->selected->is_check *= -1;
+		draw(rt);
+		//rt->selected->checker *= -1;
+	}
+	else if (rt->selected && rt->selected->is_check == 1)
+	{
+		rt->selected->is_check *= -1;
+		draw(rt);
+	}
+}
+
 int	key_handle(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_ESC)
@@ -74,9 +92,10 @@ int	key_handle(int keycode, t_rt *rt)
 		fig_resize_dia(keycode, rt);
 	else if (keycode == KEY_PLUS || keycode == KEY_MINUS)
 		fig_resize_height(keycode, rt);
+	else if (keycode == KEY_SPACE)
+		return (key_checkboard(rt), 0);
 	clear_image(rt->img);
-	draw(rt);
-	return (0);
+	return (draw(rt), 0);
 }
 
 void	key_translate(int keycode, t_rt *rt)

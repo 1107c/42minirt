@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 10:25:49 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/16 06:49:10 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/18 11:43:24 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@
 # define KEY_LIGHT	108
 # define KEY_PLUS	61
 # define KEY_MINUS	45
+# define KEY_SPACE	32
 
 # define NUM_UP		65431
 # define NUM_DOWN	65433
@@ -200,6 +201,7 @@ typedef struct s_fig
 	double			height;
 	int				idx;
 	int				is_click;
+	int				is_check;
 	struct s_fig	*next;
 }	t_fig;
 
@@ -255,6 +257,7 @@ int			close_win(t_rt *rt);
 /* draw.c */
 void		draw(t_rt *rt);
 void		clear_image(t_image *img);
+void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
 
 /* parse.c */
 void		parse_data(t_rt *rt);
@@ -300,14 +303,7 @@ t_vector	add_vec(t_vector lhs, t_vector rhs);
 t_vector	sub_vec(t_vector lhs, t_vector rhs);
 t_vector	mul_vec(t_vector lhs, double rhs);
 int			is_normalized_vec(t_vector vec);
-<<<<<<< HEAD
-t_vector	init_point(t_cam *cam, t_vector point);
-=======
 t_vector	init_point(t_cam *cam);
-
-// void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
-// t_vector	cross_product(t_vector lhs, t_vector rhs);
->>>>>>> e7ebe3b702320ff45ffcac90aba72d94f22a4284
 
 /* intersection.c */
 // double	intersect_plane(t_fig *pl, t_ray ray);

@@ -6,7 +6,7 @@
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 17:21:15 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/16 06:46:50 by myeochoi         ###   ########.fr       */
+/*   Updated: 2024/09/18 11:43:24 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ t_fig	*init_fig(void)
 	fig->height = 0;
 	fig->next = NULL;
 	fig->is_click = -1;
+	fig->is_check = -1;
 	fig->xyz = (t_vector){0, 0, 0, NULL};
 	fig->normal_vec = (t_vector){0, 0, 0, NULL};
 	fig->rgb = (t_vector){0, 0, 0, NULL};
