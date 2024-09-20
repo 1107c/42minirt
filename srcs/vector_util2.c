@@ -44,3 +44,14 @@ int	is_normalized_vec(t_vector vec)
 		return (1);
 	return (0);
 }
+
+t_vector	init_point(t_cam *cam, t_vector point)
+{
+	t_vector	vec;
+
+	vec = add_vec(mul_vec(cam->orient_vec, cam->distance_to_view), \
+		mul_vec(cam->right_vec, -WINDOW_WIDTH / 2));
+	vec = add_vec(vec, mul_vec(cam->up_vec, WINDOW_HEIGHT / 2));
+	vec = add_vec(vec, point);
+	return (vec);
+}

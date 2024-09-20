@@ -267,7 +267,7 @@ void		parse_plane(t_rt *rt, char **args, int type);
 void		parse_sphere(t_rt *rt, char **args, int type);
 void		parse_cylinder(t_rt *rt, char **args, int type);
 
-/* rt_utils.c */
+/* print_data.c */
 void		print_rt(t_rt *rt);
 
 /* key_handle.c */
@@ -285,8 +285,7 @@ t_vector	add_vec(t_vector lhs, t_vector rhs);
 t_vector	sub_vec(t_vector lhs, t_vector rhs);
 t_vector	mul_vec(t_vector lhs, double rhs);
 int			is_normalized_vec(t_vector vec);
-// void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
-// t_vector	cross_product(t_vector lhs, t_vector rhs);
+t_vector	init_point(t_cam *cam, t_vector point);
 
 /* intersection.c */
 // double	intersect_plane(t_fig *pl, t_ray ray);

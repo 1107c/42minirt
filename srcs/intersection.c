@@ -17,23 +17,23 @@ static double	get_traingle_height(t_fig *cy, t_vector point);
 static t_vector	get_point(t_vector p1, t_vector p2, double t);
 
 // 두 점 P(a, b, c), P'(a', b', c')을 지나는 직선의 방정식은 다음과 같다.
-// x - a / (a' - a) = y - b / (b' - b) = z - c / (c' - c)		---- 1
+// (x - a) / (a' - a) = (y - b) / (b' - b) = (z - c) / (c' - c)		---- *1
 
 // 한 점 P''(a'', b'', c'')을 지나고, 법선벡터가 n(p, q, r)인 평면의 방정식:
-// px + qy + rz = pa'' + qb'' + rc''							---- 2
+// px + qy + rz = pa'' + qb'' + rc''								---- *2
 
-// 1 = t로 두고 x, y, z를 매개변수 t로 치환하면 (0 < t, P(a, b, c)가 카메라의 위치이기 때문)
+// *1 = t로 두고 x, y, z를 매개변수 t로 치환하면 (0 < t, P(a, b, c)가 카메라의 위치이기 때문)
 // x = (a' - a)t + a
 // y = (b' - b)t + b
 // z = (c' - c)t + c
 
-// (x, y, z) 가 평면위에 있어야할 조건을 구해본다면
+// 직선상의 점 P''(x, y, z) 가 평면위에 있어야할 조건을 구해본다면
 // p((a' - a)t + a) + q((b' - b)t + b) + r((c' - c)t + c) = pa'' + qb'' + rc''
 // (p(a' - a) + q(b' - b) + r(c' - c))t = (pa'' + qb'' + rc'') - (pa + qb + rc)
 // i) p(a' - a) + q(b' - b) + r(c' - c) = 0
 // 우변 = 0이면 모든 t에 대해 식이 성립 o
 // 우변 != 0이면 모든 t에 대해 식이 성립 x
-// i) p(a' - a) + q(b' - b) + r(c' - c) != 0
+// ii) p(a' - a) + q(b' - b) + r(c' - c) != 0
 // ((pa'' + qb'' + rc'') - (pa + qb + rc)) / p(a' - a) + q(b' - b) + r(c' - c) > 0이면
 // 카메라 시야에서 평면과 교점이 발생
 
@@ -42,7 +42,7 @@ static t_vector	get_point(t_vector p1, t_vector p2, double t);
 // 	double		d;
 // 	double		res;
 
-// 	d = dot_product(pl->normal_vec, pl->xyz) 
+// 	d = dot_product(pl->normal_vec, pl->xyz)
 // 		- dot_product(pl->normal_vec, ray.origin);
 // 	res = dot_product(pl->normal_vec, ray.direction);
 // 	if (res == 0)
@@ -64,9 +64,9 @@ double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
 	d = dot_product(pl->normal_vec, pl->xyz) \
 		- dot_product(pl->normal_vec, cam);
 	res = dot_product(pl->normal_vec, vec);
-	if (res == 0)
+	if (fabs(res) <= EPSILON)
 	{
-		if (d == 0)
+		if (fabs(d) <= EPSILON)
 			return (0.0);
 		return (-1.0);
 	}
@@ -74,11 +74,12 @@ double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
 }
 
 // 두 점 P(a, b, c), P'(a', b', c')을 지나는 직선의 방정식
-// x - a / (a' - a) = y - b / (b' - b) = z - c / (c' - c)		---- 1
+// (x - a) / (a' - a) = (y - b) / (b' - b) = (z - c) / (c' - c)		---- *1
 
 // 반지름의 길이가 r이고 중심이 C(a'', b'' c'')인 구의 방정식
-// (x - a'')**2 + (y - b'')**2 + (z - c'')**2 = r**2
+// (x - a'')**2 + (y - b'')**2 + (z - c'')**2 = r**2				---- *2
 
+// 위와 마찬가지로 직선상의 점 P''(x, y, z)를 *1=t로 치환한 값을 *2에 대입하면
 // (t(a' - a) + (a - a''))**2 +
 // (t(b' - b) + (b - b''))**2 +
 // (t(c' - c) + (c - c''))**2 - r**2 = 0
@@ -102,11 +103,11 @@ double	intersect_sphere(t_fig *sp, t_vector p1, t_vector p2)
 	det[1] = dot_product(vec1, vec2);
 	det[2] = dot_product(vec2, vec2) - sp->diameter * sp->diameter / 4;
 	res = det[1] * det[1] - det[0] * det[2];
-	if (res < 0)
+	if (fabs(res) > EPSILON && res < 0)
 		return (-1.0);
 	t[0] = (-det[1] - sqrt(res)) / det[0];
 	t[1] = (-det[1] + sqrt(res)) / det[0];
-	if (t[0] > 0 && t[0] > t[1])
+	if (t[0] > 0 && t[0] < t[1])
 		return (t[0]);
 	if (t[1] > 0)
 		return (t[1]);
@@ -138,7 +139,7 @@ double	find_eqution(t_fig *cy, t_vector p1, t_vector p2, double t[2])
 		c = -c;
 	tanh = sqrt(1 - c * c) / c;
 	h = get_traingle_height(cy, get_point(p1, d, t[0]));
-	x = (cy->diameter / tanh);
+	x = cy->diameter / tanh;
 	return (t[1] * h / x + t[0] * (x - h) / x);
 }
 
@@ -294,6 +295,25 @@ det[2] = cy->height * cy->height * (dot_product(vec2, vec2) - \
 		cy->diameter * cy->diameter * (ecn * ecn + cy->height * cy->height - \
 		2 * cy->height * ecn) / 4;
 */
+
+double	get_parallel_cone(t_fig *cy, t_vector p1, t_vector p2)
+{
+	t_vector	top;
+	t_vector	sub[2];
+	double		dist1;
+	double		dist2;
+
+	top = add_vec(cy->xyz, mul_vec(cy->normal_vec, cy->height));
+	sub[0] = sub_vec(top, p1);
+	sub[1] = sub_vec(p2, p1);
+	dist1 = sqrt(dot_product(sub[0], sub[0]));
+	dist2 = sqrt(dot_product(sub[1], sub[1]));
+	if (fabs(dist1 - dist2) < EPSILON)
+		return (-1.0);
+	return (dist1 / (dist1 + dist2));
+}
+
+
 double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2)
 {
 	t_vector	vec1;
@@ -307,10 +327,6 @@ double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2)
 	double		alpha;
 	double		beta;
 
-	// if (is_parallel_cone(cy, p1, p2))
-	// {
-
-	// }
 	vec1 = sub_vec(p2, p1); // d
 	vec2 = sub_vec(p1, cy->xyz); // e - c
 	dn = dot_product(vec1, cy->normal_vec);
@@ -321,6 +337,8 @@ double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2)
 			- (1 + pow(cy->diameter / 2, 2) / pow(cy->height, 2)) * ecn * dn;
 	det[2] = dot_product(vec2, vec2) + 2 * (pow(cy->diameter / 2, 2) / cy->height) * ecn \
 			- (1 + pow(cy->diameter / 2, 2) / pow(cy->height, 2)) * pow(ecn, 2) - pow(cy->diameter / 2, 2);
+	if (fabs(det[0]) < EPSILON && fabs(det[1]) < EPSILON && fabs(det[2]) < EPSILON)
+		return (get_parallel_cone(cy, p1, p2));
 	res = det[1] * det[1] - det[0] * det[2];
 	if (res < 0)
 		return (-1.0);
@@ -352,45 +370,3 @@ double	intersect_cone(t_fig *cy, t_vector p1, t_vector p2)
 	}
 	return (-1.0);
 }
-
-/*
-bool is_close(double a, double b) 
-{
-	return (fabs(a - b) < EPSILON);
-}
-
-// 점이 직선 위에 있는지 확인하는 함수
-double is_point_on_line(t_vector line, t_vector point, t_vector p) {
-	double t_x, t_y, t_z;
-
-	// 방향 벡터가 0이 아닌 축에 대해서 t 값 계산
-	if (fabs(line.x) > EPSILON)
-		t_x = (p.x - point.x) / line.x;
-	else
-		t_x = NAN; // 방향 벡터가 0인 경우 t_x 계산 불가
-
-	if (fabs(line.y) > EPSILON)
-		t_y = (p.y - point.y) / line.y;
-	else
-		t_y = NAN; // 방향 벡터가 0인 경우 t_y 계산 불가
-
-	if (fabs(line.z) > EPSILON)
-		t_z = (p.z - point.z) / line.z;
-	else
-		t_z = NAN; // 방향 벡터가 0인 경우 t_z 계산 불가
-
-	// 유효한 t 값이 있을 경우 비교 (x, y, z 중 하나라도 t 값이 있으면 됨)
-	if (!isnan(t_x)) {
-		if ((!isnan(t_y) && !is_close(t_x, t_y)) || \
-			(!isnan(t_z) && !is_close(t_x, t_z)))
-			return (-);
-		return true;
-	} else if (!isnan(t_y)) {
-		if (!isnan(t_z) && !is_close(t_y, t_z)) 
-			return (-);
-		return true;
-	} else if (!isnan(t_z))
-		return true; // z만 유효한 경우
-	return (-); // 어느 방향 벡터도 0이 아니면서 비교할 t값이 없는 경우
-}
-*/
