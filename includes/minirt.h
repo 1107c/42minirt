@@ -135,6 +135,21 @@ typedef struct s_ray
 	t_vector	save;
 }	t_ray;
 
+typedef struct	s_util
+{
+	t_vector	origin;
+	t_vector	ray_dir;
+	t_vector	from_fig_center;
+	double		abc[3];
+	double		t[2];
+	double		alpha;
+	double		beta;
+	double		det;
+	double		dn;
+	double		ecn;
+	double		ecd;
+}	t_util;
+
 typedef struct s_amblight
 {
 	t_vector	rgb;
@@ -285,7 +300,14 @@ t_vector	add_vec(t_vector lhs, t_vector rhs);
 t_vector	sub_vec(t_vector lhs, t_vector rhs);
 t_vector	mul_vec(t_vector lhs, double rhs);
 int			is_normalized_vec(t_vector vec);
+<<<<<<< HEAD
 t_vector	init_point(t_cam *cam, t_vector point);
+=======
+t_vector	init_point(t_cam *cam);
+
+// void		cross_product(t_vector *lhs, t_vector *rhs, t_vector *res);
+// t_vector	cross_product(t_vector lhs, t_vector rhs);
+>>>>>>> e7ebe3b702320ff45ffcac90aba72d94f22a4284
 
 /* intersection.c */
 // double	intersect_plane(t_fig *pl, t_ray ray);
