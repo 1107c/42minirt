@@ -221,7 +221,7 @@ double  get_parallel_norm_hit(t_fig *cy, t_vector point, t_vector end)
 // dn = dot_product(vec1, cy->normal_vec);
 // det[0] = dot_product(vec1, vec1) - dn * dn;
 // det[1] = dot_product(vec1, vec2) - dot_product(vec2, cy->normal_vec) * dn;
-// det[2] = dot_product(vec2, vec2) - dot_product(vec2, cy->normal_vec) * \
+// det[2] = dot_product(vec2, vec2) - dot_product(vec2, cy->normal_vec) *
 // 		dot_product(vec2, cy->normal_vec) - (cy->diameter * cy->diameter) / 4;
 
 t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2)
@@ -247,9 +247,9 @@ t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2)
 // ecn = dot_product(cy->normal_vec, vec2);
 // ecd = dot_product(vec1, vec2);
 // det[0] = dot_product(vec1, vec1) - (1 + pow(cy->diameter / 2, 2) / pow(cy->height, 2)) * pow(dn, 2);
-// det[1] = ecd + (pow(cy->diameter / 2, 2) / cy->height) * dn \
+// det[1] = ecd + (pow(cy->diameter / 2, 2) / cy->height) * dn
 // 		- (1 + pow(cy->diameter / 2, 2) / pow(cy->height, 2)) * ecn * dn;
-// det[2] = dot_product(vec2, vec2) + 2 * (pow(cy->diameter / 2, 2) / cy->height) * ecn \
+// det[2] = dot_product(vec2, vec2) + 2 * (pow(cy->diameter / 2, 2) / cy->height) * ecn
 // 		- (1 + pow(cy->diameter / 2, 2) / pow(cy->height, 2)) * pow(ecn, 2) - pow(cy->diameter / 2, 2);
 // res = det[1] * det[1] - det[0] * det[2];
 
@@ -300,7 +300,7 @@ void	get_cy_solution(t_util *util, t_fig *cy)
 // t[1] = (-det[1] - sqrt(res)) / det[0];
 // beta += t[1] * dn;
 
-void	get_cn_solution(t_util *util, t_fig *cy)
+void	get_cn_solution(t_util *util)
 {
 	util->t[0] = (-util->abc[1] + sqrt(util->det)) / util->abc[0];
 	util->t[1] = (-util->abc[1] - sqrt(util->det)) / util->abc[0];
@@ -308,7 +308,7 @@ void	get_cn_solution(t_util *util, t_fig *cy)
 	util->beta = util->alpha + (util->t[1] - util->t[0]) * util->dn;
 }
 
-double	handle_cy_positive(t_util util, t_fig *cy, t_vector p2, int *flag)
+double	handle_cy_positive(t_util util, t_fig *cy, int *flag)
 {
 	if (util.t[0] < util.t[1])
 	{
@@ -359,7 +359,7 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 	t_util		util;
 
 	util = init_cy_util(cy, p1, p2);
-	if (fabs(util.abc[0]) < EPSILON && fabs(util.abc[1] < EPSILON))
+	if (fabs(util.abc[0]) < EPSILON && fabs(util.abc[1]) < EPSILON)
 		return (parallel_to_cy_norm(util, cy, p1, p2));
 	if (util.det < 0)
 		return (-1.0);
@@ -369,7 +369,7 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 		|| (util.t[0] <= 0 && util.t[1] <= 0))
 		return (-1.0);
 	if ((util.t[0] > 0 && util.t[1] > 0))
-		return (handle_cy_positive(util, cy, p2, flg));
+		return (handle_cy_positive(util, cy, flg));
 	*flg = 1;
 	if (util.t[0] >= 0)
 		return (util.t[0]);
@@ -394,7 +394,7 @@ double	intersect_cone(t_fig *cn, t_vector p1, t_vector p2)
 	// if (fabs(util.abc[0]) < EPSILON && fabs(util.abc[1] < EPSILON))
 	if (util.det < 0)
 		return (-1.0);
-	get_cn_solution(&util, cn);
+	get_cn_solution(&util);
 	if ((util.alpha < 0 && util.beta < 0) \
 		|| (util.alpha > cn->height && util.beta > cn->height) \
 		|| (util.t[0] <= 0 && util.t[1] <= 0))

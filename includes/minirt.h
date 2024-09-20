@@ -58,7 +58,7 @@
 # define INT_MAX	2147483647
 # define INT_MIN	-2147483648
 # define INF		1e13
-# define EPSILON	1e-3
+# define EPSILON	1e-14
 
 # define LIGHT_MAX	10
 # define FIG_MAX	50

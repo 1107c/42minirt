@@ -94,7 +94,7 @@ int	key_handle(int keycode, t_rt *rt)
 		fig_resize_height(keycode, rt);
 	else if (keycode == KEY_SPACE)
 		return (key_checkboard(rt), 0);
-	clear_image(rt->img);
+	// clear_image(rt->img);
 	return (draw(rt), 0);
 }
 
@@ -102,33 +102,33 @@ void	key_translate(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_W)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, 20));
+		mul_vec(rt->cam->orient_vec, 5));
 	else if (keycode == KEY_S)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, -20));
+		mul_vec(rt->cam->orient_vec, -5));
 	else if (keycode == KEY_A)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, -20));
+		mul_vec(rt->cam->right_vec, -5));
 	else if (keycode == KEY_D)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, 20));
+		mul_vec(rt->cam->right_vec, 5));
 	else if (keycode == KEY_Q)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, 20));
+		mul_vec(rt->cam->up_vec, 5));
 	else if (keycode == KEY_E)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, -20));
+		mul_vec(rt->cam->up_vec, -5));
 }
 
 void	key_rotate(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_UP)
-		rt->cam->phi += 20;
+		rt->cam->phi += 0.03;
 	else if (keycode == KEY_DOWN)
-		rt->cam->phi -= 20;
+		rt->cam->phi -= 0.03;
 	else if (keycode == KEY_LEFT)
-		rt->cam->theta -= 20;
+		rt->cam->theta -= 0.05;
 	else if (keycode == KEY_RIGHT)
-		rt->cam->theta += 20;
+		rt->cam->theta += 0.05;
 	get_cam_basis(rt->cam);
 }

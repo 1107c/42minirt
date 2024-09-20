@@ -70,7 +70,7 @@ void	draw(t_rt *rt)
 
 
 // 콘의 옆면에서 ray가 만났을 때의 법선벡터를 반환
-t_vector	get_cone_normal(t_fig *cn, t_vector inter_vec, t_vector eye, double t)
+t_vector	get_cone_normal(t_fig *cn, t_vector inter_vec, t_vector eye)
 {
 	t_vector	edge;
 	t_vector	side;
@@ -80,8 +80,8 @@ t_vector	get_cone_normal(t_fig *cn, t_vector inter_vec, t_vector eye, double t)
 	edge = add_vec(cn->xyz, mul_vec(cn->normal_vec, cn->height));
 	side = normalize_vec(sub_vec(inter_vec, edge));
 	d = dot_product(eye, side);
-	norm = add_vec(eye, mul_vec(side, d));
-	return (normalize_vec(norm));
+	norm = normalize_vec(add_vec(eye, mul_vec(side, d)));
+	return (norm);
 }
 
 
@@ -126,6 +126,10 @@ void get_plane_uv(t_vector point, t_fig *fig, double *u, double *v)
 	// if (sqrt(dot_product(up_vec, up_vec)) == 0)
 	// 	up_vec = normalize_vec(cross_product(fig->normal_vec, (t_vector){0, 0, 1, 0}));
 	// t_vector right_vec = normalize_vec(cross_product(up_vec, fig->normal_vec));
+	// t_vector	local_point;
+
+
+
 	t_vector vec1 = normalize_vec((t_vector){fig->normal_vec.y, -fig->normal_vec.x, 0, 0});
 	t_vector vec2 = cross_product(fig->normal_vec, vec1);
 	*u = fmod(dot_product(point, vec1) * 0.01, 1);
@@ -164,6 +168,71 @@ int is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *ligh
 	return (0);
 }
 
+void	get_pl_uv(t_vector inter_vec, t_fig *fig, double *u, double *v)
+{
+	double	u1;
+	double	v1;
+	double	u2[2];
+	double	v2[2];
+	double	det;
+	double	x;
+	double	y;
+	t_vector	temp[2];
+	t_vector	tmp;
+
+	u2[0] = fig->right_vec.x;
+	u2[1] = fig->right_vec.y;
+	v2[0] = fig->up_vec.x;
+	v2[1] = fig->up_vec.y;
+	temp[0] = mul_vec(fig->right_vec, 10000);
+	temp[1] = mul_vec(fig->up_vec, 10000);
+	tmp = sub_vec(sub_vec(inter_vec, temp[0]), temp[1]);
+	x = tmp.x;
+	y = tmp.y;
+	if (fig->right_vec.x == 0 && fig->up_vec.x == 0)
+	{
+		u2[0] = fig->right_vec.z;
+		v2[0] = fig->up_vec.z;
+		x = tmp.z;
+	}
+	if (fig->right_vec.y == 0 && fig->up_vec.y == 0)
+	{
+		u2[1] = fig->right_vec.z;
+		v2[1] = fig->up_vec.z;
+		y = tmp.z;
+	}
+	det = u2[0] * v2[1] - u2[1] * v2[0];
+	u1 = (v2[1] * x - v2[0] * y) / det;
+	v1 = (-u2[1] * x - u2[0] * y) / det;
+	*u = u1 * 0.05;
+	*v = v1 * 0.05;
+}
+
+void	get_cylinder_uv(t_vector p, double h, double *u, double *v)
+{
+	double	theta;
+	double	raw_u;
+	// double	u1;
+	// double	v1;
+
+	// u1 = p.x;
+	// v1 = p.z;
+	// if (fabs(p.x) < EPSILON)
+	// 	u1 = p.y;
+	// if (fabs(p.z) < EPSILON)
+	// 	v1 = p.y;
+	(void) h;
+	// theta = atan2(u1, v1);
+	theta = atan2(p.x, p.z);
+	raw_u = theta / (2 * M_PI);
+	// printf("theta, raw_u: %lf, %lf\n", theta, raw_u);
+	*u = 1 - (raw_u + 0.5);
+	// *v = h - floor(h);
+	*v = p.y - floor(p.y);
+	// printf("u, v: %lf %lf\n", *u, *v);
+	// *u *= 0.05;
+	// *v *= 0.05;
+}
 
 void draw_line(t_rt *rt, t_vector point, int i, int j)
 {
@@ -251,14 +320,30 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 				double u, v;
 				t_vector local_point;
 
-				if (fig->type == SPHERE || fig->type == CYLINDER)
+				if (fig->type == SPHERE)
 				{
 					local_point = normalize_vec(sub_vec(inter_vec, fig->xyz));
 					get_sphere_uv(local_point, &u, &v);
 				}
 				else if (fig->type == PLANE)
 				{
-					get_plane_uv(point, fig, &u, &v);
+					get_pl_uv(inter_vec, fig, &u, &v);
+					// printf("u, v: %lf, %lf\n", u, v);
+					// get_plane_uv(point, fig, &u, &v);
+				}
+				else if (fig->type == CYLINDER)
+				{
+					double	dn = dot_product(sub_vec(point, rt->cam->coords), \
+								 fig->normal_vec);
+					double	h = dot_product(rt->cam->coords, fig->normal_vec) \
+								+ t * dn \
+								- dot_product(fig->xyz, fig->normal_vec);
+					local_point = add_vec(fig->xyz, mul_vec(fig->normal_vec, h));
+					local_point = sub_vec(inter_vec, local_point);
+					// local_point = sub_vec(inter_vec, fig->xyz);
+					local_point = normalize_vec(local_point);
+					get_cylinder_uv(local_point, h, &u, &v);
+					u *= fig->diameter / 2;
 				}
 				if (is_checker(u, v, 10))
 					pixel_to_image(rt->img, i, j, (t_vector){fmin(255, specular_sum.x), fmin(255, specular_sum.y), fmin(255, specular_sum.z), 0});
