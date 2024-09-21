@@ -27,11 +27,11 @@ int	main(int arg, char **args)
 		return (close(fd), print_err(FATAL_ERR));
 	parse_data(rt);
 	set_cam(rt->cam, rt->win_x, rt->win_y);
-	print_rt(rt);
-	draw(rt);
+	//print_rt(rt);
 	mlx_key_hook(rt->win, &key_handle, rt);
 	mlx_mouse_hook(rt->win, &mouse_handle, rt);
 	mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
+	draw(rt);
 	mlx_loop(rt->mlx);
 	return (EXIT_SUCCESS);
 }

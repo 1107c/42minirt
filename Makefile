@@ -11,8 +11,7 @@
 # **************************************************************************** #
 
 CC = cc -g
-CFLAGS = -g -Wall -Wextra -Werror
-
+CFLAGS = -g 
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 

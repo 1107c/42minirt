@@ -401,7 +401,10 @@ double	intersect_cone(t_fig *cn, t_vector p1, t_vector p2)
 		return (-1.0);
 	if ((util.t[0] > 0 && util.t[1] > 0))
 		return (handle_cn_positive(util, cn));
+	// return (-1.0);
+	// printf("t: %lf, %lf\n", util.t[0], util.t[1]);
 	if (util.t[0] >= 0)
 		return (util.t[0]);
+	// return (-1.0);
 	return (util.t[1]);
 }

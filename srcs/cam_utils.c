@@ -17,10 +17,10 @@ static void	update_orient(t_cam *cam);
 
 void	set_cam(t_cam *cam, double x, double y)
 {
-	printf("set cam: %lf, %lf\n", x, y);
+	//printf("set cam: %lf, %lf\n", x, y);
 	cam->distance_to_view = WINDOW_WIDTH / \
 							(2 * tan(ANG * (cam->fov / 2)));
-	printf("dist: %lf\n", cam->distance_to_view);
+	//printf("dist: %lf\n", cam->distance_to_view);
 	cam->origin_orient_vec = cam->orient_vec;
 	get_cam_basis(cam);
 	cam->origin_right_vec = cam->right_vec;
@@ -60,13 +60,13 @@ void	get_cam_basis(t_cam *cam)
 	else
 		y_unit_vector = (t_vector){0, 0, -1, 0};
 	z_inv = cam->orient_vec;
-	printf("orient vector: %lf, %lf, %lf\n", \
+	// printf("orient vector: %lf, %lf, %lf\n", \
 			cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
 	cam->right_vec = cross_product(y_unit_vector, z_inv);
 	cam->up_vec = cross_product(z_inv, cam->right_vec);
-	printf("base right vector: %lf, %lf, %lf\n", \
+	// printf("base right vector: %lf, %lf, %lf\n", \
 			cam->right_vec.x, cam->right_vec.y, cam->right_vec.z);
-	printf("base up vector: %lf, %lf, %lf\n", \
+	// printf("base up vector: %lf, %lf, %lf\n", \
 			cam->up_vec.x, cam->up_vec.y, cam->up_vec.z);
 	inv_right = invert_vec(cam->right_vec);
 	cam->corner_vec = sub_vec(inv_right, cam->up_vec);
@@ -82,9 +82,9 @@ void	update_orient(t_cam *cam)
 	cam->orient_vec = add_vec(cam->orient_vec, \
 		mul_vec(cam->origin_up_vec, sin(ANG * cam->phi)));
 	cam->orient_vec = normalize_vec(cam->orient_vec);
-	printf("%lf %lf\n", cam->phi, cam->theta);
-	printf("orient vector: %lf, %lf, %lf\n",
-		cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
+	//printf("%lf %lf\n", cam->phi, cam->theta);
+	// printf("orient vector: %lf, %lf, %lf\n",
+		// cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
 }
 
 // comment -> yeojukim

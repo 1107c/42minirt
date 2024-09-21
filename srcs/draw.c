@@ -70,18 +70,40 @@ void	draw(t_rt *rt)
 
 
 // 콘의 옆면에서 ray가 만났을 때의 법선벡터를 반환
-t_vector	get_cone_normal(t_fig *cn, t_vector inter_vec, t_vector eye)
-{
-	t_vector	edge;
-	t_vector	side;
-	t_vector	norm;
-	double		d;
+// t_vector	get_cone_normal(t_fig *cn, t_vector inter_vec, t_vector eye)
+// {
+// 	t_vector	edge;
+// 	t_vector	side;
+// 	t_vector	norm;
+// 	double		d;
 
-	edge = add_vec(cn->xyz, mul_vec(cn->normal_vec, cn->height));
-	side = normalize_vec(sub_vec(inter_vec, edge));
-	d = dot_product(eye, side);
-	norm = normalize_vec(add_vec(eye, mul_vec(side, d)));
-	return (norm);
+// 	edge = add_vec(cn->xyz, mul_vec(cn->normal_vec, cn->height));
+// 	side = normalize_vec(sub_vec(inter_vec, edge));
+// 	d = -dot_product(eye, side);
+// 	norm = normalize_vec(add_vec(eye, mul_vec(side, d)));
+// 	return (norm);
+// }
+
+t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t)
+{
+	t_vector	d;
+	t_vector	ec;
+	t_vector	q;
+	double		ecn;
+	double		dn;
+	double		r;
+	double		alpha;
+
+	d = sub_vec(p2, p1);
+	ec = sub_vec(p1, cn->xyz);
+	ecn = dot_product(ec, cn->normal_vec);
+	dn = dot_product(d, cn->normal_vec);
+	alpha = ecn + t * dn;
+	r = cn->diameter * (cn->height - alpha) / (2 * cn->height);
+	q = sub_vec(add_vec(ec, mul_vec(d, t)), mul_vec(cn->normal_vec, ecn + t * dn));
+	q = add_vec(mul_vec(cn->normal_vec, r), mul_vec(q, cn->height - alpha));
+	q = normalize_vec(q);
+	return (q);
 }
 
 
@@ -137,8 +159,13 @@ void get_plane_uv(t_vector point, t_fig *fig, double *u, double *v)
 }
 int is_checker(double u, double v, int checker_size)
 {
+	if (u < 0)
+		u = -u + 0.1;
+	if (v < 0)
+		v = -v + 0.1;
 	int u_check = (int)(u * checker_size);
 	int v_check = (int)(v * checker_size);
+
 	return ((u_check + v_check) % 2);
 }
 int is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *light)
@@ -170,42 +197,31 @@ int is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *ligh
 
 void	get_pl_uv(t_vector inter_vec, t_fig *fig, double *u, double *v)
 {
-	double	u1;
-	double	v1;
-	double	u2[2];
-	double	v2[2];
-	double	det;
-	double	x;
-	double	y;
-	t_vector	temp[2];
 	t_vector	tmp;
+	double		u2[2];
+	double		v2[2];
+	double		det;
 
 	u2[0] = fig->right_vec.x;
 	u2[1] = fig->right_vec.y;
 	v2[0] = fig->up_vec.x;
 	v2[1] = fig->up_vec.y;
-	temp[0] = mul_vec(fig->right_vec, 10000);
-	temp[1] = mul_vec(fig->up_vec, 10000);
-	tmp = sub_vec(sub_vec(inter_vec, temp[0]), temp[1]);
-	x = tmp.x;
-	y = tmp.y;
+	tmp = sub_vec(inter_vec, fig->xyz);
 	if (fig->right_vec.x == 0 && fig->up_vec.x == 0)
 	{
 		u2[0] = fig->right_vec.z;
 		v2[0] = fig->up_vec.z;
-		x = tmp.z;
+		tmp.x = tmp.z;
 	}
 	if (fig->right_vec.y == 0 && fig->up_vec.y == 0)
 	{
 		u2[1] = fig->right_vec.z;
 		v2[1] = fig->up_vec.z;
-		y = tmp.z;
+		tmp.y = tmp.z;
 	}
 	det = u2[0] * v2[1] - u2[1] * v2[0];
-	u1 = (v2[1] * x - v2[0] * y) / det;
-	v1 = (-u2[1] * x - u2[0] * y) / det;
-	*u = u1 * 0.05;
-	*v = v1 * 0.05;
+	*u = 0.05 * (v2[1] * tmp.x - v2[0] * tmp.y) / det;
+	*v = 0.05 * (-u2[1] * tmp.x - u2[0] * tmp.y) / det;
 }
 
 void	get_cylinder_uv(t_vector p, double h, double *u, double *v)
@@ -271,12 +287,16 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			e_vec = normalize_vec(sub_vec(rt->cam->coords, inter_vec));
 			if (flg == 1)
 				n_vec = fig->normal_vec;
-			else
+			else if (fig->type == CYLINDER)
 			{
 				n_vec = sub_vec(inter_vec, fig->xyz);
 				double theta = dot_product(n_vec, fig->normal_vec) / sqrt(dot_product(n_vec, n_vec));
 				n_vec = sub_vec(n_vec, mul_vec(fig->normal_vec, theta));
 				n_vec = normalize_vec(n_vec);
+			}
+			else if (fig->type == CONE)
+			{
+				n_vec = get_cone_normal(fig, rt->cam->coords, point, t);
 			}
 		}
 		if (t >= 0 && t <= d)
@@ -295,10 +315,10 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 			while (tmp)
 			{
 				l_vec = normalize_vec(sub_vec(tmp->xyz, inter_vec));
-				if (fig->type == PLANE)
-					r_vec = normalize_vec(sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec));
-				else
-					r_vec = invert_vec(normalize_vec(sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec)));
+				// if (fig->type == PLANE)
+				// 	r_vec = normalize_vec(sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec));
+				// else
+					r_vec = (normalize_vec(sub_vec(mul_vec(n_vec, 2 * dot_product(n_vec, l_vec)), l_vec)));
 				if (!is_in_shadow(rt, inter_vec, l_vec, tmp))
 				{
 					diffuse_color = mul_vec((t_vector){fmin(255, fmax(0, fig->rgb.x * tmp->rgb.x)),fmin(255, fmax(0, fig->rgb.y * tmp->rgb.y)), fmin(255, fmax(0, fig->rgb.z * tmp->rgb.z)),0}, fmax(0.0, dot_product(n_vec, l_vec)) * tmp->brightness * diffuse_strength);
@@ -327,9 +347,9 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 				}
 				else if (fig->type == PLANE)
 				{
-					get_pl_uv(inter_vec, fig, &u, &v);
+					// get_pl_uv(inter_vec, fig, &u, &v);
 					// printf("u, v: %lf, %lf\n", u, v);
-					// get_plane_uv(point, fig, &u, &v);
+					get_plane_uv(point, fig, &u, &v);
 				}
 				else if (fig->type == CYLINDER)
 				{

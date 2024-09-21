@@ -127,8 +127,8 @@ void	key_rotate(int keycode, t_rt *rt)
 	else if (keycode == KEY_DOWN)
 		rt->cam->phi -= 0.03;
 	else if (keycode == KEY_LEFT)
-		rt->cam->theta -= 0.05;
+		rt->cam->theta -= 0.1;
 	else if (keycode == KEY_RIGHT)
-		rt->cam->theta += 0.05;
+		rt->cam->theta += 0.1;
 	get_cam_basis(rt->cam);
 }
