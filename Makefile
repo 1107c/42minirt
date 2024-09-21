@@ -11,14 +11,16 @@
 # **************************************************************************** #
 
 CC = cc -g
-CFLAGS = -g 
+CFLAGS = -g
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 
 PRE_MEN_C = 2d_array_utils.c close.c error.c init.c key_handle.c main.c parse.c \
 			parse_element.c parse_figure.c parse_utils.c init_utils.c print_data.c \
 			draw.c vector_util.c vector_util2.c intersection.c lst_utils.c \
-			cam_utils.c key_handle_2.c mouse_handle.c
+			cam_utils.c key_handle_2.c mouse_handle.c intersection_utils_cn.c \
+			intersection_utils_cy1.c intersection_utils_cy2.c get_uv.c draw_utils.c \
+			light_and_shadow.c get_ray_dist.c
 PRE_MEN_O = $(PRE_MEN_C:%.c=%.o)
 
 MEN_C	=	$(addprefix $(MEN_DIR),$(PRE_MEN_C))
@@ -71,7 +73,7 @@ $(LIB) : $(LIB_DIR)
 $(MLX_DIR)$(MLX):
 	make -C $(MLX_DIR)
 
-clean :	
+clean :
 	make clean -C $(LIB_DIR)
 	make clean -C $(MLX_DIR)
 	rm -f $(MEN_O) $(BONUS_O) $(LIB)
@@ -86,4 +88,3 @@ re : fclean all
 bonus : all
 
 .PHONY : all clean fclean re bonus
-

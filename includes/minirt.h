@@ -18,6 +18,11 @@
 # define CYLINDER	2
 # define CONE		3
 
+# define AMBIENT_STRENGTH	0.85
+# define DIFFUSE_STRENGTH	0.35
+# define SPECULAR_STRENGTH	0.2
+# define SHINESS	128.0
+
 # ifndef WINDOW_WIDTH
 #  define WINDOW_WIDTH	1920
 # endif
@@ -136,7 +141,7 @@ typedef struct s_ray
 	t_vector	save;
 }	t_ray;
 
-typedef struct	s_util
+typedef struct s_util
 {
 	t_vector	origin;
 	t_vector	ray_dir;
@@ -177,6 +182,25 @@ typedef struct s_cam
 	double		phi;
 	int			ch;
 }	t_cam;
+
+typedef struct s_vec
+{
+	t_vector	inter_vec;
+	t_vector	n_vec;
+	t_vector	l_vec;
+	t_vector	e_vec;
+	t_vector	r_vec;
+}	t_vec;
+
+typedef struct s_color
+{
+	t_vector	diffuse_color;
+	t_vector	specular_color;
+	t_vector	amb;
+	t_vector	dif_sum;
+	t_vector	spe_sum;
+	t_vector	final_color;
+}	t_color;
 
 typedef struct s_light
 {
@@ -230,6 +254,8 @@ typedef struct s_rt
 	int			light_cnt;
 	t_fig		*selected;
 	t_light		*selected_light;
+	t_vec		vec;
+	t_color		color;
 	char		*line;
 	char		*error;
 	char		**map;
@@ -330,8 +356,48 @@ t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
 void		fig_light_translate(int keycode, t_fig *fig, t_light *light);
 void		key_light(int keycode, t_rt *rt);
 void		fig_rotate(int keycode, t_rt *rt);
+void		key_checkboard(t_rt *rt);
 
 /* mouse_handle.c */
-int	mouse_handle(int keycode, int x, int y, t_rt *rt);
+int			mouse_handle(int keycode, int x, int y, t_rt *rt);
+
+/* intersection_util_cy1*/
+double		find_eqution(t_fig *cy, t_util util, double small, double big);
+t_vector	get_point(t_vector p1, t_vector p2, double t);
+double		get_traingle_height(t_fig *cy, t_vector point);
+t_vector	get_closest_center(t_fig *cy, t_vector point);
+double		get_parallel_norm_hit(t_fig *cy, t_vector point, t_vector end);
+
+/* intersection_util_cy2*/
+t_util		init_cy_util(t_fig *cy, t_vector p1, t_vector p2);
+double		parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, \
+	t_vector p2);
+void		get_cy_solution(t_util *util, t_fig *cy);
+double		handle_cy_positive(t_util util, t_fig *cy, int *flag);
+
+/* intersection_utils_cn.c */
+double		handle_cn_positive(t_util util, t_fig *cn);
+t_util		init_cn_util(t_fig *cn, t_vector p1, t_vector p2);
+void		get_cn_solution(t_util *util);
+
+/* get_uv.c */
+void		get_sphere_uv(double uv[2], t_fig *fig, t_rt *rt);
+void		get_cylinder_uv(t_vector point, double uv[2], t_fig *fig, t_rt *rt, double t);
+void		get_plane_uv(t_vector inter_vec, t_fig *fig, double *u, double *v);
+
+/* draw_utils.c */
+void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
+int			encode_rgb(double red, double green, double blue);
+void		clear_image(t_image *img);
+
+/* get_ray_dist.c */
+t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t);
+double		get_ray_dist_cy(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec);
+double		get_ray_dist(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec);
+
+/* light_and_shadow.c  */
+void		add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp);
+void		multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig);
+int 		is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *light);
 
 #endif

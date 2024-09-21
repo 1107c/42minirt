@@ -12,6 +12,20 @@
 
 #include "../includes/minirt.h"
 
+void	key_checkboard(t_rt *rt)
+{
+	if (rt->selected && rt->selected->is_check == -1)
+	{
+		rt->selected->is_check *= -1;
+		draw(rt);
+	}
+	else if (rt->selected && rt->selected->is_check == 1)
+	{
+		rt->selected->is_check *= -1;
+		draw(rt);
+	}
+}
+
 t_vector	fig_light_translate_module(int move, int dir, t_vector vec)
 {
 	if (dir == 0)

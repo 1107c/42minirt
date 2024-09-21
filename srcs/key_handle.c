@@ -51,24 +51,6 @@ void	fig_resize_height(int keycode, t_rt *rt)
 		rt->selected->height -= 2;
 }
 
-void	key_checkboard(t_rt *rt)
-{
-	// double d, t;
-	// d = INF;
-	if (rt->selected && rt->selected->is_check == -1)
-	{
-		//rt->selected->checker *= -1;
-		rt->selected->is_check *= -1;
-		draw(rt);
-		//rt->selected->checker *= -1;
-	}
-	else if (rt->selected && rt->selected->is_check == 1)
-	{
-		rt->selected->is_check *= -1;
-		draw(rt);
-	}
-}
-
 int	key_handle(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_ESC)
@@ -94,7 +76,6 @@ int	key_handle(int keycode, t_rt *rt)
 		fig_resize_height(keycode, rt);
 	else if (keycode == KEY_SPACE)
 		return (key_checkboard(rt), 0);
-	// clear_image(rt->img);
 	return (draw(rt), 0);
 }
 
