@@ -14,8 +14,8 @@
 
 int	main(int arg, char **args)
 {
-	t_rt	*rt;
-	int		fd;
+	t_rt		*rt;
+	int			fd;
 
 	if (arg <= 1)
 		return (print_err(NO_ARG));

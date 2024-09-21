@@ -16,27 +16,38 @@
 static void	draw_line(t_rt *rt, t_vector point, int i, int j);
 static int	encode_rgb(double red, double green, double blue);
 
-void	draw(t_rt *rt)
+void	*render_scene(void *wk)
 {
+	t_worker	*worker;
 	t_vector	point;
 	int			i;
 	int			j;
 
-	i = -1;
-	j = -1;
-	point = init_point(rt->cam);
-	while (++j < WINDOW_HEIGHT)
+	worker = wk;
+	j = worker->y_start - 1;
+	point = init_point(worker->rt->cam);
+	point = add_vec(point, mul_vec(worker->rt->cam->up_vec, -j));
+	while (++j < worker->y_end)
 	{
+		i = -1;
 		while (++i < WINDOW_WIDTH)
 		{
 			// rt->cam->ray = cam_ray(rt->cam, rt, i, j);
-			draw_line(rt, point, i, j);
-			point = add_vec(point, rt->cam->right_vec);
+			draw_line(worker->rt, point, i, j);
+			point = add_vec(point, worker->rt->cam->right_vec);
 		}
-		point = sub_vec(point, add_vec(mul_vec(rt->cam->right_vec, i), \
-		rt->cam->up_vec));
-		i = -1;
+		point = sub_vec(point, add_vec(mul_vec(worker->rt->cam->right_vec, i), \
+		worker->rt->cam->up_vec));
 	}
+	return (NULL);
+}
+
+void	draw(t_rt *rt)
+{
+	t_worker	workers[THREADS_NUM];
+
+	init_workers(workers, rt);
+	thread_work(workers);
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
 
@@ -132,31 +143,31 @@ void get_sphere_uv(t_vector point, double *u, double *v)
 	*v = 0.5 + asin(point.y) / M_PI;
 }
 
-void get_plane_uv(t_vector point, t_fig *fig, double *u, double *v)
-{
-	//t_vector	local_point;
-// t_vector right_normalized = normalize_vec(fig->right_vec);
-// t_vector up_normalized = normalize_vec(fig->up_vec);
+// void get_plane_uv(t_vector point, t_fig *fig, double *u, double *v)
+// {
+// 	//t_vector	local_point;
+// // t_vector right_normalized = normalize_vec(fig->right_vec);
+// // t_vector up_normalized = normalize_vec(fig->up_vec);
 
-	//local_point =  mul_vec(sub_vec(point, fig->normal_vec), 0.002);
-	// *u = dot_product(local_point, fig->right_vec) / dot_product(fig->right_vec, fig->right_vec);
-	// *v = dot_product(local_point, fig->up_vec) / dot_product(fig->up_vec, fig->up_vec);
-	// fig->up_vec.y = 1;
-	// fig->right_vec.z = 1;
-	// fig->up_vec.z = 1;
-	// t_vector	up_vec = normalize_vec(cross_product(fig->normal_vec, (t_vector){1, 0, 0, 0}));
-	// if (sqrt(dot_product(up_vec, up_vec)) == 0)
-	// 	up_vec = normalize_vec(cross_product(fig->normal_vec, (t_vector){0, 0, 1, 0}));
-	// t_vector right_vec = normalize_vec(cross_product(up_vec, fig->normal_vec));
-	// t_vector	local_point;
+// 	//local_point =  mul_vec(sub_vec(point, fig->normal_vec), 0.002);
+// 	// *u = dot_product(local_point, fig->right_vec) / dot_product(fig->right_vec, fig->right_vec);
+// 	// *v = dot_product(local_point, fig->up_vec) / dot_product(fig->up_vec, fig->up_vec);
+// 	// fig->up_vec.y = 1;
+// 	// fig->right_vec.z = 1;
+// 	// fig->up_vec.z = 1;
+// 	// t_vector	up_vec = normalize_vec(cross_product(fig->normal_vec, (t_vector){1, 0, 0, 0}));
+// 	// if (sqrt(dot_product(up_vec, up_vec)) == 0)
+// 	// 	up_vec = normalize_vec(cross_product(fig->normal_vec, (t_vector){0, 0, 1, 0}));
+// 	// t_vector right_vec = normalize_vec(cross_product(up_vec, fig->normal_vec));
+// 	// t_vector	local_point;
 
 
 
-	t_vector vec1 = normalize_vec((t_vector){fig->normal_vec.y, -fig->normal_vec.x, 0, 0});
-	t_vector vec2 = cross_product(fig->normal_vec, vec1);
-	*u = fmod(dot_product(point, vec1) * 0.01, 1);
-	*v = fmod(dot_product(point, vec2) * 0.01, 1);
-}
+// 	t_vector vec1 = normalize_vec((t_vector){fig->normal_vec.y, -fig->normal_vec.x, 0, 0});
+// 	t_vector vec2 = cross_product(fig->normal_vec, vec1);
+// 	*u = fmod(dot_product(point, vec1) * 0.01, 1);
+// 	*v = fmod(dot_product(point, vec2) * 0.01, 1);
+// }
 int is_checker(double u, double v, int checker_size)
 {
 	if (u < 0)
@@ -346,11 +357,7 @@ void draw_line(t_rt *rt, t_vector point, int i, int j)
 					get_sphere_uv(local_point, &u, &v);
 				}
 				else if (fig->type == PLANE)
-				{
-					// get_pl_uv(inter_vec, fig, &u, &v);
-					// printf("u, v: %lf, %lf\n", u, v);
-					get_plane_uv(point, fig, &u, &v);
-				}
+					get_pl_uv(inter_vec, fig, &u, &v);
 				else if (fig->type == CYLINDER)
 				{
 					double	dn = dot_product(sub_vec(point, rt->cam->coords), \
