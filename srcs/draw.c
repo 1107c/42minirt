@@ -53,6 +53,8 @@ void	draw(t_rt *rt)
 void	draw_line(t_rt *rt, t_vector point, int i, int j)
 {
 	t_fig	*fig;
+	t_vec	vec;
+	t_color	color;
 	double	d;
 	double	t;
 
@@ -60,15 +62,15 @@ void	draw_line(t_rt *rt, t_vector point, int i, int j)
 	d = INF;
 	while (fig)
 	{
-		t = get_ray_dist(point, fig, rt, &rt->vec);
+		t = get_ray_dist(point, fig, rt, &vec);
 		if (t >= 0 && t <= d)
 		{
 			d = t;
-			multi_lightning(rt, &rt->vec, &rt->color, fig);
+			multi_lightning(rt, &vec, &color, fig);
 			if (rt->selected && rt->selected->idx == fig->idx && \
 				rt->selected->is_check == 1)
 				checekrboard(rt, point, fig, t);
-			pixel_to_image(rt->img, i, j, rt->color.final_color);
+			pixel_to_image(rt->img, i, j, color.final_color);
 			rt->map[j][i] = fig->idx + 48;
 		}
 		fig = fig->next;
