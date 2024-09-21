@@ -35,9 +35,9 @@
 double	intersect_sphere(t_ray ray, t_fig *fig)
 {
 	t_vector	tvec;
-	double	abc[3];
-	double	disc;
-	double	t[2];
+	double		abc[3];
+	double		disc;
+	double		t[2];
 
 	tvec = sub_vec(ray.origin, fig->xyz);
 	abc[0] = dot_product(ray.direction, ray.direction);
@@ -48,7 +48,6 @@ double	intersect_sphere(t_ray ray, t_fig *fig)
 		return (-1.0);
 	t[0] = (-abc[1] - sqrt(disc)) / (2.0 * abc[0]);
 	t[1] = (-abc[1] + sqrt(disc)) / (2.0 * abc[0]);
-
 	if (t[0] > 0 && t[0] < t[1])
 		return (t[0]);
 	if (t[1] > 0)

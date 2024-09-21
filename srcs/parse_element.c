@@ -32,7 +32,8 @@ void	parse_amb(t_rt *rt, char **args)
 
 // ∗ identifier: C
 // ∗ x,y,z coordinates of the view point: -50.0,0,20
-// ∗ 3d normalized orientation vector. In range [-1,1] for each x,y,z axis: 0.0,0.0,1.0
+// ∗ 3d normalized orientation vector. 
+//	 In range [-1,1] for each x,y,z axis: 0.0,0.0,1.0
 // ∗ FOV : Horizontal field of view in degrees in range [0,180]: 70
 
 void	parse_cam(t_rt *rt, char **args)
@@ -68,8 +69,6 @@ void	parse_light(t_rt *rt, char **args)
 	light = lst_addback(rt, LIGHT);
 	if (!light)
 		free_2d_and_close_all(rt, args, MEM_ALLOC_ERR);
-	// if (rt->light->ch)
-	// 	free_2d_and_close_all(rt, args, LIGHT_DUP_ERR);
 	if (get_arg_len(args) != 4)
 		free_2d_and_close_all(rt, args, LIGHT_LEN_ERR);
 	if (!is_valid_multi_double_value(&(light->xyz), args[1], INT_MIN, INT_MAX))

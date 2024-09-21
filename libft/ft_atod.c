@@ -38,11 +38,11 @@ ssize_t	ft_atoss(char *s)
 	return (sign * res);
 }
 
-double ft_atod(char *str)
+double	ft_atod(char *str)
 {
 	ssize_t	i;
 	ssize_t	j;
-	ssize_t k;
+	ssize_t	k;
 	double	front;
 	double	back;
 
@@ -52,7 +52,6 @@ double ft_atod(char *str)
 		i++;
 	if (str[i] == '\0')
 		return ((double)ft_atoss(str));
-	// str[i] = '\0';
 	front = (double)ft_atoss(str);
 	k = i + 1;
 	while (str[++i])
@@ -63,5 +62,4 @@ double ft_atod(char *str)
 	else
 		front += back;
 	return (front);
-	// return(roundf(front * 10) / 10);
 }
