@@ -17,7 +17,7 @@
 # include <stdlib.h>
 # include "math.h"
 
-# define MAX_SIZE 1024
+# define MAX_SIZE 42
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42

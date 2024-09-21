@@ -16,26 +16,37 @@ static void	draw_line(t_rt *rt, t_vector point, int i, int j);
 static void	checekrboard(t_rt *rt, t_vector point, t_fig *fig, double t);
 static int	is_checker(double u, double v, int checker_size);
 
-void	draw(t_rt *rt)
+void	*render_scene(void *wk)
 {
+	t_worker	*worker;
 	t_vector	point;
 	int			i;
 	int			j;
 
-	i = -1;
-	j = -1;
-	point = init_point(rt->cam);
-	while (++j < WINDOW_HEIGHT)
+	worker = wk;
+	j = worker->y_start - 1;
+	point = init_point(worker->rt->cam);
+	point = add_vec(point, mul_vec(worker->rt->cam->up_vec, -j));
+	while (++j < worker->y_end)
 	{
+		i = -1;
 		while (++i < WINDOW_WIDTH)
 		{
-			draw_line(rt, point, i, j);
-			point = add_vec(point, rt->cam->right_vec);
+			draw_line(worker->rt, point, i, j);
+			point = add_vec(point, worker->rt->cam->right_vec);
 		}
-		point = sub_vec(point, add_vec(mul_vec(rt->cam->right_vec, i), \
-		rt->cam->up_vec));
-		i = -1;
+		point = sub_vec(point, add_vec(mul_vec(worker->rt->cam->right_vec, i), \
+		worker->rt->cam->up_vec));
 	}
+	return (NULL);
+}
+
+void	draw(t_rt *rt)
+{
+	t_worker	workers[THREADS_NUM];
+
+	init_workers(workers, rt);
+	thread_work(workers);
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
 }
 

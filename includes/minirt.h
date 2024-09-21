@@ -13,6 +13,8 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
+# define THREADS_NUM	16
+
 # define PLANE		0
 # define SPHERE		1
 # define CYLINDER	2
@@ -98,6 +100,7 @@
 # include <stdio.h>
 # include <math.h>
 # include <stdbool.h>
+# include <pthread.h>
 
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
@@ -261,6 +264,13 @@ typedef struct s_rt
 	char		**map;
 }	t_rt;
 
+typedef struct s_worker
+{
+	t_rt		*rt;
+	int			y_start;
+	int			y_end;
+}	t_worker;
+
 /* error.c */
 int			error(char *error_msg);
 int			print_err(t_msg	msg);
@@ -282,6 +292,7 @@ int			close_win(t_rt *rt);
 
 /* draw.c */
 void		draw(t_rt *rt);
+void		*render_scene(void *worker);
 void		clear_image(t_image *img);
 void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
 
@@ -361,25 +372,6 @@ void		key_checkboard(t_rt *rt);
 /* mouse_handle.c */
 int			mouse_handle(int keycode, int x, int y, t_rt *rt);
 
-/* intersection_util_cy1*/
-double		find_eqution(t_fig *cy, t_util util, double small, double big);
-t_vector	get_point(t_vector p1, t_vector p2, double t);
-double		get_traingle_height(t_fig *cy, t_vector point);
-t_vector	get_closest_center(t_fig *cy, t_vector point);
-double		get_parallel_norm_hit(t_fig *cy, t_vector point, t_vector end);
-
-/* intersection_util_cy2*/
-t_util		init_cy_util(t_fig *cy, t_vector p1, t_vector p2);
-double		parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, \
-	t_vector p2);
-void		get_cy_solution(t_util *util, t_fig *cy);
-double		handle_cy_positive(t_util util, t_fig *cy, int *flag);
-
-/* intersection_utils_cn.c */
-double		handle_cn_positive(t_util util, t_fig *cn);
-t_util		init_cn_util(t_fig *cn, t_vector p1, t_vector p2);
-void		get_cn_solution(t_util *util);
-
 /* get_uv.c */
 void		get_sphere_uv(double uv[2], t_fig *fig, t_rt *rt);
 void		get_cylinder_uv(t_vector point, double uv[2], t_fig *fig, t_rt *rt, double t);
@@ -399,5 +391,23 @@ double		get_ray_dist(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec);
 void		add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp);
 void		multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig);
 int 		is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *light);
+
+/* intersect_utils1.c */
+t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2);
+void	get_cy_solution(t_util *util, t_fig *cy);
+
+/* intersect_utils2.c */
+double	handle_cy_positive(t_util util, t_fig *cy, int *flag);
+double	find_equation(t_fig *cy, t_util util, double small, double big);
+double	handle_cn_positive(t_util util, t_fig *cn);
+
+/* intersect_utils3.c*/
+t_util	init_cn_util(t_fig *cn, t_vector p1, t_vector p2);
+double	parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, t_vector p2);
+void	get_cn_solution(t_util *util);
+
+/* threads.c */
+void	init_workers(t_worker *workers, t_rt *rt);
+void	thread_work(t_worker *workers);
 
 #endif
