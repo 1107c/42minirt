@@ -49,19 +49,17 @@ void	set_cam(t_cam *cam, double x, double y)
 void	get_cam_basis(t_cam *cam)
 {
 	t_vector	y_unit_vector;
-	t_vector	z_inv;
-	t_vector	inv_right;
 
 	update_orient(cam);
 	if (fabs(cam->orient_vec.y) != 1)
 		y_unit_vector = (t_vector){0, 1, 0, 0};
 	else
-		y_unit_vector = (t_vector){0, 0, -1, 0};
-	z_inv = cam->orient_vec;
-	cam->right_vec = cross_product(y_unit_vector, z_inv);
-	cam->up_vec = cross_product(z_inv, cam->right_vec);
-	inv_right = invert_vec(cam->right_vec);
-	cam->corner_vec = sub_vec(inv_right, cam->up_vec);
+		y_unit_vector = (t_vector){0, 0, -cam->orient_vec.y, 0};
+	cam->right_vec = cross_product(y_unit_vector, cam->orient_vec);
+	cam->right_vec = normalize_vec(cam->right_vec);
+	cam->up_vec = cross_product(cam->orient_vec, cam->right_vec);
+	cam->up_vec = normalize_vec(cam->up_vec);
+	cam->screen_origin = init_point(cam);
 }
 
 void	update_orient(t_cam *cam)

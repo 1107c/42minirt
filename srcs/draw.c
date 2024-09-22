@@ -13,33 +13,8 @@
 #include "../includes/minirt.h"
 
 static void	draw_line(t_rt *rt, t_vector point, int i, int j);
-static void	checekrboard(t_rt *rt, t_vector point, t_fig *fig, double t);
+static void	checkerboard(t_rt *rt, t_vector point, t_fig *fig, double t);
 static int	is_checker(double u, double v, int checker_size);
-
-void	*render_scene(void *wk)
-{
-	t_worker	*worker;
-	t_vector	point;
-	int			i;
-	int			j;
-
-	worker = wk;
-	j = worker->y_start - 1;
-	point = init_point(worker->rt->cam);
-	point = add_vec(point, mul_vec(worker->rt->cam->up_vec, -j));
-	while (++j < worker->y_end)
-	{
-		i = -1;
-		while (++i < WINDOW_WIDTH)
-		{
-			draw_line(worker->rt, point, i, j);
-			point = add_vec(point, worker->rt->cam->right_vec);
-		}
-		point = sub_vec(point, add_vec(mul_vec(worker->rt->cam->right_vec, i), \
-		worker->rt->cam->up_vec));
-	}
-	return (NULL);
-}
 
 void	draw(t_rt *rt)
 {
@@ -48,6 +23,39 @@ void	draw(t_rt *rt)
 	init_workers(workers, rt);
 	thread_work(workers);
 	mlx_put_image_to_window(rt->mlx, rt->win, rt->img->img, 0, 0);
+}
+
+void	*render_scene(void *wk)
+{
+	t_worker	*worker;
+	t_vector	point;
+	t_vector	p1;
+	int			i;
+	int			j;
+	time_t			start;
+	time_t			end;
+
+	start = clock();
+	worker = wk;
+	j = worker->y_start;
+	point = add_vec(worker->rt->cam->screen_origin, \
+			mul_vec(worker->rt->cam->up_vec, -j));
+	while (j < worker->y_end)
+	{
+		i = 0;
+		p1 = point;
+		while (i < WINDOW_WIDTH)
+		{
+			draw_line(worker->rt, point, i, j);
+			point = add_vec(point, mul_vec(worker->rt->cam->right_vec, 1));
+			i += 1;
+		}
+		j += 1;
+		point = sub_vec(p1, mul_vec(worker->rt->cam->up_vec, 1));
+	}
+	end = clock();
+	// printf("time: %lf\n", (double)(end - start) / CLOCKS_PER_SEC);
+	return (NULL);
 }
 
 void	draw_line(t_rt *rt, t_vector point, int i, int j)
@@ -60,26 +68,41 @@ void	draw_line(t_rt *rt, t_vector point, int i, int j)
 
 	fig = rt->fig;
 	d = INF;
+	vec.fig = NULL;
+	color.final_color = (t_vector) {0, 0, 0, 0};
+	vec.inter_vec = (t_vector) {0, 0, 0, 0};
+	vec.n_vec = (t_vector) {0, 0, 0, 0};
 	while (fig)
 	{
 		t = get_ray_dist(point, fig, rt, &vec);
-		if (t >= 0 && t <= d)
+		if (t > 0 && t <= d)
 		{
 			d = t;
-			multi_lightning(rt, &vec, &color, fig);
-			if (rt->selected && rt->selected->idx == fig->idx && \
-				rt->selected->is_check == 1)
-				checekrboard(rt, point, fig, t);
-			pixel_to_image(rt->img, i, j, color.final_color);
-			rt->map[j][i] = fig->idx + 48;
+			vec.inter_tg_vec = vec.inter_vec;
+			vec.n_tg_vec = vec.n_vec;
+			vec.fig = fig;
 		}
 		fig = fig->next;
 	}
+	vec.inter_vec = vec.inter_tg_vec;
+	vec.n_vec = vec.n_tg_vec;
+	if (!vec.fig)
+	{
+		rt->map[j][i] = 0;
+		pixel_to_image(rt->img, i, j, color.final_color);
+		return;		
+	}
+	rt->map[j][i] = vec.fig->idx + 48;
+	multi_lightning(rt, &vec, &color, vec.fig);
+	// if (rt->selected && rt->selected->idx == vec.fig->idx && \
+	// 	rt->selected->is_check == 1)
+	// 	checkerboard(rt, point, vec.fig, t);
+	pixel_to_image(rt->img, i, j, color.final_color);
 }
 
-void	checekrboard(t_rt *rt, t_vector point, t_fig *fig, double t)
+void	checkerboard(t_rt *rt, t_vector point, t_fig *fig, double t)
 {
-	double		uv[2];
+	double	uv[2];
 
 	if (fig->type == SPHERE)
 		get_sphere_uv(uv, fig, rt);

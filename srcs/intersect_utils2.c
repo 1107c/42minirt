@@ -19,7 +19,7 @@ double	handle_cy_positive(t_util util, t_fig *cy, int *flag)
 {
 	if (util.t[0] < util.t[1])
 	{
-		if (util.alpha > 0 && util.alpha <= cy->height)
+		if (util.alpha >= 0 && util.alpha <= cy->height)
 			return (util.t[0]);
 		else
 		{
@@ -29,7 +29,7 @@ double	handle_cy_positive(t_util util, t_fig *cy, int *flag)
 	}
 	else
 	{
-		if (util.beta > 0 && util.beta <= cy->height)
+		if (util.beta >= 0 && util.beta <= cy->height)
 			return (util.t[1]);
 		else
 		{

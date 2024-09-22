@@ -176,6 +176,8 @@ typedef struct s_cam
 	t_vector	origin_orient_vec;
 	t_vector	origin_right_vec;
 	t_vector	origin_up_vec;
+	t_vector	screen_origin;
+	t_vector	screen_width;
 	double		fov;
 	double		as_ratio;
 	double		distance_to_view;
@@ -185,15 +187,6 @@ typedef struct s_cam
 	double		phi;
 	int			ch;
 }	t_cam;
-
-typedef struct s_vec
-{
-	t_vector	inter_vec;
-	t_vector	n_vec;
-	t_vector	l_vec;
-	t_vector	e_vec;
-	t_vector	r_vec;
-}	t_vec;
 
 typedef struct s_color
 {
@@ -226,6 +219,7 @@ typedef struct s_fig
 	int				type;
 	double			diameter;
 	double			height;
+	double			radius_sq;
 	int				idx;
 	int				is_click;
 	int				is_check;
@@ -240,6 +234,18 @@ typedef struct s_image
 	int		endian;
 	char	*buffer;
 }	t_image;
+
+typedef struct s_vec
+{
+	t_vector	inter_vec;
+	t_vector	n_vec;
+	t_vector	l_vec;
+	t_vector	e_vec;
+	t_vector	r_vec;
+	t_vector	inter_tg_vec;
+	t_vector	n_tg_vec;
+	t_fig		*fig;
+}	t_vec;
 
 typedef struct s_rt
 {
@@ -395,6 +401,8 @@ int 		is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *li
 /* intersect_utils1.c */
 t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2);
 void	get_cy_solution(t_util *util, t_fig *cy);
+t_vector	find_closest_center(t_fig *cy, t_vector point);
+double	parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, t_vector p2);
 
 /* intersect_utils2.c */
 double	handle_cy_positive(t_util util, t_fig *cy, int *flag);
@@ -403,8 +411,9 @@ double	handle_cn_positive(t_util util, t_fig *cn);
 
 /* intersect_utils3.c*/
 t_util	init_cn_util(t_fig *cn, t_vector p1, t_vector p2);
-double	parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, t_vector p2);
 void	get_cn_solution(t_util *util);
+double	get_cy_up_hit(t_fig *cy, t_util util);
+
 
 /* threads.c */
 void	init_workers(t_worker *workers, t_rt *rt);

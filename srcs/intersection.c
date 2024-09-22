@@ -22,9 +22,9 @@ double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
 	d = dot_product(pl->normal_vec, pl->xyz) \
 		- dot_product(pl->normal_vec, cam);
 	res = dot_product(pl->normal_vec, vec);
-	if (fabs(res) <= EPSILON)
+	if (res == 0)
 	{
-		if (fabs(d) <= EPSILON)
+		if (d == 0)
 			return (0.0);
 		return (-1.0);
 	}
@@ -74,8 +74,19 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 		return (handle_cy_positive(util, cy, flg));
 	*flg = 1;
 	if (util.t[0] >= 0)
-		return (util.t[0]);
-	return (util.t[1]);
+	{
+		if (util.beta >= 0 && util.beta <= cy->height)
+			return (EPSILON);
+		return (get_cy_up_hit(cy, util));
+	} 
+	if (util.t[1] >= 0)
+	{
+		if (util.alpha >= 0 && util.alpha <= cy->height)
+			return (EPSILON);
+		return (get_cy_up_hit(cy, util));
+	}
+	return (EPSILON);
+	return (-1.0);
 }
 
 double	intersect_cone(t_fig *cn, t_vector p1, t_vector p2)

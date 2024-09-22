@@ -42,3 +42,21 @@ void	get_cn_solution(t_util *util)
 	util->alpha = util->t[0] * util->dn + util->ecn;
 	util->beta = util->alpha + (util->t[1] - util->t[0]) * util->dn;
 }
+
+double	get_cy_up_hit(t_fig *cy, t_util util)
+{
+	t_vector	close;
+	double		height;
+	double		total_dist;
+	double		c;
+	double		hyp;
+
+	close = find_closest_center(cy, util.origin);
+	height = fabs(dot_product(sub_vec(close, util.origin), \
+			cy->normal_vec));
+	total_dist = sqrt(dot_product(util.ray_dir, util.ray_dir));
+	c = fabs(dot_product(util.ray_dir, cy->normal_vec)) \
+			/ total_dist;
+	hyp = height / c;
+	return (hyp / total_dist);
+}

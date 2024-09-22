@@ -13,7 +13,7 @@
 #include "../includes/minirt.h"
 
 static double	get_parallel_norm_hit(t_fig *cy, t_vector point, t_vector end);
-static t_vector	find_closest_center(t_fig *cy, t_vector point);
+// static t_vector	find_closest_center(t_fig *cy, t_vector point);
 
 t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2)
 {

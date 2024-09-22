@@ -39,6 +39,7 @@ void	parse_sphere(t_rt *rt, char **args, int type)
 	if (!is_valid_single_double_value(rt, args[2], EPSILON, INT_MAX))
 		free_2d_and_close_all(rt, args, rt->error);
 	fig->diameter = ft_atod(args[2]);
+	fig->radius_sq = pow(fig->diameter / 2, 2);
 	if (!is_valid_multi_double_value(&(fig->rgb), args[3], 0, 255))
 		free_2d_and_close_all(rt, args, fig->rgb.error);
 }
@@ -57,6 +58,7 @@ void	parse_cylinder(t_rt *rt, char **args, int type)
 	if (!is_valid_single_double_value(rt, args[3], EPSILON, INT_MAX))
 		free_2d_and_close_all(rt, args, rt->error);
 	fig->diameter = ft_atod(args[3]);
+	fig->radius_sq = pow(fig->diameter / 2, 2);
 	if (!is_valid_single_double_value(rt, args[4], EPSILON, INT_MAX))
 		free_2d_and_close_all(rt, args, rt->error);
 	fig->height = ft_atod(args[4]);

@@ -94,6 +94,8 @@ t_cam	*init_cam(void)
 	cam->origin_orient_vec = (t_vector){0, 0, 0, NULL};
 	cam->origin_right_vec = (t_vector){0, 0, 0, NULL};
 	cam->origin_up_vec = (t_vector){0, 0, 0, NULL};
+	cam->screen_origin = (t_vector){0, 0, 0, NULL};
+	cam->screen_width = (t_vector){0, 0, 0, NULL};
 	return (cam);
 }
 

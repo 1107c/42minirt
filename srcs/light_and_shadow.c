@@ -28,11 +28,13 @@ void	add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp)
 int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
 	t_light *light)
 {
-	t_fig	*fig;
-	double	t;
-	double	max_t;
-	int		flg;
+	t_vector	dir;
+	t_fig		*fig;
+	double		t;
+	double		max_t;
+	int			flg;
 
+	dir = add_vec(inter_vec, light_dir);
 	fig = rt->fig;
 	max_t = sqrt(dot_product ((sub_vec(light->xyz, inter_vec)), \
 		sub_vec(light->xyz, inter_vec)));
@@ -40,14 +42,13 @@ int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
 	{
 		flg = 0;
 		if (fig->type == PLANE)
-			t = intersect_plane(fig, inter_vec, add_vec(inter_vec, light_dir));
+			t = intersect_plane(fig, inter_vec, dir);
 		else if (fig->type == SPHERE)
-			t = intersect_sphere(fig, inter_vec, add_vec(inter_vec, light_dir));
+			t = intersect_sphere(fig, inter_vec, dir);
 		else if (fig->type == CYLINDER)
-			t = intersect_cylinder(fig, inter_vec, add_vec(inter_vec, \
-				light_dir), &flg);
+			t = intersect_cylinder(fig, inter_vec, dir, &flg);
 		else if (fig->type == CONE)
-			t = intersect_cone(fig, inter_vec, add_vec(inter_vec, light_dir));
+			t = intersect_cone(fig, inter_vec, dir);
 		if (t > 0.001 && t < max_t)
 			return (1);
 		fig = fig->next;
@@ -72,7 +73,7 @@ void	multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig)
 			add_color(c, fig, vec, tmp);
 		c->specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, \
 			dot_product(vec->e_vec, vec->r_vec)), SHINESS) \
-		* tmp->brightness * SPECULAR_STRENGTH);
+			* tmp->brightness * SPECULAR_STRENGTH);
 		c->spe_sum = add_vec(c->spe_sum, c->specular_color);
 		tmp = tmp->next;
 	}
