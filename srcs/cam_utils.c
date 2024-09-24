@@ -46,6 +46,113 @@ void	set_cam(t_cam *cam, double x, double y)
 // theta = dot_product(proj_vector_yzx, z_unit_vector) /
 // 		sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
 // cam->right_vec = (t_vector) {theta, 0, -sqrt(1 - theta * theta), 0};
+
+void	copy_matrix3(t_mat3 a, t_mat3 b)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < 3)
+	{
+		j = -1;
+		while (++j < 3)
+			a[i][j] = b[i][j];
+	}
+}
+
+void	mul_matrix3(t_mat3 a, t_mat3 b)
+{
+	t_mat3	c;
+	int		i;
+	int		j;
+	int		k;
+
+	i = -1;
+	while (++i < 3)
+	{
+		j = -1;
+		while (++j < 3)
+		{
+			k = -1;
+			c[i][j] = 0;
+			while (++k < 3)
+				c[i][j] += a[i][k] * b[k][j];
+		}
+	}
+	copy_matrix3(a, c);
+}
+
+void	init_yz(t_mat3 a, double angle)
+{
+	a[0][0] = 1;
+	a[0][1] = 0;
+	a[0][2] = 0;
+	a[1][0] = 0;
+	a[1][1] = cos(angle);
+	a[1][2] = -sin(angle);
+	a[2][0] = 0;
+	a[2][1] = sin(angle);
+	a[2][2] = cos(angle);
+}
+
+void	init_zx(t_mat3 a, double angle)
+{
+	a[0][0] = cos(angle);
+	a[0][1] = 0;
+	a[0][2] = -sin(angle);
+	a[1][0] = 0;
+	a[1][1] = 1;
+	a[1][2] = 0;
+	a[2][0] = -sin(angle);
+	a[2][1] = 0;
+	a[2][2] = cos(angle);
+}
+
+t_vector	get_basis_from_matrix(t_mat3 a, t_vector base)
+{
+	t_vector	new_base;
+	double		mat[3];
+	double		mat1[3];
+	int			i;
+	int			j;
+
+	ft_bzero(mat, sizeof(mat));
+	i = -1;
+	mat1[0] = base.x;
+	mat1[1] = base.y;
+	mat1[2] = base.z;
+	while (++i < 3)
+	{
+		j = -1;
+		while (++j < 3)
+			mat[i] += a[i][j] * mat1[j];
+	}
+	new_base.x = mat[0];
+	new_base.y = mat[1];
+	new_base.z = mat[2];
+	return (normalize_vec(new_base));
+}
+
+
+void	basis(t_cam *cam, double phi, double theta)
+{
+	t_mat3	a;
+	t_mat3	b;
+
+	update_orient(cam);
+	init_yz(a, phi);
+	init_zx(b, theta);
+	mul_matrix3(b, a);
+	cam->right_vec = get_basis_from_matrix(b, cam->origin_right_vec);
+	cam->up_vec = get_basis_from_matrix(b, cam->origin_up_vec);
+	cam->screen_origin = init_point(cam);
+	// printf("phi, theta: %lf %lf\n", cam->phi, cam->theta);
+	// printf("orient: %lf %lf %lf\n", cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
+	// printf("right: %lf %lf %lf\n", cam->right_vec.x, cam->right_vec.y, cam->right_vec.z);
+	// printf("up: %lf %lf %lf\n", cam->up_vec.x, cam->up_vec.y, cam->up_vec.z);
+}
+
 void	get_cam_basis(t_cam *cam)
 {
 	t_vector	y_unit_vector;
@@ -54,7 +161,7 @@ void	get_cam_basis(t_cam *cam)
 	if (fabs(cam->orient_vec.y) != 1)
 		y_unit_vector = (t_vector){0, 1, 0, 0};
 	else
-		y_unit_vector = (t_vector){0, 0, -cam->orient_vec.y, 0};
+		y_unit_vector = (t_vector){0, 0, 1, 0};
 	cam->right_vec = cross_product(y_unit_vector, cam->orient_vec);
 	cam->right_vec = normalize_vec(cam->right_vec);
 	cam->up_vec = cross_product(cam->orient_vec, cam->right_vec);

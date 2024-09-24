@@ -25,6 +25,7 @@ void	init_workers(t_worker *workers, t_rt *rt)
 	{
 		workers[i].y_start = start;
 		start += h;
+		start += (3 - start % 3) % 3;
 		workers[i].y_end = start;
 		workers[i].rt = rt;
 		i++;

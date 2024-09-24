@@ -77,15 +77,16 @@ double	intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg)
 	{
 		if (util.beta >= 0 && util.beta <= cy->height)
 			return (EPSILON);
+		*flg = 1;
 		return (get_cy_up_hit(cy, util));
 	} 
 	if (util.t[1] >= 0)
 	{
 		if (util.alpha >= 0 && util.alpha <= cy->height)
 			return (EPSILON);
+		*flg = 1;
 		return (get_cy_up_hit(cy, util));
 	}
-	return (EPSILON);
 	return (-1.0);
 }
 
@@ -105,7 +106,12 @@ double	intersect_cone(t_fig *cn, t_vector p1, t_vector p2)
 		return (-1.0);
 	if ((util.t[0] > 0 && util.t[1] > 0))
 		return (handle_cn_positive(util, cn));
-	if (util.t[0] >= 0)
+	return (-1.0);
+	if (util.t[0] >= 0 && util.alpha >= 0 \
+		&& util.alpha <= cn->height)
 		return (util.t[0]);
-	return (util.t[1]);
+	if (util.t[1] >= 0 && util.beta >= 0 \
+		&& util.beta <= cn->height)
+		return (util.t[1]);
+	return (-1.0);
 }

@@ -104,8 +104,9 @@ int	rt_mlx_init(t_rt *rt)
 	rt->mlx = mlx_init();
 	if (!rt->mlx)
 		return (0);
-	mlx_get_screen_size(rt->mlx, &rt->win_x, &rt->win_y);
-	rt->win = mlx_new_window(rt->mlx, rt->win_x, rt->win_y, WINDOW_TITLE);
+	// mlx_get_screen_size(rt->mlx, &rt->win_x, &rt->win_y);
+	rt->win = mlx_new_window(rt->mlx, WINDOW_WIDTH, \
+				WINDOW_HEIGHT, WINDOW_TITLE);
 	if (!rt->win)
 	{
 		mlx_destroy_display(rt->mlx);

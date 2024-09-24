@@ -106,17 +106,22 @@ void	key_translate(int keycode, t_rt *rt)
 
 void	key_rotate(int keycode, t_rt *rt)
 {
-	if (keycode == KEY_UP && rt->cam->phi < 75.0)
-		rt->cam->phi += 0.5;
-	else if (keycode == KEY_DOWN && rt->cam->phi > -75.0)
-		rt->cam->phi -= 0.5;
+	if (keycode == KEY_UP)
+		rt->cam->phi += 10;
+	else if (keycode == KEY_DOWN)
+		rt->cam->phi -= 10;
 	else if (keycode == KEY_LEFT)
-		rt->cam->theta -= 0.5;
+		rt->cam->theta -= 10;
 	else if (keycode == KEY_RIGHT)
-		rt->cam->theta += 0.5;
+		rt->cam->theta += 10;
 	if (rt->cam->theta >= 180.0)
 		rt->cam->theta -= 360.0;
 	else if (rt->cam->theta <= -180.0)
 		rt->cam->theta += 360.0;
-	get_cam_basis(rt->cam);
+	if (rt->cam->phi >= 180.0)
+		rt->cam->phi -= 360.0;
+	else if (rt->cam->phi <= -180.0)
+		rt->cam->phi += 360.0;
+	basis(rt->cam, rt->cam->phi * (ANG), rt->cam->theta * ANG);
+	// get_cam_basis(rt->cam);
 }

@@ -105,6 +105,10 @@
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 
+typedef double			t_mat4[4][4];
+typedef double			t_mat3[3][3];
+typedef double			t_mat2[2][2];
+
 typedef enum e_msg
 {
 	NO_ARG,
@@ -197,6 +201,14 @@ typedef struct s_color
 	t_vector	spe_sum;
 	t_vector	final_color;
 }	t_color;
+
+typedef struct s_pallette
+{
+	double	a;
+	double	r;
+	double	g;
+	double	b;
+}	t_pallette;
 
 typedef struct s_light
 {
@@ -367,6 +379,7 @@ void		set_cam(t_cam *cam, double x, double y);
 void		get_cam_basis(t_cam *cam);
 void		update_ray(t_ray *ray, int right);
 t_ray		cam_ray(t_cam *cam, t_rt *rt, double x, double y);
+void		basis(t_cam *cam, double phi, double theta);
 
 /* key_handle_2.c */
 t_vector	fig_light_translate_module(int move, int dir, t_vector vec);

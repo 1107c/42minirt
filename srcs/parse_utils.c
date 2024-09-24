@@ -76,13 +76,13 @@ void	get_fig_idx_vec(t_rt *rt)
 	t_vector	z;
 
 	tmp = rt->fig;
-	if (fabs(tmp->normal_vec.y) != 1)
-		y_unit_vector = (t_vector){0, 1, 0, 0};
-	else
-		y_unit_vector = (t_vector){0, 0, -tmp->normal_vec.y, 0};
 	i = 1;
 	while (tmp)
 	{
+		if (fabs(tmp->normal_vec.y) != 1)
+			y_unit_vector = (t_vector){0, 1, 0, 0};
+		else
+			y_unit_vector = (t_vector){0, 0, -tmp->normal_vec.y, 0};
 		z = tmp->normal_vec;
 		tmp->right_vec = normalize_vec(cross_product(y_unit_vector, z));
 		tmp->up_vec = normalize_vec(cross_product(z, tmp->right_vec));

@@ -93,6 +93,12 @@ void	key_light(int keycode, t_rt *rt)
 
 void	fig_rotate(int keycode, t_rt *rt)
 {
+	printf("norm: %lf %lf %lf\n", rt->selected->normal_vec.x, \
+			rt->selected->normal_vec.y, rt->selected->normal_vec.z);
+	printf("up: %lf %lf %lf\n", rt->selected->up_vec.x, \
+			rt->selected->up_vec.y, rt->selected->up_vec.z);
+	printf("right: %lf %lf %lf\n", rt->selected->right_vec.x, \
+			rt->selected->right_vec.y, rt->selected->right_vec.z);
 	if (keycode == NUM_ROT_X && rt->selected && rt->selected->type != 1)
 	{
 		rt->selected->normal_vec = add_vec(mul_vec(rt->selected->right_vec, \
@@ -108,4 +114,10 @@ void	fig_rotate(int keycode, t_rt *rt)
 		rt->selected->up_vec = cross_product(rt->selected->normal_vec, \
 		rt->selected->right_vec);
 	}
+	printf("norm: %lf %lf %lf\n", rt->selected->normal_vec.x, \
+			rt->selected->normal_vec.y, rt->selected->normal_vec.z);
+	printf("up: %lf %lf %lf\n", rt->selected->up_vec.x, \
+			rt->selected->up_vec.y, rt->selected->up_vec.z);
+	printf("right: %lf %lf %lf\n", rt->selected->right_vec.x, \
+			rt->selected->right_vec.y, rt->selected->right_vec.z);
 }
