@@ -12,11 +12,11 @@
 
 #include "../includes/minirt.h"
 
-void	get_sphere_uv(double uv[2], t_fig *fig, t_rt *rt)
+void	get_sphere_uv(double uv[2], t_vector point, t_rt *rt)
 {
-	t_vector	point;
+	// t_vector	point;
 
-	point = normalize_vec(sub_vec(rt->vec.inter_vec, fig->xyz));
+	// point = normalize_vec(sub_vec(fig->, fig->xyz));
 	uv[0] = 0.5 + (atan2(point.z, point.x)) / (2 * M_PI);
 	uv[1] = 0.5 + asin(point.y) / M_PI;
 }
@@ -50,36 +50,14 @@ void	get_plane_uv(t_vector inter_vec, t_fig *fig, double *u, double *v)
 	*v = 0.05 * (-u2[1] * tmp.x - u2[0] * tmp.y) / det;
 }
 
-void	get_cylinder_uv(t_vector point, double uv[2], t_fig *fig, t_rt *rt, double t)
+void	get_cylinder_uv(t_vector point, double uv[2], t_fig *fig)
 {
 	double	theta;
-	double	raw_u;
-	// double	u1;
-	// double	v1;
-	double	dn = dot_product(sub_vec(point, rt->cam->coords), \
-				 fig->normal_vec);
-	double	h = dot_product(rt->cam->coords, fig->normal_vec) \
-				+ t * dn \
-				- dot_product(fig->xyz, fig->normal_vec);
-	t_vector	p;
-	p = add_vec(fig->xyz, mul_vec(fig->normal_vec, h));
-	p = sub_vec(rt->vec.inter_vec, p);
-	p = normalize_vec(p);
-	// u1 = p.x;
-	// v1 = p.z;
-	// if (fabs(p.x) < EPSILON)
-	// 	u1 = p.y;
-	// if (fabs(p.z) < EPSILON)
-	// 	v1 = p.y;
-	(void) h;
-	// theta = atan2(u1, v1);
-	theta = atan2(p.x, p.z);
-	raw_u = theta / (2 * M_PI);
-	// printf("theta, raw_u: %lf, %lf\n", theta, raw_u);
-	uv[0] = 1 - (raw_u + 0.5);
-	// *v = h - floor(h);
-	uv[1] = p.y - floor(p.y);
-	// printf("u, v: %lf %lf\n", *u, *v);
-	// *u *= 0.05;
-	// *v *= 0.05;
+	double	height;
+	t_vector	pc;
+	pc = normalize_vec(sub_vec(point, add_vec(fig->xyz, mul_vec(fig->normal_vec, fig->height / 2))));
+	theta = atan2(dot_product(pc, fig->right_vec), dot_product(pc, fig->up_vec)) + M_PI;
+	height = dot_product(pc, fig->normal_vec);
+	uv[0] = (theta * (0.5 * M_1_PI));
+	uv[1] = fmod(height, 1);
 }

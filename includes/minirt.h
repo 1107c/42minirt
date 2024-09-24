@@ -392,9 +392,10 @@ void		key_checkboard(t_rt *rt);
 int			mouse_handle(int keycode, int x, int y, t_rt *rt);
 
 /* get_uv.c */
-void		get_sphere_uv(double uv[2], t_fig *fig, t_rt *rt);
-void		get_cylinder_uv(t_vector point, double uv[2], t_fig *fig, t_rt *rt, double t);
-void		get_plane_uv(t_vector inter_vec, t_fig *fig, double *u, double *v);
+	void	get_cylinder_uv(t_vector point, double uv[2], t_fig *fig);
+	void	get_plane_uv(t_vector inter_vec, t_fig *fig, double *u, double *v);
+	void	get_sphere_uv(double uv[2], t_vector point, t_rt *rt);
+
 
 /* draw_utils.c */
 void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
