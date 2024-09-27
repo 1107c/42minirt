@@ -40,6 +40,9 @@ t_rt	*init_rt(int fd)
 	rt->fig_cnt = 0;
 	rt->selected = NULL;
 	rt->selected_light = NULL;
+	rt->did_get_normal_map = 0;
+	rt->bump = NULL;
+	rt->bump_cnt = 0;
 	init_map(rt);
 	return (rt);
 }

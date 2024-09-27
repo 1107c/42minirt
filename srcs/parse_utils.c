@@ -88,6 +88,8 @@ void	get_fig_idx_vec(t_rt *rt)
 		tmp->up_vec = normalize_vec(cross_product(z, tmp->right_vec));
 		tmp->rgb2 = tmp->rgb;
 		tmp->idx = i++;
+		tmp->is_check = -1;
+		tmp->is_bump = -1;
 		tmp = tmp->next;
 	}
 }
