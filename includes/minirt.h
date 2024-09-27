@@ -26,10 +26,10 @@
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH	1920
+#  define WINDOW_WIDTH	1260
 # endif
 # ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT	1080
+#  define WINDOW_HEIGHT	740
 # endif
 # define WINDOW_TITLE	"miniRT"
 

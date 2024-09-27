@@ -357,8 +357,6 @@ void	key_bump(int keycode, t_rt *rt)
 				close_all(rt, MEM_ALLOC_ERR);
 			rt->selected->bump = rt->selected->bump->next;
 			get_normal_map(rt->selected->bump, rt, get_xpm_name(rt->bump_cnt++));
-			// printf("%d\n". )
-			// rt->bump_cnt++;
 		}
 		else if (rt->selected->bump->next == NULL)
 			rt->selected->bump = rt->bump;
@@ -395,6 +393,9 @@ int	key_handle(int keycode, t_rt *rt)
 		return (key_checkboard(rt), 0);
 	else if (keycode == KEY_B || keycode == KEY_N)
 		return (key_bump(keycode, rt), 0);
+	printf("coords %f, %f, %f\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
+	printf("orinedt %f, %f, %f\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
+
 	return (draw(rt), 0);
 }
 

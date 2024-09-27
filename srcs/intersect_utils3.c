@@ -81,6 +81,7 @@ double	get_cy_up_hit(t_fig *cy, t_util util)
 	double		hyp;
 
 	close = find_closest_center(cy, util.origin, util.ray_dir);
+	// close =  add_vec(cy->xyz, mul_vec(cy->normal_vec, cy->height));
 	height = fabs(dot_product(sub_vec(close, util.origin), \
 			cy->normal_vec));
 	total_dist = sqrt(dot_product(util.ray_dir, util.ray_dir));
