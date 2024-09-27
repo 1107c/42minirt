@@ -83,31 +83,44 @@ void	mul_matrix3(t_mat3 a, t_mat3 b)
 	copy_matrix3(a, c);
 }
 
-void	init_yz(t_mat3 a, double angle)
+void	rot_matrix(t_mat3 a, double angle, t_vector vec)
 {
-	a[0][0] = 1;
-	a[0][1] = 0;
-	a[0][2] = 0;
-	a[1][0] = 0;
-	a[1][1] = cos(angle);
-	a[1][2] = -sin(angle);
-	a[2][0] = 0;
-	a[2][1] = sin(angle);
-	a[2][2] = cos(angle);
+	a[0][0] = cos(angle) + pow(vec.x, 2) * (1 - cos(angle));
+	a[0][1] = vec.x * vec.y * (1 - cos(angle)) - vec.z * sin(angle);
+	a[0][2] = vec.x * vec.z * (1 - cos(angle)) + vec.y * sin(angle);;
+	a[1][0] = vec.y * vec.x * (1 - cos(angle)) + vec.z * sin(angle);;
+	a[1][1] = cos(angle) + pow(vec.y, 2) * (1 - cos(angle));
+	a[1][2] = vec.y * vec.z * (1 - cos(angle)) - vec.x * sin(angle);
+	a[2][0] = vec.z * vec.x * (1 - cos(angle)) - vec.y * sin(angle);;
+	a[2][1] = vec.z * vec.y * (1 - cos(angle)) + vec.x * sin(angle);;
+	a[2][2] = cos(angle) + pow(vec.z, 2) * (1 - cos(angle));
 }
 
-void	init_zx(t_mat3 a, double angle)
-{
-	a[0][0] = cos(angle);
-	a[0][1] = 0;
-	a[0][2] = -sin(angle);
-	a[1][0] = 0;
-	a[1][1] = 1;
-	a[1][2] = 0;
-	a[2][0] = -sin(angle);
-	a[2][1] = 0;
-	a[2][2] = cos(angle);
-}
+// void	init_yz(t_mat3 a, double angle)
+// {
+// 	a[0][0] = 1;
+// 	a[0][1] = 0;
+// 	a[0][2] = 0;
+// 	a[1][0] = 0;
+// 	a[1][1] = cos(angle);
+// 	a[1][2] = -sin(angle);
+// 	a[2][0] = 0;
+// 	a[2][1] = sin(angle);
+// 	a[2][2] = cos(angle);
+// }
+
+// void	init_zx(t_mat3 a, double angle)
+// {
+// 	a[0][0] = cos(angle);
+// 	a[0][1] = 0;
+// 	a[0][2] = sin(angle);
+// 	a[1][0] = 0;
+// 	a[1][1] = 1;
+// 	a[1][2] = 0;
+// 	a[2][0] = -sin(angle);
+// 	a[2][1] = 0;
+// 	a[2][2] = cos(angle);
+// }
 
 t_vector	get_basis_from_matrix(t_mat3 a, t_vector base)
 {
@@ -134,6 +147,23 @@ t_vector	get_basis_from_matrix(t_mat3 a, t_vector base)
 	return (normalize_vec(new_base));
 }
 
+void	print_mat(t_mat3 a)
+{
+	int	i;
+	int	j;
+
+	i = -1;
+	while (++i < 3)
+	{
+		j = -1;
+		while (++j < 3)
+			printf("%lf ", a[i][j]);
+		printf("\n");
+	}
+	printf("\n");
+}
+
+
 
 void	basis(t_cam *cam, double phi, double theta)
 {
@@ -141,11 +171,11 @@ void	basis(t_cam *cam, double phi, double theta)
 	t_mat3	b;
 
 	update_orient(cam);
-	init_yz(a, phi);
-	init_zx(b, theta);
+	rot_matrix(a, phi, cam->origin_right_vec);
+	rot_matrix(b, theta, cam->origin_up_vec);
 	mul_matrix3(b, a);
 	cam->right_vec = get_basis_from_matrix(b, cam->origin_right_vec);
-	cam->up_vec = get_basis_from_matrix(b, cam->origin_up_vec);
+	cam->up_vec = normalize_vec(cross_product(cam->orient_vec, cam->right_vec));
 	cam->screen_origin = init_point(cam);
 	// printf("phi, theta: %lf %lf\n", cam->phi, cam->theta);
 	// printf("orient: %lf %lf %lf\n", cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
@@ -167,6 +197,10 @@ void	get_cam_basis(t_cam *cam)
 	cam->up_vec = cross_product(cam->orient_vec, cam->right_vec);
 	cam->up_vec = normalize_vec(cam->up_vec);
 	cam->screen_origin = init_point(cam);
+	// printf("phi, theta: %lf %lf\n", cam->phi, cam->theta);
+	// printf("orient: %lf %lf %lf\n", cam->orient_vec.x, cam->orient_vec.y, cam->orient_vec.z);
+	// printf("right: %lf %lf %lf\n", cam->right_vec.x, cam->right_vec.y, cam->right_vec.z);
+	// printf("up: %lf %lf %lf\n", cam->up_vec.x, cam->up_vec.y, cam->up_vec.z);
 }
 
 void	update_orient(t_cam *cam)

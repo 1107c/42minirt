@@ -12,14 +12,23 @@
 
 #include "../includes/minirt.h"
 
-void	add_color(t_color *color, t_vector fig_rgb, t_vec *vec, t_light *tmp)
+void	add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp)
 {
-	color->diffuse_color = mul_vec((t_vector){fmin(255, fmax(0, fig_rgb.x \
-	* tmp->rgb.x)), fmin(255, fmax(0, fig_rgb.y * tmp->rgb.y)), fmin(255, \
-		fmax(0, fig_rgb.z * tmp->rgb.z)), 0}, fmax(0.0, dot_product(vec->n_vec, \
-	vec->l_vec)) * tmp->brightness * DIFFUSE_STRENGTH);
+	double	d;
+	double	e;
+
+	d = dot_product(vec->n_vec, vec->l_vec);
+	if (fig->type == PLANE)
+		d = fabs(d);
+	e = dot_product(vec->e_vec, vec->r_vec);
+	if (dot_product(vec->n_vec, vec->n_vec) == 0)
+		e = 0;
+	color->diffuse_color = mul_vec((t_vector){fmin(255, fmax(0, fig->rgb.x \
+	* tmp->rgb.x)), fmin(255, fmax(0, fig->rgb.y * tmp->rgb.y)), fmin(255, \
+	fmax(0, fig->rgb.z * tmp->rgb.z)), 0}, fmax(0.0, d) \
+	* tmp->brightness * DIFFUSE_STRENGTH);
 	color->specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, \
-	dot_product(vec->e_vec, vec->r_vec)), SHINESS) * \
+	e), SHINESS) * \
 	tmp->brightness * SPECULAR_STRENGTH);
 	color->dif_sum = add_vec(color->dif_sum, color->diffuse_color);
 	color->spe_sum = add_vec(color->spe_sum, color->specular_color);
@@ -38,13 +47,14 @@ int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
 	fig = rt->fig;
 	max_t = sqrt(dot_product ((sub_vec(light->xyz, inter_vec)), \
 		sub_vec(light->xyz, inter_vec)));
+	flg = 0;
 	while (fig)
 	{
 		flg = 0;
 		if (fig->type == PLANE)
 			t = intersect_plane(fig, inter_vec, dir);
 		else if (fig->type == SPHERE)
-			t = intersect_sphere(fig, inter_vec, dir);
+			t = intersect_sphere(fig, inter_vec, dir, &flg);
 		else if (fig->type == CYLINDER)
 			t = intersect_cylinder(fig, inter_vec, dir, &flg);
 		else if (fig->type == CONE)
@@ -70,7 +80,7 @@ void	multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig)
 		vec->r_vec = (normalize_vec(sub_vec(mul_vec(vec->n_vec, 2 * \
 			dot_product(vec->n_vec, vec->l_vec)), vec->l_vec)));
 		if (!is_in_shadow(rt, vec->inter_vec, vec->l_vec, tmp))
-				add_color(c, fig->rgb, vec, tmp);
+				add_color(c, fig, vec, tmp);
 		c->specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, \
 			dot_product(vec->e_vec, vec->r_vec)), SHINESS) \
 			* tmp->brightness * SPECULAR_STRENGTH);

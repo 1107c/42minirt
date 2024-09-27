@@ -402,7 +402,7 @@ t_vector	init_point(t_cam *cam);
 /* intersection.c */
 // double	intersect_plane(t_fig *pl, t_ray ray);
 double		intersect_plane(t_fig *pl, t_vector cam, t_vector point);
-double		intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
+double		intersect_sphere(t_fig *sp, t_vector cam, t_vector point, int *flag);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
 double		intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
 double		intersect_cone(t_fig *cy, t_vector p1, t_vector p2);
@@ -445,14 +445,14 @@ double		get_ray_dist_cy(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec);
 double		get_ray_dist(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec);
 
 /* light_and_shadow.c  */
-void		add_color(t_color *color, t_vector fig_rgb, t_vec *vec, t_light *tmp);
+void		add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp);
 void		multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig);
 int 		is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *light);
 
 /* intersect_utils1.c */
 t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2);
 void	get_cy_solution(t_util *util, t_fig *cy);
-t_vector	find_closest_center(t_fig *cy, t_vector point);
+t_vector	find_closest_center(t_fig *cy, t_vector point, t_vector ray);
 double	parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, t_vector p2);
 
 /* intersect_utils2.c */
