@@ -22,7 +22,7 @@
 
 # define AMBIENT_STRENGTH	0.85
 # define DIFFUSE_STRENGTH	0.35
-# define SPECULAR_STRENGTH	0.2
+# define SPECULAR_STRENGTH	0
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
@@ -363,7 +363,7 @@ t_vector	init_point(t_cam *cam);
 /* intersection.c */
 // double	intersect_plane(t_fig *pl, t_ray ray);
 double		intersect_plane(t_fig *pl, t_vector cam, t_vector point);
-double		intersect_sphere(t_fig *sp, t_vector cam, t_vector point);
+double		intersect_sphere(t_fig *sp, t_vector cam, t_vector point, int *flag);
 // int	intersect_sphere(t_ray *ray, t_fig *fig);
 double		intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
 double		intersect_cone(t_fig *cy, t_vector p1, t_vector p2);
@@ -414,7 +414,7 @@ int 		is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *li
 /* intersect_utils1.c */
 t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2);
 void	get_cy_solution(t_util *util, t_fig *cy);
-t_vector	find_closest_center(t_fig *cy, t_vector point);
+t_vector	find_closest_center(t_fig *cy, t_vector point, t_vector ray);
 double	parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, t_vector p2);
 
 /* intersect_utils2.c */

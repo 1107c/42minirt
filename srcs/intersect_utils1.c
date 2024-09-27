@@ -37,7 +37,7 @@ t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2)
 double	parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, t_vector p2)
 {
 	if (fabs(util.abc[2]) < EPSILON)
-		return (get_parallel_norm_hit(cy, p1, p2));
+		return (get_parallel_norm_hit(cy, p1, sub_vec(p2, p1)));
 	return (-1.0);
 }
 
@@ -48,7 +48,7 @@ double	get_parallel_norm_hit(t_fig *cy, t_vector point, t_vector end)
 	double		height;
 	double		total_dist;
 
-	closer_area = find_closest_center(cy, point);
+	closer_area = find_closest_center(cy, point, end);
 	t[0] = sub_vec(closer_area, point);
 	height = fabs(dot_product(t[0], cy->normal_vec));
 	t[1] = sub_vec(end, point);
@@ -56,12 +56,13 @@ double	get_parallel_norm_hit(t_fig *cy, t_vector point, t_vector end)
 	return (height / total_dist);
 }
 
-t_vector	find_closest_center(t_fig *cy, t_vector point)
+t_vector	find_closest_center(t_fig *cy, t_vector point, t_vector ray)
 {
 	t_vector	top;
 	t_vector	bottom;
 	t_vector	t[2];
 	double		dist[2];
+	double		c;
 
 	bottom = cy->xyz;
 	top = add_vec(cy->xyz, mul_vec(cy->normal_vec, cy->height));
@@ -69,17 +70,40 @@ t_vector	find_closest_center(t_fig *cy, t_vector point)
 	t[1] = sub_vec(top, point);
 	dist[0] = dot_product(t[0], t[0]);
 	dist[1] = dot_product(t[1], t[1]);
+	// if (dist[0] < dist[1])
+		// return (bottom);
+	// return (top);
+	c = dot_product(ray, sub_vec(bottom, point));
 	if (dist[0] < dist[1])
-		return (bottom);
-	return (top);
+	{
+		if (c > 0)
+			return (bottom);
+		return (top);
+	}
+	c = dot_product(ray, sub_vec(top, point));
+	if (c > 0)
+		return (top);
+	return (bottom);
 }
 
 void	get_cy_solution(t_util *util, t_fig *cy)
 {
+	double	temp_t;
+	double	temp_h;
+
 	util->t[0] = (-util->abc[1] + sqrt(util->det)) / util->abc[0];
 	util->t[1] = (-util->abc[1] - sqrt(util->det)) / util->abc[0];
 	util->alpha = dot_product(util->origin, cy->normal_vec) \
 				+ util->t[0] * util->dn \
 				- dot_product(cy->xyz, cy->normal_vec);
 	util->beta = util->alpha + (util->t[1] - util->t[0]) * util->dn;
+	if (util->t[0] > util->t[1])
+	{
+		temp_t = util->t[0];
+		util->t[0] = util->t[1];
+		util->t[1] = temp_t;
+		temp_h = util->alpha;
+		util->alpha = util->beta;
+		util->beta = temp_h;
+	}
 }

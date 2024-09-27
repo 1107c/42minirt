@@ -39,6 +39,8 @@ void	fig_resize_dia(int keycode, t_rt *rt)
 
 void	fig_resize_height(int keycode, t_rt *rt)
 {
+	if (!rt->selected)
+		return ;
 	if (keycode == KEY_PLUS && rt->selected->type == 2)
 		rt->selected->height += 2;
 	if (keycode == KEY_MINUS && rt->selected->type == 2 && \
@@ -76,6 +78,8 @@ int	key_handle(int keycode, t_rt *rt)
 		fig_resize_height(keycode, rt);
 	else if (keycode == KEY_SPACE)
 		return (key_checkboard(rt), 0);
+	// printf("coords: %lf %lf %lf\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
+	// printf("orient: %lf %lf %lf\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
 	return (draw(rt), 0);
 }
 
@@ -84,23 +88,23 @@ void	key_translate(int keycode, t_rt *rt)
 	if (keycode == KEY_W)
 	{
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, 5));
+		mul_vec(rt->cam->orient_vec, 3));
 	}
 	else if (keycode == KEY_S)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, -5));
+		mul_vec(rt->cam->orient_vec, -3));
 	else if (keycode == KEY_D)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, 5));
+		mul_vec(rt->cam->right_vec, 3));
 	else if (keycode == KEY_A)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, -5));
+		mul_vec(rt->cam->right_vec, -3));
 	else if (keycode == KEY_Q)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, 5));
+		mul_vec(rt->cam->up_vec, 3));
 	else if (keycode == KEY_E)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, -5));
+		mul_vec(rt->cam->up_vec, -3));
 	rt->cam->screen_origin = init_point(rt->cam);
 }
 
