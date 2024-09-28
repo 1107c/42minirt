@@ -14,12 +14,9 @@
 
 t_util		init_cn_util(t_fig *cn, t_vector p1, t_vector p2)
 {
-	t_util		util;
-	t_vector	apex;
-	t_vector	d;
-	double		radius;
-	double		height_ratio;
-	double		h;
+	t_util	util;
+	double	radius;
+	double	height_ratio;
 
 	util.origin = p1;
 	util.ray_dir = sub_vec(p2, p1);
@@ -42,12 +39,14 @@ t_util		init_cn_util(t_fig *cn, t_vector p1, t_vector p2)
 	util.abc[0] = dot_product(util.ray_dir, util.ray_dir) - \
 				(1 + height_ratio) \
 				* pow(util.dn, 2);
-	util.abc[1] = util.ecd + util.dn * ((pow(radius, 2) / cn->height) \
-			- (1 + height_ratio) * util.ecn);
+	util.abc[1] = util.ecd - util.ecn * util.dn * (1 + height_ratio) \
+				+ height_ratio * cn->height * util.dn;
 	util.abc[2] = dot_product(util.from_fig_center, util.from_fig_center) \
 			+ 2 * (pow(radius, 2) / cn->height) * util.ecn \
 			- (1 + height_ratio) \
 			* pow(util.ecn, 2) - pow(radius, 2);
+	util.c = cn->height / sqrt(pow(radius, 2) + pow(cn->height, 2));
+	util.h = cn->height * 2;
 	// util.abc[0] = dot_product(util.ray_dir, util.ray_dir) - 2 * pow(util.ray_dir.y, 2);
 	// util.abc[1] = util.ray_dir.x * util.origin.x - util.ray_dir.y * util.origin.y \
 				+ util.ray_dir.z * util.origin.z;

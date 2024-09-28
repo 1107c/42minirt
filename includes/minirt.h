@@ -170,6 +170,8 @@ typedef struct s_util
 	double		dn;
 	double		ecn;
 	double		ecd;
+	double		c;
+	double		h;
 }	t_util;
 
 typedef struct s_amblight

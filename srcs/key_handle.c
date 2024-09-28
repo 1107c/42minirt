@@ -414,23 +414,23 @@ void	key_translate(int keycode, t_rt *rt)
 	if (keycode == KEY_W)
 	{
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, 3));
+		mul_vec(rt->cam->orient_vec, 1));
 	}
 	else if (keycode == KEY_S)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, -3));
+		mul_vec(rt->cam->orient_vec, -1));
 	else if (keycode == KEY_D)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, 3));
+		mul_vec(rt->cam->right_vec, 1));
 	else if (keycode == KEY_A)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, -3));
+		mul_vec(rt->cam->right_vec, -1));
 	else if (keycode == KEY_Q)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, 3));
+		mul_vec(rt->cam->up_vec, 1));
 	else if (keycode == KEY_E)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, -3));
+		mul_vec(rt->cam->up_vec, -1));
 	rt->cam->screen_origin = init_point(rt->cam);
 }
 

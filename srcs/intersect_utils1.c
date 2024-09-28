@@ -89,21 +89,17 @@ t_vector	find_closest_center(t_fig *cy, t_vector point, t_vector ray)
 void	get_cy_solution(t_util *util, t_fig *cy)
 {
 	double	temp_t;
-	double	temp_h;
 
 	util->t[0] = (-util->abc[1] + sqrt(util->det)) / util->abc[0];
 	util->t[1] = (-util->abc[1] - sqrt(util->det)) / util->abc[0];
-	util->alpha = dot_product(util->origin, cy->normal_vec) \
-				+ util->t[0] * util->dn \
-				- dot_product(cy->xyz, cy->normal_vec);
-	util->beta = util->alpha + (util->t[1] - util->t[0]) * util->dn;
 	if (util->t[0] > util->t[1])
 	{
 		temp_t = util->t[0];
 		util->t[0] = util->t[1];
 		util->t[1] = temp_t;
-		temp_h = util->alpha;
-		util->alpha = util->beta;
-		util->beta = temp_h;
 	}
+	util->alpha = dot_product(util->origin, cy->normal_vec) \
+				+ util->t[0] * util->dn \
+				- dot_product(cy->xyz, cy->normal_vec);
+	util->beta = util->alpha + (util->t[1] - util->t[0]) * util->dn;
 }
