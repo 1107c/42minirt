@@ -47,16 +47,29 @@ int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
 	fig = rt->fig;
 	max_t = sqrt(dot_product ((sub_vec(light->xyz, inter_vec)), \
 		sub_vec(light->xyz, inter_vec)));
-	flg = 0;
 	while (fig)
 	{
 		flg = 0;
 		if (fig->type == PLANE)
 			t = intersect_plane(fig, inter_vec, dir);
 		else if (fig->type == SPHERE)
+		{
 			t = intersect_sphere(fig, inter_vec, dir, &flg);
+			if (flg == 1)
+				{
+				fig = fig->next;
+				continue ;
+				}
+		}
 		else if (fig->type == CYLINDER)
+		{
 			t = intersect_cylinder(fig, inter_vec, dir, &flg);
+			if (flg == 2)
+			{
+				fig = fig->next;
+				continue ;
+			}
+		}
 		else if (fig->type == CONE)
 			t = intersect_cone(fig, inter_vec, dir);
 		if (t > 0.001 && t < max_t)
