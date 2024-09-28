@@ -53,14 +53,7 @@ int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
 		if (fig->type == PLANE)
 			t = intersect_plane(fig, inter_vec, dir);
 		else if (fig->type == SPHERE)
-		{
 			t = intersect_sphere(fig, inter_vec, dir, &flg);
-			if (flg == 1)
-				{
-				fig = fig->next;
-				continue ;
-				}
-		}
 		else if (fig->type == CYLINDER)
 		{
 			t = intersect_cylinder(fig, inter_vec, dir, &flg);
