@@ -22,14 +22,14 @@
 
 # define AMBIENT_STRENGTH	0.85
 # define DIFFUSE_STRENGTH	0.35
-# define SPECULAR_STRENGTH	0
+# define SPECULAR_STRENGTH	0.2
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH	1020
+#  define WINDOW_WIDTH	1260
 # endif
 # ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT	500
+#  define WINDOW_HEIGHT	740
 # endif
 # define WINDOW_TITLE	"miniRT"
 
@@ -46,6 +46,8 @@
 # define KEY_D		100
 # define KEY_Q		113
 # define KEY_E		101
+# define KEY_B		98
+# define KEY_N		110
 # define KEY_LIGHT	108
 # define KEY_PLUS	61
 # define KEY_MINUS	45
@@ -118,6 +120,26 @@ typedef enum e_msg
 	OPEN_ERR,
 }	t_msg;
 
+typedef enum e_path
+{
+	PATH_1,
+	PATH_2,
+	PATH_3,
+	PATH_4,
+	PATH_5,
+	PATH_6,
+	PATH_7,
+	PATH_8,
+	PATH_9,
+	PATH_10,
+	PATH_11,
+	PATH_12,
+	PATH_13,
+	PATH_14,
+	PATH_15,
+	PATH_16,
+}	t_path;
+
 typedef enum e_type
 {
 	IMG,
@@ -134,19 +156,6 @@ typedef struct s_vector
 	double	z;
 	char	*error;
 }	t_vector;
-
-// comment -> yeojukim
-// : 광선에 대한 정보를 담는 구조체입니다.
-// : origin은 광선의 원점(시작점)을 의미하고 direction은 광선의 방향을 의미합니다.
-typedef struct s_ray
-{
-	t_vector	origin;
-	t_vector	direction;
-	t_vector	unit;
-	t_vector	u;
-	t_vector	v;
-	t_vector	save;
-}	t_ray;
 
 typedef struct s_util
 {
@@ -202,6 +211,7 @@ typedef struct s_color
 	t_vector	dif_sum;
 	t_vector	spe_sum;
 	t_vector	final_color;
+	t_vector	save_color;
 }	t_color;
 
 typedef struct s_pallette
@@ -222,6 +232,16 @@ typedef struct s_light
 	struct s_light	*next;
 }	t_light;
 
+typedef struct s_bump
+{
+	t_vector	**normal_map;
+	t_vector	**color_map;
+	int			normal_height;
+	int			normal_width;
+	struct s_bump	*next;
+}	t_bump;
+
+
 typedef struct s_fig
 {
 	t_vector		xyz;
@@ -237,6 +257,8 @@ typedef struct s_fig
 	int				idx;
 	int				is_click;
 	int				is_check;
+	int				is_bump;
+	t_bump			*bump;
 	struct s_fig	*next;
 }	t_fig;
 
@@ -249,6 +271,7 @@ typedef struct s_image
 	char	*buffer;
 }	t_image;
 
+
 typedef struct s_vec
 {
 	t_vector	inter_vec;
@@ -260,6 +283,17 @@ typedef struct s_vec
 	t_vector	n_tg_vec;
 	t_fig		*fig;
 }	t_vec;
+
+typedef struct s_rgb{
+	char name[2];
+    t_vector rgb;
+}	t_rgb;
+
+typedef struct s_xpm{
+	int		info[4];
+    t_rgb	colors[256];
+    t_vector	**pixels;
+}	t_xpm;
 
 typedef struct s_rt
 {
@@ -282,6 +316,9 @@ typedef struct s_rt
 	char		*line;
 	char		*error;
 	char		**map;
+	t_bump		*bump;
+	int			bump_cnt;
+	int			did_get_normal_map;
 }	t_rt;
 
 typedef struct s_worker
@@ -303,6 +340,8 @@ t_rt		*init_rt(int fd);
 t_light		*init_light(void);
 t_fig		*init_fig(void);
 void		init_map(t_rt *rt);
+t_bump		*init_bump(void);
+
 
 /* close.c */
 void		close_mlx(t_rt *rt);
@@ -379,8 +418,6 @@ void		*lst_addback(t_rt *rt, t_type type);
 /* cam_utils.c */
 void		set_cam(t_cam *cam, double x, double y);
 void		get_cam_basis(t_cam *cam);
-void		update_ray(t_ray *ray, int right);
-t_ray		cam_ray(t_cam *cam, t_rt *rt, double x, double y);
 void		basis(t_cam *cam, double phi, double theta);
 
 /* key_handle_2.c */

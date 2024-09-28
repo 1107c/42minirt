@@ -31,7 +31,7 @@ double	intersect_plane(t_fig *pl, t_vector cam, t_vector point)
 	return (d / res);
 }
 
-double	intersect_sphere(t_fig *sp, t_vector p1, t_vector p2, int *flag)
+double		intersect_sphere(t_fig *sp, t_vector p1, t_vector p2, int *flag)
 {
 	t_vector	vec1;
 	t_vector	vec2;
@@ -54,8 +54,10 @@ double	intersect_sphere(t_fig *sp, t_vector p1, t_vector p2, int *flag)
 	if (t[1] > 0)
 	{
 		if (t[0] < t[1])
+		{
 			*flag = 1;
-		return (t[1]);
+			return (t[1]);
+		}
 	}
 	return (-1.0);
 }
@@ -65,6 +67,7 @@ double	cylinder1(t_fig *cy, t_util util, int *flag)
 	t_vector	first;
 	t_vector	second;
 	double		d[2];
+	double		t;
 
 	first = sub_vec(cy->xyz, util.origin);
 	second = sub_vec(add_vec(cy->xyz, \
@@ -73,8 +76,7 @@ double	cylinder1(t_fig *cy, t_util util, int *flag)
 	d[0] = dot_product(util.origin, first);
 	d[1] = dot_product(util.origin, second);
 	// 실린더 내부에서 광선을 쏜 경우(ok)
-	// if (d <= 0)
-	if (d[0] * d[1] <= 0)
+	if (dot_product(first, second) < 0)
 	{
 		*flag = 3;
 		return (util.t[1]);
@@ -85,7 +87,9 @@ double	cylinder1(t_fig *cy, t_util util, int *flag)
 	{
 		// printf("alpha, beta: %lf %lf\n", util.alpha, util.beta);
 		if (util.alpha < 0)
+		{
 			*flag = 2;
+		}
 		else
 			*flag = 1;
 		return (get_cy_up_hit(cy, util));
@@ -182,7 +186,7 @@ double	cylinder2(t_fig *cy, t_util util, int *flag)
 double	cylinder3(t_fig *cy, t_util util, int *flag)
 {
 	// 실린더 내부(ok)
-	if (util.t[0] <= 0)
+	if (util.t[0] < 0)
 	{
 		*flag = 3;
 		return (util.t[1]);

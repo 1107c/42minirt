@@ -93,16 +93,14 @@ void	key_light(int keycode, t_rt *rt)
 
 void	fig_rotate(int keycode, t_rt *rt)
 {
-	if (!rt->selected || rt->selected->type == 1)
-		return ;
-	if (keycode == NUM_ROT_X)
+	if (keycode == NUM_ROT_X && rt->selected)
 	{
 		rt->selected->normal_vec = add_vec(mul_vec(rt->selected->right_vec, \
 		sin(ANG * 20)), mul_vec(rt->selected->normal_vec, cos(ANG * 20)));
 		rt->selected->right_vec = cross_product(rt->selected->up_vec, \
 		rt->selected->normal_vec);
 	}
-	if (keycode == NUM_ROT_Y)
+	if (keycode == NUM_ROT_Y && rt->selected)
 	{
 		rt->selected->normal_vec = add_vec(invert_vec(mul_vec(rt->selected->\
 		up_vec, sin(ANG * 20))), mul_vec(rt->selected->normal_vec, \

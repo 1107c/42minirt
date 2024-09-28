@@ -70,9 +70,9 @@ t_vector	find_closest_center(t_fig *cy, t_vector point, t_vector ray)
 	t[1] = sub_vec(top, point);
 	dist[0] = dot_product(t[0], t[0]);
 	dist[1] = dot_product(t[1], t[1]);
-	// if (dist[0] < dist[1])
-		// return (bottom);
-	// return (top);
+	if (dist[0] < dist[1])
+		return (bottom);
+	return (top);
 	c = dot_product(ray, sub_vec(bottom, point));
 	if (dist[0] < dist[1])
 	{

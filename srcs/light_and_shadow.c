@@ -80,7 +80,7 @@ void	multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig)
 		vec->r_vec = (normalize_vec(sub_vec(mul_vec(vec->n_vec, 2 * \
 			dot_product(vec->n_vec, vec->l_vec)), vec->l_vec)));
 		if (!is_in_shadow(rt, vec->inter_vec, vec->l_vec, tmp))
-			add_color(c, fig, vec, tmp);
+				add_color(c, fig, vec, tmp);
 		c->specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, \
 			dot_product(vec->e_vec, vec->r_vec)), SHINESS) \
 			* tmp->brightness * SPECULAR_STRENGTH);

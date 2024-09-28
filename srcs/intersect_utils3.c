@@ -20,13 +20,15 @@ t_util		init_cn_util(t_fig *cn, t_vector p1, t_vector p2)
 
 	util.origin = p1;
 	util.ray_dir = sub_vec(p2, p1);
+	// d = sub_vec(util.ray_dir, cn->normal_vec);
+	// radius = cn->diameter / 2;
 	// apex = add_vec(cn->xyz, mul_vec(cn->normal_vec, cn->height));
 	// h = cn->height;
 	// util.abc[0] = d.x * d.x + d.y * d.y - (radius * radius) / (h * h) * d.z * d.z;
-	// util.abc[1] = d.x * (util.origin.x - apex.x) + d.y * (util.origin.y - apex.y) - 
+	// util.abc[1] = d.x * (util.origin.x - apex.x) + d.y * (util.origin.y - apex.y) -
 	// 			(radius * radius) / (h * h) * d.z * (util.origin.z - apex.z);
-	// util.abc[2] = (util.origin.x - apex.x) * (util.origin.x - apex.x) + 
-	// 			(util.origin.y - apex.y) * (util.origin.y - apex.y) - 
+	// util.abc[2] = (util.origin.x - apex.x) * (util.origin.x - apex.x) +
+	// 			(util.origin.y - apex.y) * (util.origin.y - apex.y) -
 	// 			(radius * radius) / (h * h) * (util.origin.z - apex.z) * (util.origin.z - apex.z);
 	util.from_fig_center = sub_vec(p1, cn->xyz);
 	util.dn = dot_product(util.ray_dir, cn->normal_vec);
@@ -78,6 +80,7 @@ double	get_cy_up_hit(t_fig *cy, t_util util)
 	double		hyp;
 
 	close = find_closest_center(cy, util.origin, util.ray_dir);
+	// close =  add_vec(cy->xyz, mul_vec(cy->normal_vec, cy->height));
 	height = fabs(dot_product(sub_vec(close, util.origin), \
 			cy->normal_vec));
 	total_dist = sqrt(dot_product(util.ray_dir, util.ray_dir));

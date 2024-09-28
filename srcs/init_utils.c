@@ -41,6 +41,7 @@ t_fig	*init_fig(void)
 	fig->next = NULL;
 	fig->is_click = -1;
 	fig->is_check = -1;
+	fig->is_bump = -1;
 	fig->xyz = (t_vector){0, 0, 0, NULL};
 	fig->normal_vec = (t_vector){0, 0, 0, NULL};
 	fig->rgb = (t_vector){0, 0, 0, NULL};
@@ -63,5 +64,20 @@ void	init_map(t_rt *rt)
 		rt->map[i] = (char *)ft_calloc((WINDOW_WIDTH + 1), sizeof(char));
 		if (!rt->map[i])
 			close_all(rt, MEM_ALLOC_ERR);
-	}	
+	}
+}
+
+t_bump	*init_bump(void)
+{
+	t_bump	*bump;
+
+	bump = malloc(sizeof(t_bump));
+	if (!bump)
+		return (NULL);
+	bump->normal_map = NULL;
+	bump->color_map = NULL;
+	bump->normal_height = 0;
+	bump->normal_width = 0;
+	bump->next = NULL;
+	return (bump);
 }
