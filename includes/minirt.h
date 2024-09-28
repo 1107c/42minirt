@@ -26,10 +26,10 @@
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH	1920
+#  define WINDOW_WIDTH	1020
 # endif
 # ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT	1080
+#  define WINDOW_HEIGHT	500
 # endif
 # define WINDOW_TITLE	"miniRT"
 
@@ -161,6 +161,8 @@ typedef struct s_util
 	double		dn;
 	double		ecn;
 	double		ecd;
+	double		c;
+	double		h;
 }	t_util;
 
 typedef struct s_amblight

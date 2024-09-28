@@ -69,10 +69,12 @@ double	cylinder1(t_fig *cy, t_util util, int *flag)
 	first = sub_vec(cy->xyz, util.origin);
 	second = sub_vec(add_vec(cy->xyz, \
 			mul_vec(cy->normal_vec, cy->height)), util.origin);
-	d[0] = dot_product(util.ray_dir, first);
-	d[1] = dot_product(util.ray_dir, second);
+	// d = dot_product(first, second);
+	d[0] = dot_product(util.origin, first);
+	d[1] = dot_product(util.origin, second);
 	// 실린더 내부에서 광선을 쏜 경우(ok)
-	if (d[0] * d[1] < 0)
+	// if (d <= 0)
+	if (d[0] * d[1] <= 0)
 	{
 		*flag = 3;
 		return (util.t[1]);
@@ -81,6 +83,7 @@ double	cylinder1(t_fig *cy, t_util util, int *flag)
 	// 실린더 외부(ok)
 	else
 	{
+		// printf("alpha, beta: %lf %lf\n", util.alpha, util.beta);
 		if (util.alpha < 0)
 			*flag = 2;
 		else
@@ -258,6 +261,7 @@ double	parallel_to_cn_norm(t_util util, t_fig *cn)
 
 	if (fabs(util.abc[2]) >= EPSILON)
 		return (-1.0);
+	return (EPSILON);
 	top = add_vec(cn->xyz, mul_vec(cn->normal_vec, cn->height));
 	hit = sub_vec(top, util.origin);
 	hit_dist = sqrt(dot_product(hit, hit));
@@ -272,68 +276,33 @@ double	test3(t_fig *cn, t_util util)
 	double		h;
 	double		total_dist;
 	double		hit_dist;
-	double		x;
 
 	temp = sub_vec(cn->xyz, util.origin);
-	h = fabs(sqrt(dot_product(temp, temp)) \
-		* dot_product(temp, cn->normal_vec));
+	h = fabs(dot_product(temp, cn->normal_vec));
 	total_dist = sqrt(dot_product(util.ray_dir, \
 				util.ray_dir));
-	c = fabs(dot_product(util.ray_dir, cn->normal_vec));
+	c = fabs(dot_product(util.ray_dir, cn->normal_vec)) \
+		/ total_dist;
 	hit_dist = h / c;
-	x = hit_dist / total_dist;
-	// printf("x: %lf\n", x);
-	return (x);
+	return (hit_dist / total_dist);
 }
 
-double	cone1(t_fig *cn, t_util util)
+double	cone1(t_util util, t_fig *cn, t_vector close)
 {
-	t_vector	first;
-	t_vector	second;
-	double		d[2];
+	t_vector	temp;
+	double		c;
+	double		h;
+	double		total_dist;
+	double		hit_dist;
 
-	first = sub_vec(cn->xyz, util.origin);
-	second = sub_vec(add_vec(cn->xyz, \
-			mul_vec(cn->normal_vec, cn->height)), util.origin);
-	d[0] = dot_product(util.ray_dir, first);
-	d[1] = dot_product(util.ray_dir, second);
-	// 내부
-	// return (EPSILON);
-	if (d[0] * d[1] >= 0)
-		return (test3(cn, util));
-	// else
-	// printf("%lf %lf\n", util.t[0], util.t[1]);
-	// return (util.t[1]);
-	return (-1.0);
-	// return (EPSILON);
-}
-
-double	cone2(t_fig *cn, t_util util)
-{
-	// return (EPSILON);
-	if (util.t[0] > 0)
-		return (util.t[0]);
-	return (util.t[1]);
-}
-
-double	cone3(t_fig *cn, t_util util)
-{
-	t_vector	first;
-	t_vector	second;
-	double		d[2];
-
-	first = sub_vec(cn->xyz, util.origin);
-	second = sub_vec(add_vec(cn->xyz, \
-			mul_vec(cn->normal_vec, cn->height)), util.origin);
-	d[0] = dot_product(util.ray_dir, first);
-	d[1] = dot_product(util.ray_dir, second);
-	if (util.t[0] > 0)
-		return (util.t[0]);
-	else if (d[0] * d[1] <= 0)
-	// return (EPSILON);
-		return (test3(cn, util));
-	else
-		return (-1.0);
+	temp = sub_vec(close, util.origin);
+	h = fabs(dot_product(temp, cn->normal_vec));
+	total_dist = sqrt(dot_product(util.ray_dir, \
+				util.ray_dir));
+	c = fabs(dot_product(util.ray_dir, cn->normal_vec)) \
+		/ total_dist;
+	hit_dist = h / c;
+	return (hit_dist / total_dist);
 }
 
 double	intersect_cone(t_fig *cn, t_vector p1, t_vector p2)
@@ -346,29 +315,54 @@ double	intersect_cone(t_fig *cn, t_vector p1, t_vector p2)
 	if (util.det < 0)
 		return (-1.0);
 	get_cn_solution(&util);
-	if ((util.alpha < 0 && util.beta < 0) || \
-		(util.alpha > cn->height && util.beta > cn->height) || \
-		(util.t[0] < 0 && util.t[1] < 0))
+	if (util.alpha < 0 && util.beta < 0)
 		return (-1.0);
-	if (util.alpha < 0)
-		return (util.t[1]);
-	return (util.t[0]);
-	// if (util.alpha < 0)
-	// 	return (cone1(cn, util));
-	// else if (util.beta < 0)
-	// 	return (cone3(cn, util));
-	// else if ((util.alpha > 0 && util.alpha <= cn->height) \
-	// 		&& (util.beta > 0 && util.beta <= cn->height))
-	// 	return (cone2(cn, util));
+	if (util.alpha > util.h && util.beta > util.h)
+		return (-1.0);
+	if (util.t[0] > 0)
+	{
+		if (util.alpha <= util.h && util.alpha >= 0)
+			return (util.t[0]);
+		if (util.beta >= 0 && util.beta <= util.h)
+			return (util.t[1]);
+		return (-1.0);
+	}
+	else
+	{
+		double	d;
+		double	e;
+		double	f;
+
+		d = dot_product(util.ray_dir, sub_vec(cn->xyz, util.origin));
+		e = dot_product(util.ray_dir, sub_vec(add_vec(cn->xyz, \
+			mul_vec(cn->normal_vec, 2 * cn->height)), util.origin));
+		f = util.dn / sqrt(dot_product(util.ray_dir, util.ray_dir));
+		if (util.t[1] > 0)
+		{
+			if (util.beta <= util.h && util.beta >= 0)
+				return (util.t[1]);
+			// return (-1.0);
+			if (util.alpha > 0 && util.beta < 0 \
+				&& fabs(f) <= util.c && d >= 0 && e < 0)
+				return (cone1(util, cn, cn->xyz));
+			// return (EPSILON);
+			if (util.alpha < util.h && util.beta > util.h \
+				&& fabs(f) <= util.c && e >= 0 && d < 0)
+				return (cone1(util, cn, add_vec(cn->xyz, \
+					mul_vec(cn->normal_vec, 2 * cn->height))));
+		}
+		else
+		{
+			if (fabs(f) >= util.c && d >= 0 && e < 0)
+				return (cone1(util, cn, cn->xyz));
+			// return (EPSILON);
+			if (fabs(f) >= util.c && e >= 0 && d < 0)
+				return (cone1(util, cn, add_vec(cn->xyz, \
+					mul_vec(cn->normal_vec, 2 * cn->height))));
+			// printf("%lf %lf\n", fabs(f), util.c);
+			// if (fabs(f) < util.c)
+				// return (EPSILON);
+		}
+	}
 	return (-1.0);
-	// if ((util.t[0] > 0 && util.t[1] > 0))
-	// 	return (handle_cn_positive(util, cn));
-	// return (-1.0);
-	// if (util.t[0] >= 0 && util.alpha >= 0 \
-	// 	&& util.alpha <= cn->height)
-	// 	return (util.t[0]);
-	// if (util.t[1] >= 0 && util.beta >= 0 \
-	// 	&& util.beta <= cn->height)
-	// 	return (util.t[1]);
-	// return (-1.0);
 }
