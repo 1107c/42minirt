@@ -78,7 +78,7 @@ double	cylinder1(t_fig *cy, t_util util, int *flag)
 	if (dot_product(first, second) < 0)
 	{
 		*flag = 3;
-		return (util.t[1]);
+			return (util.t[1]);
 	}
 	// return (EPSILON);
 	// 실린더 외부(ok)

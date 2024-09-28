@@ -49,7 +49,10 @@ double	get_ray_dist_cy(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec)
 	else if (flg == 2)
 		vec->n_vec = invert_vec(fig->normal_vec);
 	else if (flg == 3)
+	{
 		vec->n_vec = (t_vector) {0, 0, 0, 0};
+		vec->inter_vec = (t_vector) {0, 0, 0, 0};
+	}
 	else
 	{
 		vec->n_vec = sub_vec(vec->inter_vec, fig->xyz);
@@ -84,7 +87,10 @@ double	get_ray_dist(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec)
 		if (!flag)
 			vec->n_vec = normalize_vec(sub_vec(vec->inter_vec, fig->xyz));
 		else
+		{
 			vec->n_vec = (t_vector) {0, 0, 0, 0};
+			vec->inter_vec = (t_vector) {0, 0, 0, 0};
+		}
 	}
 	else if (fig->type == CONE)
 		vec->n_vec = get_cone_normal(fig, rt->cam->coords, point, t);

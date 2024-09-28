@@ -236,6 +236,8 @@ typedef struct s_bump
 	t_vector	**color_map;
 	int			normal_height;
 	int			normal_width;
+	int			save_height;
+	int			save_width;
 	struct s_bump	*next;
 }	t_bump;
 

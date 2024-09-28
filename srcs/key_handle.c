@@ -142,12 +142,12 @@ int	find_color(char *tmp, t_xpm *img, int i, int *j)
 	{
 		if (ft_strncmp(tmp + *j, img->colors[idx].name, 2) == 0)
 		{
-			// if (i == 0)
-			// 	printf("%s\n", img->colors[i].name);
-			img->pixels[i][k].x = img->colors[idx].rgb.x;
-			img->pixels[i][k].y = img->colors[idx].rgb.y;
-			img->pixels[i][k].z = img->colors[idx].rgb.z;
-			// printf("r:%d, g:%d, b:%d n:%s, r:%d, g:%d, b:%d\n", img->colors[idx].r, img->colors[idx].g, img->colors[idx].b, img->colors[0].name, img->pixels[0][0].r, img->pixels[0][0].g, img->pixels[0][0].b);
+			if (i < img->info[0] && k < img->info[1] && idx < img->info[2])
+			{
+			    img->pixels[i][k].x = img->colors[idx].rgb.x;
+			    img->pixels[i][k].y = img->colors[idx].rgb.y;
+			    img->pixels[i][k].z = img->colors[idx].rgb.z;
+			}
 			*j += 2;
 			return (1);
 		}
@@ -171,8 +171,10 @@ void	interpret_xpm(int fd, t_xpm *img)
      	j = 1;
       	while (tmp[j])
        {
-       		if (!find_color(tmp, img, i, &j) && j < ft_strlen(tmp))
+       		if (!find_color(tmp, img, i, &j))
       			j++;
+         	if (tmp[j - 1] == '\0')
+          		break;
        }
      	free (tmp);
       	i++;
@@ -207,7 +209,7 @@ t_xpm	*parse_xpm(char *path, t_rt *rt, int i)
 	return (img);
 }
 
-void	get_height_map(t_xpm *image, double **height_map, t_bump *bump)
+t_vector	**get_height_map(t_xpm *image, double **height_map, t_bump *bump)
 {
 	int	i;
 	int	j;
@@ -215,7 +217,7 @@ void	get_height_map(t_xpm *image, double **height_map, t_bump *bump)
 	i = 0;
     while (i < image->info[0])
     {
-    	int j = 0;
+    	j = 0;
 		while (j < image->info[1])
 		{
 			height_map[i][j] = (0.299 * image->pixels[i][j].x) + (0.587 * \
@@ -224,7 +226,7 @@ void	get_height_map(t_xpm *image, double **height_map, t_bump *bump)
 		}
 		i++;
     }
-    bump->color_map = image->pixels;
+    return (image->pixels);
 }
 
 t_vector **	translate_height_to_normal(double **height_map, t_vector **normal_map, int width, int height)
@@ -263,7 +265,7 @@ t_vector **	translate_height_to_normal(double **height_map, t_vector **normal_ma
 	return (normal_map);
 }
 
-void	get_normal_map(t_bump *bump, t_rt *rt, char *path)
+t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path)
 {
     t_xpm	*image;
     double	**height_map;
@@ -283,16 +285,20 @@ void	get_normal_map(t_bump *bump, t_rt *rt, char *path)
       		close_all(rt, MEM_ALLOC_ERR);
       	i++;
     }
-    get_height_map(image, height_map, bump);
+    bump->color_map = get_height_map(image, height_map, bump);
     bump->normal_height = image->info[0];
     bump->normal_width = image->info[1];
-    bump->normal_map = translate_height_to_normal(height_map, bump->normal_map, image->info[0], image->info[1]);
+    if (bump->normal_height < bump->normal_width)
+    	bump->save_height = image->info[0];
+    else
+		bump->save_height = image->info[1];
+    return (translate_height_to_normal(height_map, bump->normal_map, image->info[1], image->info[0]));
 }
 
 char *get_xpm_name(t_path path)
 {
 	if (path == PATH_1)
-		return ("input_bonus/block.xpm");
+		return ("input_bonus/earthmap.xpm");
 	if (path == PATH_2)
 		return ("input_bonus/icecream2.xpm");
 	if (path == PATH_3)
@@ -300,7 +306,7 @@ char *get_xpm_name(t_path path)
 	if (path == PATH_4)
 		return ("input_bonus/waffle.xpm");
 	if (path == PATH_5)
-		return ("input_bonus/earthmap.xpm");
+		return ("input_bonus/block.xpm");
 	if (path == PATH_6)
 		return ("input_bonus/jupiter.xpm");
 	if (path == PATH_7)
@@ -330,6 +336,7 @@ void	key_bump(int keycode, t_rt *rt)
 	if (keycode == KEY_B)
 	{
 		if (rt->selected && rt->selected->is_bump == -1)
+		{
 			if (rt->did_get_normal_map == 0)
 			{
 				rt->selected->bump = init_bump();
@@ -339,12 +346,14 @@ void	key_bump(int keycode, t_rt *rt)
 				fig = rt->fig;
 				while (fig)
 				{
-					fig->bump = rt->selected->bump;
+					if (!fig->bump)
+						fig->bump = rt->selected->bump;
 					fig = fig->next;
 				}
-				get_normal_map(rt->selected->bump, rt, get_xpm_name(rt->bump_cnt++));
+				rt->selected->bump->normal_map = get_normal_map(rt->selected->bump, rt, get_xpm_name(rt->bump_cnt++));
 				rt->did_get_normal_map = 1;
 			}
+		}
 		rt->selected->is_bump *= -1;
 		draw(rt);
 	}
@@ -363,6 +372,7 @@ void	key_bump(int keycode, t_rt *rt)
 		else
 			rt->selected->bump = rt->selected->bump->next;
 		draw(rt);
+
 	}
 }
 

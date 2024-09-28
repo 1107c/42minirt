@@ -78,6 +78,8 @@ t_bump	*init_bump(void)
 	bump->color_map = NULL;
 	bump->normal_height = 0;
 	bump->normal_width = 0;
+	bump->save_width = 0;
+	bump->save_height = 0;
 	bump->next = NULL;
 	return (bump);
 }
