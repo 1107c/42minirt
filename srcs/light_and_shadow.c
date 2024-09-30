@@ -57,7 +57,7 @@ int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
 		else if (fig->type == CYLINDER)
 		{
 			t = intersect_cylinder(fig, inter_vec, dir, &flg);
-			if (flg == 2)
+			if (flg == 2 || flg == 3)
 			{
 				fig = fig->next;
 				continue ;

@@ -55,6 +55,7 @@ void	get_cylinder_uv(t_vector point, double uv[2], t_fig *fig)
 	double	theta;
 	double	height;
 	t_vector	pc;
+
 	pc = normalize_vec(sub_vec(point, add_vec(fig->xyz, mul_vec(fig->normal_vec, fig->height / 2))));
 	theta = atan2(dot_product(pc, fig->right_vec), dot_product(pc, fig->up_vec)) + M_PI;
 	height = dot_product(pc, fig->normal_vec);

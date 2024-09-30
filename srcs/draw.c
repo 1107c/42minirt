@@ -110,7 +110,7 @@ void    bump(t_rt *rt, t_vector point, t_vec *vec, t_color *color)
 
 		}
 	    normal_from_map = vec->fig->bump->normal_map[v][u];
-					color_from_map = vec->fig->bump->color_map[v][u];
+		color_from_map = vec->fig->bump->color_map[v][u];
 
 	    t_vector	y_unit_vector;
 	    if (fabs(vec->n_vec.y) != 1)
@@ -175,7 +175,7 @@ void	draw_line(t_rt *rt, t_vector point, int i, int j)
 	pixel_to_image(rt->img, i, j, color.final_color);
 }
 
-void	checkerboard(t_rt *rt, t_vector point,  t_vec *vec, t_color *color )
+void	checkerboard(t_rt *rt, t_vector point,  t_vec *vec, t_color *color)
 {
 	double	uv[2];
 
