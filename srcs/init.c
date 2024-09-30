@@ -13,8 +13,8 @@
 #include "../includes/minirt.h"
 
 static t_image		*init_img(void *mlx);
-static t_amblight	*init_amblight(void);
-static t_cam		*init_cam(void);
+static t_amblight	*init_amblight(t_rt *rt);
+static t_cam		*init_cam(t_rt *rt);
 static int			rt_mlx_init(t_rt *rt);
 
 t_rt	*init_rt(int fd)
@@ -25,81 +25,25 @@ t_rt	*init_rt(int fd)
 	if (!rt)
 		return (NULL);
 	if (!rt_mlx_init(rt))
-		return (NULL);
-	rt->amblight = init_amblight();
-	rt->cam = init_cam();
+		return (free(rt), NULL);
+	rt->amblight = init_amblight(rt);
+	rt->cam = init_cam(rt);
 	if (!rt->amblight || !rt->cam)
-		return (close_mlx(rt), free(rt->amblight), free(rt->cam), \
-				free(rt), NULL);
+		return (free(rt), NULL);
 	rt->fig = NULL;
 	rt->light = NULL;
-	rt->error = NULL;
+	rt->selected = NULL;
+	rt->selected_light = NULL;
+	rt->bump = NULL;
 	rt->line = NULL;
+	rt->error = NULL;
 	rt->file_fd = fd;
 	rt->light_cnt = 0;
 	rt->fig_cnt = 0;
-	rt->selected = NULL;
-	rt->selected_light = NULL;
-	rt->did_get_normal_map = 0;
-	rt->bump = NULL;
 	rt->bump_cnt = 0;
+	rt->did_get_normal_map = 0;
 	init_map(rt);
 	return (rt);
-}
-
-t_image	*init_img(void *mlx)
-{
-	t_image	*img;
-
-	img = malloc(sizeof(t_image));
-	if (!img)
-		return (NULL);
-	img->img = mlx_new_image(mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
-	img->buffer = mlx_get_data_addr(img->img, &img->bits_per_pixel, \
-				&img->size_line, &img->endian);
-	return (img);
-}
-
-t_amblight	*init_amblight(void)
-{
-	t_amblight	*amblight;
-
-	amblight = malloc(sizeof(t_amblight));
-	if (!amblight)
-		return (NULL);
-	amblight->light_ratio = 0;
-	amblight->ch = 0;
-	return (amblight);
-}
-
-// comment -> yeojukim
-// : 수정된 구조체에 따라 수정했습니다.
-t_cam	*init_cam(void)
-{
-	t_cam	*cam;
-
-	cam = malloc(sizeof(t_cam));
-	if (!cam)
-		return (NULL);
-	cam->fov = 0;
-	cam->vp_h = 0;
-	cam->vp_w = 0;
-	cam->as_ratio = 0;
-	cam->distance_to_view = 0;
-	cam->theta = 0;
-	cam->phi = 0;
-	cam->ch = 0;
-	cam->coords = (t_vector){0, 0, 0, NULL};
-	cam->orient_vec = (t_vector){0, 0, 0, NULL};
-	cam->right_vec = (t_vector){0, 0, 0, NULL};
-	cam->up_vec = (t_vector){0, 0, 0, NULL};
-	cam->corner_vec = (t_vector){0, 0, 0, NULL};
-	cam->origin_orient_vec = (t_vector){0, 0, 0, NULL};
-	cam->origin_right_vec = (t_vector){0, 0, 0, NULL};
-	cam->origin_up_vec = (t_vector){0, 0, 0, NULL};
-	cam->screen_origin = (t_vector){0, 0, 0, NULL};
-	cam->screen_width = (t_vector){0, 0, 0, NULL};
-	return (cam);
 }
 
 int	rt_mlx_init(t_rt *rt)
@@ -107,7 +51,6 @@ int	rt_mlx_init(t_rt *rt)
 	rt->mlx = mlx_init();
 	if (!rt->mlx)
 		return (0);
-	// mlx_get_screen_size(rt->mlx, &rt->win_x, &rt->win_y);
 	rt->win = mlx_new_window(rt->mlx, WINDOW_WIDTH, \
 				WINDOW_HEIGHT, WINDOW_TITLE);
 	if (!rt->win)
@@ -123,4 +66,60 @@ int	rt_mlx_init(t_rt *rt)
 		return (free(rt->mlx), 0);
 	}
 	return (1);
+}
+
+t_image	*init_img(void *mlx)
+{
+	t_image	*img;
+
+	img = malloc(sizeof(t_image));
+	if (!img)
+		return (NULL);
+	img->img = mlx_new_image(mlx, WINDOW_WIDTH, WINDOW_HEIGHT);
+	if (!img->img)
+		return (free(img), NULL);
+	img->buffer = mlx_get_data_addr(img->img, &img->bits_per_pixel, \
+				&img->size_line, &img->endian);
+	if (!img->buffer)
+		return (mlx_destroy_image(mlx, img->img), free(img), NULL);
+	return (img);
+}
+
+t_amblight	*init_amblight(t_rt *rt)
+{
+	t_amblight	*amblight;
+
+	amblight = malloc(sizeof(t_amblight));
+	if (!amblight)
+		return (close_mlx(rt), NULL);
+	amblight->light_ratio = 0;
+	amblight->cnt = 0;
+	return (amblight);
+}
+
+// comment -> yeojukim
+// : 수정된 구조체에 따라 수정했습니다.
+t_cam	*init_cam(t_rt *rt)
+{
+	t_cam	*cam;
+
+	cam = malloc(sizeof(t_cam));
+	if (!cam)
+		return (free(rt->amblight), \
+				close_mlx(rt), NULL);
+	cam->fov = 0;
+	cam->as_ratio = 0;
+	cam->distance_to_view = 0;
+	cam->theta = 0;
+	cam->phi = 0;
+	cam->cnt = 0;
+	cam->coords = init_vector(0, 0, 0);
+	cam->orient_vec = init_vector(0, 0, 0);
+	cam->right_vec = init_vector(0, 0, 0);
+	cam->up_vec = init_vector(0, 0, 0);
+	cam->origin_orient_vec = init_vector(0, 0, 0);
+	cam->origin_right_vec = init_vector(0, 0, 0);
+	cam->origin_up_vec = init_vector(0, 0, 0);
+	cam->screen_origin = init_vector(0, 0, 0);
+	return (cam);
 }

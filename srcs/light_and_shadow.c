@@ -12,83 +12,115 @@
 
 #include "../includes/minirt.h"
 
-void	add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp)
-{
-	double	d;
-	double	e;
+static void	get_final_color(t_color *c);
 
-	d = dot_product(vec->n_vec, vec->l_vec);
-	if (fig->type == PLANE)
-		d = fabs(d);
-	e = dot_product(vec->e_vec, vec->r_vec);
-	if (dot_product(vec->n_vec, vec->n_vec) == 0)
-		e = 0;
-	color->diffuse_color = mul_vec((t_vector){fmin(255, fmax(0, fig->rgb.x \
-	* tmp->rgb.x)), fmin(255, fmax(0, fig->rgb.y * tmp->rgb.y)), fmin(255, \
-	fmax(0, fig->rgb.z * tmp->rgb.z)), 0}, fmax(0.0, d) \
-	* tmp->brightness * DIFFUSE_STRENGTH);
-	color->specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, \
-	e), SHINESS) * \
-	tmp->brightness * SPECULAR_STRENGTH);
-	color->dif_sum = add_vec(color->dif_sum, color->diffuse_color);
-	color->spe_sum = add_vec(color->spe_sum, color->specular_color);
+t_vector	get_diffuse_color(t_light *lt, t_fig *fig, double power)
+{
+	t_vector	diffuse;
+	double		xyz[3];
+
+	xyz[0] = fmin(255, fmax(0, fig->rgb.x * lt->rgb.x));
+	xyz[1] = fmin(255, fmax(0, fig->rgb.y * lt->rgb.y));
+	xyz[2] = fmin(255, fmax(0, fig->rgb.z * lt->rgb.z));
+	diffuse = init_vector(xyz[0], xyz[1], xyz[2]);
+	diffuse = mul_vec(diffuse, fmax(0.0, power) \
+			* lt->brightness * DIFFUSE_STRENGTH);
+	return (diffuse);
 }
 
-int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
-	t_light *light)
+t_vector	get_specular_color(t_light *lt, double power)
 {
-	t_vector	dir;
-	t_fig		*fig;
-	double		t;
-	double		max_t;
-	int			flg;
+	double	total_power;
 
-	dir = add_vec(inter_vec, light_dir);
-	fig = rt->fig;
-	max_t = sqrt(dot_product ((sub_vec(light->xyz, inter_vec)), \
-		sub_vec(light->xyz, inter_vec)));
-	flg = 0;
-	while (fig)
+	total_power = pow(fmax(0.0, power), SHINESS) \
+					* lt->brightness * SPECULAR_STRENGTH;
+	return (mul_vec(lt->rgb, total_power));
+}
+
+t_vector	get_light_color(t_vector l_sum, t_light *lt, double power)
+{
+	double	xyz[3];
+
+	xyz[0] = l_sum.x + power * lt->rgb.x * 0.2 * lt->brightness;
+	xyz[1] = l_sum.y + power * lt->rgb.y * 0.2 * lt->brightness;
+	xyz[2] = l_sum.z + power * lt->rgb.z * 0.2 * lt->brightness;
+	xyz[0] = fmin(255, fmax(0, xyz[0]));
+	xyz[1] = fmin(255, fmax(0, xyz[1]));
+	xyz[2] = fmin(255, fmax(0, xyz[2]));
+	return (init_vector(xyz[0], xyz[1], xyz[2]));
+}
+
+void	add_color(t_color *c, t_fig *fig, t_vec *vec, t_light *light)
+{
+	double	d_power;
+	double	s_power;
+	double	l_power;
+
+	d_power = dot_product(vec->n_vec, vec->l_vec);
+	if (fig->type == PLANE)
+		d_power = fabs(d_power);
+	s_power = dot_product(vec->e_vec, vec->r_vec);
+	if (dot_product(vec->n_vec, vec->n_vec) == 0)
+		s_power = 0;
+	c->diffuse_color = get_diffuse_color(light, fig, d_power);
+	c->specular_color = get_specular_color(light, s_power);
+	c->dif_sum = add_vec(c->dif_sum, c->diffuse_color);
+	c->spe_sum = add_vec(c->spe_sum, c->specular_color);
+	l_power = dot_product(vec->l_vec, vec->r_vec);
+	c->l_sum = get_light_color(c->l_sum, light, l_power);
+}
+
+int	is_in_shadow(t_fig *fig, t_light *light, t_xs *xs, t_vec *vec)
+{
+	t_vector	i_vec;
+	t_vector	l_vec;
+	t_fig		*_fig;
+	double		time;
+
+	i_vec = vec->inter_vec;
+	l_vec = vec->l_vec;
+	xs->from = add_vec(vec->inter_vec, mul_vec(l_vec, V_EPSILON));
+	xs->ray_dir = sub_vec(light->xyz, xs->from);
+	xs->total_dist = sqrt(dot_product(xs->ray_dir, \
+							xs->ray_dir));
+	_fig = fig;
+	while (_fig)
 	{
-		flg = 0;
-		if (fig->type == PLANE)
-			t = intersect_plane(fig, inter_vec, dir);
-		else if (fig->type == SPHERE)
-			t = intersect_sphere(fig, inter_vec, dir, &flg);
-		else if (fig->type == CYLINDER)
-			t = intersect_cylinder(fig, inter_vec, dir, &flg);
-		else if (fig->type == CONE)
-			t = intersect_cone(fig, inter_vec, dir);
-		if (t > 0.001 && t < max_t)
+		time = get_ray_dist(_fig, xs);
+		if (time > 0 && time < 1)
 			return (1);
-		fig = fig->next;
+		_fig = _fig->next;
 	}
 	return (0);
 }
 
-void	multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig)
+void	multi_lightning(t_light *light, t_fig *fig, t_util *util, t_amblight *amb)
 {
-	t_light	*tmp;
+	t_light	*lt;
 
-	c->dif_sum = (t_vector){0, 0, 0, 0};
-	c->spe_sum = (t_vector){0, 0, 0, 0};
-	vec->e_vec = normalize_vec(sub_vec(rt->cam->coords, vec->inter_vec));
-	tmp = rt->light;
-	while (tmp)
+	lt = light;
+	util->color.amb = mul_vec(util->vec.fig->rgb, amb->light_ratio * AMBIENT_STRENGTH);
+	util->vec.e_vec = normalize_vec(sub_vec( \
+						util->xs.from, 
+						util->vec.inter_vec));
+	while (lt)
 	{
-		vec->l_vec = normalize_vec(sub_vec(tmp->xyz, vec->inter_vec));
-		vec->r_vec = (normalize_vec(sub_vec(mul_vec(vec->n_vec, 2 * \
-			dot_product(vec->n_vec, vec->l_vec)), vec->l_vec)));
-		if (!is_in_shadow(rt, vec->inter_vec, vec->l_vec, tmp))
-				add_color(c, fig, vec, tmp);
-		c->specular_color = mul_vec(tmp->rgb, pow(fmax(0.0, \
-			dot_product(vec->e_vec, vec->r_vec)), SHINESS) \
-			* tmp->brightness * SPECULAR_STRENGTH);
-		c->spe_sum = add_vec(c->spe_sum, c->specular_color);
-		tmp = tmp->next;
+		util->vec.l_vec = normalize_vec(sub_vec(lt->xyz, util->vec.inter_vec));
+		util->vec.r_vec = normalize_vec(sub_vec(mul_vec(util->vec.n_vec, 2 * \
+			dot_product(util->vec.n_vec, util->vec.l_vec)), util->vec.l_vec));
+		if (!is_in_shadow(fig, lt, &util->xs, &util->vec))
+			add_color(&util->color, util->vec.fig, &util->vec, lt);
+		lt = lt->next;
 	}
-	c->amb = mul_vec(fig->rgb, rt->amblight->light_ratio * AMBIENT_STRENGTH);
-	c->final_color.x = fmin(255, c->amb.x + c->dif_sum.x + c->spe_sum.x);
-	c->final_color.y = fmin(255, c->amb.y + c->dif_sum.y + c->spe_sum.y);
-	c->final_color.z = fmin(255, c->amb.z + c->dif_sum.z + c->spe_sum.z);
+	get_final_color(&util->color);
+}
+
+void	get_final_color(t_color *c)
+{
+	t_vector	sum;
+
+	sum = add_vec(c->amb, add_vec(c->dif_sum, c->spe_sum));
+	c->final_color.x = fmin(255, fmax(0, sum.x + c->l_sum.x));
+	c->final_color.y = fmin(255, fmax(0, sum.y + c->l_sum.y));
+	c->final_color.z = fmin(255, fmax(0, sum.z + c->l_sum.z));
 }

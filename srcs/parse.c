@@ -15,6 +15,7 @@
 static int	is_valid_nums(char **args);
 static int	is_valid_num(char **s, int *dot, int *comma);
 static void	parse_args(t_rt *rt, char **args);
+static void	check_data(t_rt *rt);
 
 // 1. 각각의 요소들은 하나 이상의 개행으로 구분되어야 함
 // 2. 요소 각각의 정보들은 하나 이상의 공백으로 구분되어야 함
@@ -22,18 +23,6 @@ static void	parse_args(t_rt *rt, char **args);
 // 4. 도형을 제외한 A, C, L(영어 대문자로 구성된 요소)들은 단 한번만 나와야 합니다.
 
 // .rt 파일을 get_next_line함수로 한 줄씩 읽으면서 유효한지 검사하는 함수
-void	check_len(t_rt *rt)
-{
-	if (rt->amblight->ch != 1)
-		close_all(rt, AMB_INPUT_ERR);
-	if (rt->cam->ch != 1)
-		close_all(rt, CAM_INPUT_ERR);
-	if (!rt->light)
-		close_all(rt, LIGHT_INPUT_ERR);
-	if (!rt->fig)
-		close_all(rt, FIG_INPUT_ERR);
-}
-
 void	parse_data(t_rt *rt)
 {
 	char	**args;
@@ -48,14 +37,14 @@ void	parse_data(t_rt *rt)
 			args = ft_split(rt->line, ft_isspace);
 			if (!args)
 				close_all(rt, MEM_ALLOC_ERR);
-			if (!is_valid_nums(args))
+			if (!is_valid_nums(args + 1))
 				close_all(rt, FORMAT_ERR);
 			parse_args(rt, args);
 			free_args(args);
 		}
 		free(rt->line);
 	}
-	check_len(rt);
+	check_data(rt);
 	rt->line = NULL;
 	close(rt->file_fd);
 	rt->file_fd = 0;
@@ -76,7 +65,6 @@ int	is_valid_nums(char **args)
 	int		dot;
 	int		comma;
 
-	args++;
 	while (*args)
 	{
 		s = *args++;
@@ -140,4 +128,16 @@ void	parse_args(t_rt *rt, char **args)
 		parse_cylinder(rt, args, CONE);
 	else
 		free_2d_and_close_all(rt, args, INVALID_OPT);
+}
+
+void	check_data(t_rt *rt)
+{
+	if (rt->amblight->cnt != 1)
+		close_all(rt, AMB_INPUT_ERR);
+	if (rt->cam->cnt != 1)
+		close_all(rt, CAM_INPUT_ERR);
+	if (!rt->light)
+		close_all(rt, LIGHT_INPUT_ERR);
+	if (!rt->fig)
+		close_all(rt, FIG_INPUT_ERR);
 }

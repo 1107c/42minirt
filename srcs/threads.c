@@ -20,8 +20,8 @@ void	init_workers(t_worker *workers, t_rt *rt)
 
 	i = 0;
 	start = 0;
-	h = WINDOW_HEIGHT / THREADS_NUM;
-	while (i < THREADS_NUM)
+	h = WINDOW_HEIGHT / NUM_THREADS;
+	while (i < NUM_THREADS)
 	{
 		workers[i].y_start = start;
 		start += h;
@@ -30,18 +30,19 @@ void	init_workers(t_worker *workers, t_rt *rt)
 		workers[i].rt = rt;
 		i++;
 	}
-	workers[THREADS_NUM - 1].y_end = WINDOW_HEIGHT;
+	workers[NUM_THREADS - 1].y_end = WINDOW_HEIGHT;
 }
 
 void	thread_work(t_worker *workers)
 {
-	pthread_t	threads[THREADS_NUM];
+	pthread_t	threads[NUM_THREADS];
 	int			i;
 
 	i = -1;
-	while (++i < THREADS_NUM)
-		pthread_create(&threads[i], NULL, render_scene, &workers[i]);
+	while (++i < NUM_THREADS)
+		pthread_create(&threads[i], NULL, \
+						render_scene, &workers[i]);
 	i = -1;
-	while (++i < THREADS_NUM)
+	while (++i < NUM_THREADS)
 		pthread_join(threads[i], NULL);
 }

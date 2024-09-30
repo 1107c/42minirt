@@ -393,8 +393,8 @@ int	key_handle(int keycode, t_rt *rt)
 		return (key_checkboard(rt), 0);
 	else if (keycode == KEY_B || keycode == KEY_N)
 		return (key_bump(keycode, rt), 0);
-	printf("coords %f, %f, %f\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
-	printf("orinedt %f, %f, %f\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
+	// printf("coords %f, %f, %f\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
+	// printf("orinedt %f, %f, %f\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
 
 	return (draw(rt), 0);
 }
@@ -442,6 +442,6 @@ void	key_rotate(int keycode, t_rt *rt)
 		rt->cam->phi -= 360.0;
 	else if (rt->cam->phi <= -180.0)
 		rt->cam->phi += 360.0;
-	basis(rt->cam, rt->cam->phi * (ANG), rt->cam->theta * ANG);
-	// get_cam_basis(rt->cam);
+	update_basis(rt->cam, rt->cam->phi * (ANG), \
+				rt->cam->theta * ANG);
 }

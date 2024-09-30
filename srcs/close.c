@@ -21,46 +21,6 @@ void	close_mlx(t_rt *rt)
 	free(rt->img);
 }
 
-void	free_lst(t_rt *rt)
-{
-	t_fig	*fig;
-	t_light	*light;
-
-	while (rt->fig)
-	{
-		fig = rt->fig;
-		rt->fig = rt->fig->next;
-		free(fig);
-	}
-	while (rt->light)
-	{
-		light = rt->light;
-		rt->light = rt->light->next;
-		free(light);
-	}
-}
-
-void	free_bump(t_bump *bump)
-{
-	t_bump	*tmp;
-	int		i;
-
-	i = 0;
-	while (bump)
-	{
-		tmp = bump;
-		while (i < bump->normal_height)
-		{
-			free(bump->normal_map[i]);
-			free(bump->color_map[i++]);
-		}
-		free(bump->normal_map);
-		free(bump->color_map);
-		bump = bump->next;
-		free(tmp);
-	}
-}
-
 void	close_all(t_rt *rt, char *error_msg)
 {
 	close_mlx(rt);
@@ -71,9 +31,8 @@ void	close_all(t_rt *rt, char *error_msg)
 	if (rt->file_fd)
 		close(rt->file_fd);
 	free_lst(rt);
-	free_bump(rt->bump);
-	free(rt->light);
-	free(rt->fig);
+	// free_bump(rt->bump);
+	// free_args(rt->map);
 	free(rt);
 	error(error_msg);
 }

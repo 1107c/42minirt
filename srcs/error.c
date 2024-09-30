@@ -18,22 +18,22 @@ int	error(char *error_msg)
 		exit(EXIT_SUCCESS);
 	ft_putendl_fd(error_msg, STDERR_FILENO);
 	exit(EXIT_FAILURE);
+	return (EXIT_FAILURE);
 }
 
 int	print_err(t_msg	msg)
 {
-	printf("Error\n");
+	ft_putendl_fd("Error", STDERR_FILENO);
 	if (msg == NO_ARG)
-		printf("=> no input, enter only *.rt");
+		error("=> no input. enter only *.rt");
 	else if (msg == MUCH_ARG)
-		printf("=> too many input, enter only *.rt");
+		error("=> too many input. enter only *.rt");
 	else if (msg == EXTEN_ERR)
-		printf("=> input is not .enter only *.rt");
+		error("=> invalid file format. enter only *.rt");
 	else if (msg == FATAL_ERR)
-		printf("=> fatal error");
+		error("=> fatal error");
 	else if (msg == OPEN_ERR)
-		printf("=> file open error");
-	exit(EXIT_FAILURE);
+		error("=> file open error");
 	return (EXIT_FAILURE);
 }
 

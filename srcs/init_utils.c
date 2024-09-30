@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_utils.c                                       :+:      :+:    :+:   */
+/*   init_xss.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -20,11 +20,10 @@ t_light	*init_light(void)
 	if (!light)
 		return (NULL);
 	light->brightness = 0;
-	light->ch = 0;
 	light->next = NULL;
 	light->is_click = -1;
-	light->xyz = (t_vector){0, 0, 0, NULL};
-	light->rgb = (t_vector){0, 0, 0, NULL};
+	light->xyz = init_vector(0, 0, 0);
+	light->rgb = init_vector(0, 0, 0);
 	return (light);
 }
 
@@ -42,12 +41,12 @@ t_fig	*init_fig(void)
 	fig->is_click = -1;
 	fig->is_check = -1;
 	fig->is_bump = -1;
-	fig->xyz = (t_vector){0, 0, 0, NULL};
-	fig->normal_vec = (t_vector){0, 0, 0, NULL};
-	fig->rgb = (t_vector){0, 0, 0, NULL};
-	fig->rgb2 = (t_vector){0, 0, 0, NULL};
-	fig->right_vec = (t_vector){0, 0, 0, NULL};
-	fig->up_vec = (t_vector){0, 0, 0, NULL};
+	fig->xyz = init_vector(0, 0, 0);
+	fig->normal_vec = init_vector(0, 0, 0);
+	fig->rgb = init_vector(0, 0, 0);
+	fig->rgb2 = init_vector(0, 0, 0);
+	fig->right_vec = init_vector(0, 0, 0);
+	fig->up_vec = init_vector(0, 0, 0);
 	return (fig);
 }
 
@@ -63,7 +62,10 @@ void	init_map(t_rt *rt)
 	{
 		rt->map[i] = (char *)ft_calloc((WINDOW_WIDTH + 1), sizeof(char));
 		if (!rt->map[i])
+		{
+			free_args(rt->map);
 			close_all(rt, MEM_ALLOC_ERR);
+		}
 	}
 }
 
@@ -80,4 +82,9 @@ t_bump	*init_bump(void)
 	bump->normal_width = 0;
 	bump->next = NULL;
 	return (bump);
+}
+
+t_vector	init_vector(double x, double y, double z)
+{
+	return ((t_vector){x, y, z, NULL});
 }

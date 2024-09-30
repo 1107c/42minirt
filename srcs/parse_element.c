@@ -18,7 +18,7 @@
 
 void	parse_amb(t_rt *rt, char **args)
 {
-	if (rt->amblight->ch)
+	if (rt->amblight->cnt)
 		free_2d_and_close_all(rt, args, AMB_DUP_ERR);
 	if (get_arg_len(args) != 3)
 		free_2d_and_close_all(rt, args, AMB_LEN_ERR);
@@ -27,12 +27,12 @@ void	parse_amb(t_rt *rt, char **args)
 	rt->amblight->light_ratio = ft_atod(args[1]);
 	if (!is_valid_multi_double_value(&(rt->amblight->rgb), args[2], 0, 255))
 		free_2d_and_close_all(rt, args, rt->amblight->rgb.error);
-	rt->amblight->ch = 1;
+	rt->amblight->cnt = 1;
 }
 
 void	parse_cam(t_rt *rt, char **args)
 {
-	if (rt->cam->ch)
+	if (rt->cam->cnt)
 		free_2d_and_close_all(rt, args, CAM_DUP_ERR);
 	if (get_arg_len(args) != 4)
 		free_2d_and_close_all(rt, args, CAM_LEN_ERR);
@@ -46,7 +46,7 @@ void	parse_cam(t_rt *rt, char **args)
 	if (!is_valid_single_double_value(rt, args[3], 0, 180))
 		free_2d_and_close_all(rt, args, rt->error);
 	rt->cam->fov = ft_atod(args[3]);
-	rt->cam->ch = 1;
+	rt->cam->cnt = 1;
 }
 
 void	parse_light(t_rt *rt, char **args)
@@ -67,5 +67,4 @@ void	parse_light(t_rt *rt, char **args)
 	light->brightness = ft_atod(args[2]);
 	if (!is_valid_multi_double_value(&(light->rgb), args[3], 0, 255))
 		free_2d_and_close_all(rt, args, light->rgb.error);
-	light->ch = 1;
 }

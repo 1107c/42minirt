@@ -60,3 +60,27 @@ t의 계수(Y): 2((a' - a)(a - a'') + (b' - b)(b - b'') + (c' - c)(c - c''))
 상수항의 계수(Z): (a - a'')**2 + (b - b'')**2 + (c - c'')**2 - r**2
 t의 관한 이차방정식의 해가 존재할 조건은
 D/4 >= 0 => Y**2 - XZ >= 0
+
+# CAM
+카메라 시점의 기저벡터를 구하는 과정
+카메라의 orient_vec의 yz, xz로의 정사영과 z축이 이루는 각 theta, pi를 구한다.
+카메라의 orient_vec가 z축 위에 있다고 가정했을 때,
+해당 벡터를 y축으로 theta만큼, x축으로 pi만큼 회전한 것을 의미한다.
+축의 회전에 따라 x축, y축도 같이 회전되어 바뀐 벡터를 구해주면
+이것들이 곧 새로운 시점의 기저벡터들이 된다.
+
+<CODE v1>
+t_vector	proj_vector_yzx;
+t_vector	z_unit_vector;
+double		theta;
+
+proj_vector_yzx = (t_vector) {0, cam->orient_vec.y, cam->orient_vec.z, 0};
+z_unit_vector = (t_vector) {0, 0, 1, 0};
+theta = dot_product(proj_vector_yzx, z_unit_vector) /
+		sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
+cam->up_vec = (t_vector) {0, theta, -sqrt(1 - theta * theta), 0};
+proj_vector_yzx.x = cam->orient_vec.x;
+proj_vector_yzx.y = 0;
+theta = dot_product(proj_vector_yzx, z_unit_vector) /
+		sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
+cam->right_vec = (t_vector) {theta, 0, -sqrt(1 - theta * theta), 0};

@@ -15,12 +15,13 @@ CFLAGS = -g
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 
-PRE_MEN_C = 2d_array_utils.c close.c error.c init.c key_handle.c main.c parse.c \
-			parse_element.c parse_figure.c parse_utils.c init_utils.c print_data.c \
-			draw.c vector_util.c vector_util2.c intersection.c lst_utils.c \
-			cam_utils.c key_handle_2.c mouse_handle.c  get_uv.c draw_utils.c \
-			light_and_shadow.c get_ray_dist.c threads.c intersect_utils1.c \
-			intersect_utils2.c intersect_utils3.c
+PRE_MEN_C = 2d_array_utils.c bump.c cam_utils.c checker.c close.c cn_utils.c \
+			cy_handler.c cy_utils.c draw_utils.c draw.c error.c get_ray_dist.c \
+			get_uv.c init_utils.c init.c intersect_utils3.c intersection.c \
+			key_handle_2.c key_handle.c light_and_shadow.c lst_utils.c \
+			main.c matrix_utils.c mouse_handle.c parse_element.c parse_figure.c \
+			parse_utils.c parse.c print_data.c threads.c vector_util.c \
+			vector_util2.c xs.c
 
 PRE_MEN_O = $(PRE_MEN_C:%.c=%.o)
 

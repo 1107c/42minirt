@@ -13,7 +13,9 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 
-# define THREADS_NUM	16
+# define NUM_THREADS	16
+
+# define V_EPSILON	0.001
 
 # define PLANE		0
 # define SPHERE		1
@@ -96,6 +98,12 @@
 # define LIGHT_MAX_ERR			"Error\n=> light maximum count exceeded"
 # define FIG_MAX_ERR			"Error\n=> figure maximum count exceeded"
 
+# define	NO_HIT					0
+# define	CENTER_SIDE_HIT			1
+# define	CENTER_CENTER_HIT		2
+# define	SIDE_SIDE_HIT			3
+# define	SIDE_CENTER_HIT			4
+
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -107,9 +115,8 @@
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 
-typedef double			t_mat4[4][4];
-typedef double			t_mat3[3][3];
-typedef double			t_mat2[2][2];
+typedef double	t_mat3[3][3];
+typedef struct	s_fig	t_fig;
 
 typedef enum e_msg
 {
@@ -157,51 +164,15 @@ typedef struct s_vector
 	char	*error;
 }	t_vector;
 
-typedef struct s_util
+typedef struct s_vec
 {
-	t_vector	origin;
-	t_vector	ray_dir;
-	t_vector	from_fig_center;
-	double		abc[3];
-	double		t[2];
-	double		alpha;
-	double		beta;
-	double		det;
-	double		dn;
-	double		ecn;
-	double		ecd;
-	double		c;
-	double		h;
-}	t_util;
-
-typedef struct s_amblight
-{
-	t_vector	rgb;
-	double		light_ratio;
-	int			ch;
-}	t_amblight;
-
-typedef struct s_cam
-{
-	t_vector	coords;
-	t_vector	orient_vec;
-	t_vector	right_vec;
-	t_vector	up_vec;
-	t_vector	corner_vec;
-	t_vector	origin_orient_vec;
-	t_vector	origin_right_vec;
-	t_vector	origin_up_vec;
-	t_vector	screen_origin;
-	t_vector	screen_width;
-	double		fov;
-	double		as_ratio;
-	double		distance_to_view;
-	double		vp_w;
-	double		vp_h;
-	double		theta;
-	double		phi;
-	int			ch;
-}	t_cam;
+	t_vector	inter_vec;
+	t_vector	n_vec;
+	t_vector	l_vec;
+	t_vector	e_vec;
+	t_vector	r_vec;
+	t_fig		*fig;
+}	t_vec;
 
 typedef struct s_color
 {
@@ -212,22 +183,70 @@ typedef struct s_color
 	t_vector	spe_sum;
 	t_vector	final_color;
 	t_vector	save_color;
+	t_vector	l_sum;
 }	t_color;
 
-typedef struct s_pallette
+typedef struct s_xs
 {
-	double	a;
-	double	r;
-	double	g;
-	double	b;
-}	t_pallette;
+	t_vector	from;
+	t_vector	ray_dir;
+	t_vector	from_fig_center;
+	double		hit_time;
+	double		abc[3];
+	double		t[2];
+	double		alpha;
+	double		beta;
+	double		det;
+	double		dn;
+	double		ecn;
+	double		ecd;
+	double		c;
+	double		h;
+	double		total_dist;
+	double		left;
+	double		right;
+	int			type;
+	int			flag;
+}	t_xs;
+
+typedef struct s_util
+{
+	t_vec	vec;
+	t_color	color;
+	t_xs	xs;
+	double	time;
+}	t_util;
+
+typedef struct s_amblight
+{
+	t_vector	rgb;
+	double		light_ratio;
+	int			cnt;
+}	t_amblight;
+
+typedef struct s_cam
+{
+	t_vector	coords;
+	t_vector	orient_vec;
+	t_vector	right_vec;
+	t_vector	up_vec;
+	t_vector	origin_orient_vec;
+	t_vector	origin_right_vec;
+	t_vector	origin_up_vec;
+	t_vector	screen_origin;
+	double		fov;
+	double		as_ratio;
+	double		distance_to_view;
+	double		theta;
+	double		phi;
+	int			cnt;
+}	t_cam;
 
 typedef struct s_light
 {
 	t_vector		xyz;
 	t_vector		rgb;
 	double			brightness;
-	int				ch;
 	int				is_click;
 	struct s_light	*next;
 }	t_light;
@@ -240,7 +259,6 @@ typedef struct s_bump
 	int			normal_width;
 	struct s_bump	*next;
 }	t_bump;
-
 
 typedef struct s_fig
 {
@@ -271,25 +289,12 @@ typedef struct s_image
 	char	*buffer;
 }	t_image;
 
-
-typedef struct s_vec
-{
-	t_vector	inter_vec;
-	t_vector	n_vec;
-	t_vector	l_vec;
-	t_vector	e_vec;
-	t_vector	r_vec;
-	t_vector	inter_tg_vec;
-	t_vector	n_tg_vec;
-	t_fig		*fig;
-}	t_vec;
-
-typedef struct s_rgb{
+typedef struct s_rgb {
 	char name[2];
     t_vector rgb;
 }	t_rgb;
 
-typedef struct s_xpm{
+typedef struct s_xpm {
 	int		info[4];
     t_rgb	colors[256];
     t_vector	**pixels;
@@ -297,28 +302,24 @@ typedef struct s_xpm{
 
 typedef struct s_rt
 {
+	void		*mlx;
+	void		*win;
 	t_image		*img;
+	t_amblight	*amblight;
 	t_cam		*cam;
 	t_fig		*fig;
 	t_light		*light;
-	t_amblight	*amblight;
-	void		*mlx;
-	void		*win;
-	int			win_x;
-	int			win_y;
-	int			file_fd;
-	int			fig_cnt;
-	int			light_cnt;
 	t_fig		*selected;
 	t_light		*selected_light;
-	t_vec		vec;
-	t_color		color;
+	t_bump		*bump;
 	char		*line;
 	char		*error;
-	char		**map;
-	t_bump		*bump;
+	int			file_fd;
+	int			light_cnt;
+	int			fig_cnt;
 	int			bump_cnt;
 	int			did_get_normal_map;
+	char		**map;
 }	t_rt;
 
 typedef struct s_worker
@@ -326,6 +327,7 @@ typedef struct s_worker
 	t_rt		*rt;
 	int			y_start;
 	int			y_end;
+	t_util		util;
 }	t_worker;
 
 /* error.c */
@@ -336,11 +338,12 @@ int			open_file(char *filename);
 /* init.c */
 t_rt		*init_rt(int fd);
 
-/* init_utils.c */
+/* init_xss.c */
 t_light		*init_light(void);
 t_fig		*init_fig(void);
 void		init_map(t_rt *rt);
 t_bump		*init_bump(void);
+t_vector	init_vector(double x, double y, double z);
 
 
 /* close.c */
@@ -402,23 +405,22 @@ int			is_normalized_vec(t_vector vec);
 t_vector	init_point(t_cam *cam);
 
 /* intersection.c */
-// double	intersect_plane(t_fig *pl, t_ray ray);
-double		intersect_plane(t_fig *pl, t_vector cam, t_vector point);
-double		intersect_sphere(t_fig *sp, t_vector cam, t_vector point, int *flag);
-// int	intersect_sphere(t_ray *ray, t_fig *fig);
-double		intersect_cylinder(t_fig *cy, t_vector p1, t_vector p2, int *flg);
-double		intersect_cone(t_fig *cy, t_vector p1, t_vector p2);
+double		intersect_plane(t_fig *pl, t_xs *xs);
+double		intersect_sphere(t_fig *sp, t_xs *xs);
+double		intersect_cylinder(t_fig *cy, t_xs *xs);
+double		intersect_cone(t_fig *cn, t_xs *xs);
 void		draw_fig(t_rt *rt, int i, int j);
 
 // void	draw_plane(t_rt *rt);
 
-/* lst_utils.c */
+/* lst_xss.c */
 void		*lst_addback(t_rt *rt, t_type type);
+void		free_lst(t_rt *rt);
+void		free_bump(t_bump *bump);
 
 /* cam_utils.c */
 void		set_cam(t_cam *cam, double x, double y);
-void		get_cam_basis(t_cam *cam);
-void		basis(t_cam *cam, double phi, double theta);
+void		update_basis(t_cam *cam, double phi, double theta);
 
 /* key_handle_2.c */
 t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
@@ -431,45 +433,60 @@ void		key_checkboard(t_rt *rt);
 int			mouse_handle(int keycode, int x, int y, t_rt *rt);
 
 /* get_uv.c */
-	void	get_cylinder_uv(t_vector point, double uv[2], t_fig *fig);
-	void	get_plane_uv(t_vector inter_vec, t_fig *fig, double *u, double *v);
-	void	get_sphere_uv(double uv[2], t_vector point, t_rt *rt);
-
+void	get_cylinder_uv(double uv[2], t_vector point, t_fig *fig);
+void	get_plane_uv(double uv[2], t_vector inter_vec, t_fig *fig);
+void	get_sphere_uv(double uv[2], t_vector point);
 
 /* draw_utils.c */
 void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
-int			encode_rgb(double red, double green, double blue);
-void		clear_image(t_image *img);
 
 /* get_ray_dist.c */
 t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t);
-double		get_ray_dist_cy(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec);
-double		get_ray_dist(t_vector point, t_fig *fig, t_rt *rt, t_vec *vec);
+double	get_ray_dist(t_fig *fig, t_xs *xs);
 
 /* light_and_shadow.c  */
 void		add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp);
-void		multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig);
-int 		is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, t_light *light);
-
-/* intersect_utils1.c */
-t_util	init_cy_util(t_fig *cy, t_vector p1, t_vector p2);
-void	get_cy_solution(t_util *util, t_fig *cy);
-t_vector	find_closest_center(t_fig *cy, t_vector point, t_vector ray);
-double	parallel_to_cy_norm(t_util util, t_fig *cy, t_vector p1, t_vector p2);
-
-/* intersect_utils2.c */
-double	handle_cy_positive(t_util util, t_fig *cy, int *flag);
-double	find_equation(t_fig *cy, t_util util, double small, double big);
-double	handle_cn_positive(t_util util, t_fig *cn);
+void		multi_lightning(t_light *light, t_fig *fig, t_util *util, t_amblight *amb);
+int			is_in_shadow(t_fig *fig, t_light *light, t_xs *xs, t_vec *vec);
 
 /* intersect_utils3.c*/
-t_util	init_cn_util(t_fig *cn, t_vector p1, t_vector p2);
-void	get_cn_solution(t_util *util);
-double	get_cy_up_hit(t_fig *cy, t_util util);
-
+void	get_cn_solution(t_xs *xs);
 
 /* threads.c */
 void	init_workers(t_worker *workers, t_rt *rt);
 void	thread_work(t_worker *workers);
+
+/* matrix_utils.c */
+void	print_mat(t_mat3 a);
+void	rotate_matrix(t_mat3 a, double c, double s, t_vector vec);
+void	mul_matrix3(t_mat3 a, t_mat3 b);
+
+/* checker.c */
+void	checkerboard(t_vector point, t_vec *vec, t_color *color);
+
+/* bump.c */
+void	bump(t_rt *rt, t_vector point, t_vec *vec, t_color *color);
+
+/* xs.c */
+void	plane_xs(t_fig *pl, t_xs *xs);
+void	sphere_xs(t_fig *sp, t_xs *xs);
+void	cylinder_xs(t_fig *cy, t_xs *xs);
+void	cone_xs(t_fig *cn, t_xs *xs);
+
+/* cy_handler.c */
+double	cylinder1(t_fig *cy, t_xs *xs);
+double	cylinder2(t_fig *cy, t_xs *xs);
+double	cylinder3(t_fig *cy, t_xs *xs);
+double	cylinder4(t_fig *cy, t_xs *xs);
+
+/* cy_utils.c */
+double		parallel_to_cy_norm(t_fig *cy, t_xs *xs);
+t_vector	find_closest_center(t_fig *cy, t_vector from, t_vector ray);
+void		get_cy_solution(t_xs *xs);
+double		get_cy_up_hit(t_fig *cy, t_xs *xs);
+
+/* cn_utils.c */
+double	parallel_to_cn_norm(t_fig *cn, t_xs *xs);
+double	cone1(t_fig *cn, t_xs *xs, t_vector close);
 
 #endif
