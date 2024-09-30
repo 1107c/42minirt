@@ -10,8 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC = cc
-CFLAGS = -g
+CC = clang
+CFLAGS =-g -Wall -Wextra -Werror
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 
@@ -21,7 +21,8 @@ PRE_MEN_C = 2d_array_utils.c bump.c cam_utils.c checker.c close.c cn_utils.c \
 			key_handle_2.c key_handle.c light_and_shadow.c lst_utils.c \
 			main.c matrix_utils.c mouse_handle.c parse_element.c parse_figure.c \
 			parse_utils.c parse.c print_data.c threads.c vector_util.c \
-			vector_util2.c xs.c
+			vector_util2.c xs.c xpm_util_1.c xpm_util_2.c light_and_shadow_utils.c \
+			key_bump.c
 
 PRE_MEN_O = $(PRE_MEN_C:%.c=%.o)
 

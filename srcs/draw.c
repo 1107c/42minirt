@@ -72,16 +72,38 @@ int	draw_line(t_worker *wk, t_vector to)
 	if (!wk->util.vec.fig)
 		return (0);
 	if (wk->util.vec.fig->is_bump == 1)
-		bump(wk->rt, to, &wk->util.vec, &wk->util.color);
+		bump(wk, &wk->util.vec, &wk->util.color);
 	else
-		multi_lightning(wk->rt->light, wk->rt->fig, &wk->util, wk->rt->amblight);
+		multi_lightning(wk->rt->light, wk->rt->fig, &wk->util, \
+			wk->rt->amblight);
 	if (wk->util.vec.fig->is_check == 1)
-		checkerboard(to, &wk->util.vec, &wk->util.color);
+		checkerboard(&wk->util.vec, &wk->util.color);
 	return (wk->util.vec.fig->idx + 48);
+}
+
+void	init_xs(t_xs *xs)
+{
+	xs->from = init_vector(0, 0, 0);
+	xs->ray_dir = init_vector(0, 0, 0);
+	xs->from_fig_center = init_vector(0, 0, 0);
+	xs->alpha = 0;
+	xs->beta = 0;
+	xs->det = 0;
+	xs->dn = 0;
+	xs->ecn = 0;
+	xs->ecd = 0;
+	xs->c = 0;
+	xs->h = 0;
+	xs->total_dist = 0;
+	xs->left = 0;
+	xs->right = 0;
+	xs->type = 0;
+	xs->flag = 0;
 }
 
 void	init_util(t_util *util, t_vector from, t_vector to)
 {
+	init_xs(&util->xs);
 	util->vec.fig = NULL;
 	util->vec.inter_vec = init_vector(0, 0, 0);
 	util->vec.n_vec = init_vector(0, 0, 0);
@@ -96,6 +118,27 @@ void	init_util(t_util *util, t_vector from, t_vector to)
 	util->color.l_sum = init_vector(0, 0, 0);
 }
 
+void	update_closest_cylinder(t_util *util, t_fig *fig)
+{
+	double	theta;
+
+	if (util->xs.flag == 1)
+		util->vec.n_vec = fig->normal_vec;
+	else if (util->xs.flag == 2)
+		util->vec.n_vec = invert_vec(fig->normal_vec);
+	else if (util->xs.flag == 3)
+		util->vec.n_vec = init_vector(0, 0, 0);
+	else
+	{
+		util->vec.n_vec = sub_vec(util->vec.inter_vec, fig->xyz);
+		theta = dot_product(util->vec.n_vec, fig->normal_vec) / \
+			sqrt(dot_product(util->vec.n_vec, util->vec.n_vec));
+		util->vec.n_vec = sub_vec(util->vec.n_vec, \
+			mul_vec(fig->normal_vec, theta));
+		util->vec.n_vec = normalize_vec(util->vec.n_vec);
+	}
+}
+
 void	update_closest_figure(t_util *util, t_fig *fig, \
 								t_vector to, double time)
 {
@@ -108,30 +151,13 @@ void	update_closest_figure(t_util *util, t_fig *fig, \
 	else if (fig->type == SPHERE)
 	{
 		if (!util->xs.flag)
-			util->vec.n_vec = normalize_vec( \
-						sub_vec(util->vec.inter_vec, fig->xyz));
+			util->vec.n_vec = normalize_vec(sub_vec(util->vec.inter_vec, \
+				fig->xyz));
 		else
 			util->vec.n_vec = init_vector(0, 0, 0);
 	}
 	else if (fig->type == CYLINDER)
-	{
-		if (util->xs.flag == 1)
-			util->vec.n_vec = fig->normal_vec;
-		else if (util->xs.flag == 2)
-			util->vec.n_vec = invert_vec(fig->normal_vec);
-		else if (util->xs.flag == 3)
-			util->vec.n_vec = init_vector(0, 0, 0);
-		else
-		{
-			double	theta;
-
-			util->vec.n_vec = sub_vec(util->vec.inter_vec, fig->xyz);
-			theta = dot_product(util->vec.n_vec, fig->normal_vec) / \
-				sqrt(dot_product(util->vec.n_vec, util->vec.n_vec));
-			util->vec.n_vec = sub_vec(util->vec.n_vec, mul_vec(fig->normal_vec, theta));
-			util->vec.n_vec = normalize_vec(util->vec.n_vec);
-		}
-	}
+		update_closest_cylinder(util, fig);
 	else
 		util->vec.n_vec = get_cone_normal(fig, \
 							util->xs.from, to, time);

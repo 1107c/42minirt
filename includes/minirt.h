@@ -98,11 +98,11 @@
 # define LIGHT_MAX_ERR			"Error\n=> light maximum count exceeded"
 # define FIG_MAX_ERR			"Error\n=> figure maximum count exceeded"
 
-# define	NO_HIT					0
-# define	CENTER_SIDE_HIT			1
-# define	CENTER_CENTER_HIT		2
-# define	SIDE_SIDE_HIT			3
-# define	SIDE_CENTER_HIT			4
+# define NO_HIT					0
+# define CENTER_SIDE_HIT			1
+# define CENTER_CENTER_HIT		2
+# define SIDE_SIDE_HIT			3
+# define SIDE_CENTER_HIT			4
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -115,8 +115,8 @@
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 
-typedef double	t_mat3[3][3];
-typedef struct	s_fig	t_fig;
+typedef double			t_mat3[3][3];
+typedef struct s_fig	t_fig;
 
 typedef enum e_msg
 {
@@ -191,7 +191,6 @@ typedef struct s_xs
 	t_vector	from;
 	t_vector	ray_dir;
 	t_vector	from_fig_center;
-	double		hit_time;
 	double		abc[3];
 	double		t[2];
 	double		alpha;
@@ -253,12 +252,12 @@ typedef struct s_light
 
 typedef struct s_bump
 {
-	t_vector	**normal_map;
-	t_vector	**color_map;
-	int			normal_height;
-	int			normal_width;
-	int			save_height;
-	int			save_width;
+	t_vector		**normal_map;
+	t_vector		**color_map;
+	int				normal_height;
+	int				normal_width;
+	int				save_height;
+	int				save_width;
 	struct s_bump	*next;
 }	t_bump;
 
@@ -292,14 +291,14 @@ typedef struct s_image
 }	t_image;
 
 typedef struct s_rgb {
-	char name[2];
-    t_vector rgb;
+	char		name[2];
+	t_vector	rgb;
 }	t_rgb;
 
 typedef struct s_xpm {
-	int		info[4];
-    t_rgb	colors[256];
-    t_vector	**pixels;
+	int			info[4];
+	t_rgb		colors[256];
+	t_vector	**pixels;
 }	t_xpm;
 
 typedef struct s_rt
@@ -346,7 +345,6 @@ t_fig		*init_fig(void);
 void		init_map(t_rt *rt);
 t_bump		*init_bump(void);
 t_vector	init_vector(double x, double y, double z);
-
 
 /* close.c */
 void		close_mlx(t_rt *rt);
@@ -421,7 +419,7 @@ void		free_lst(t_rt *rt);
 void		free_bump(t_bump *bump);
 
 /* cam_utils.c */
-void		set_cam(t_cam *cam, double x, double y);
+void		set_cam(t_cam *cam);
 void		update_basis(t_cam *cam, double phi, double theta);
 
 /* key_handle_2.c */
@@ -429,57 +427,65 @@ t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
 void		fig_light_translate(int keycode, t_fig *fig, t_light *light);
 void		key_light(int keycode, t_rt *rt);
 void		fig_rotate(int keycode, t_rt *rt);
-void		key_checkboard(t_rt *rt);
+void		key_checkboard_bump(int keycode, t_rt *rt);
 
 /* mouse_handle.c */
 int			mouse_handle(int keycode, int x, int y, t_rt *rt);
 
 /* get_uv.c */
-void	get_cylinder_uv(double uv[2], t_vector point, t_fig *fig);
-void	get_plane_uv(double uv[2], t_vector inter_vec, t_fig *fig);
-void	get_sphere_uv(double uv[2], t_vector point);
+void		get_cylinder_uv(double uv[2], t_vector point, t_fig *fig);
+void		get_plane_uv(double uv[2], t_vector inter_vec, t_fig *fig);
+void		get_sphere_uv(double uv[2], t_vector point);
+void		get_uv(t_vec *vec, double *uv);
 
 /* draw_utils.c */
 void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
 
 /* get_ray_dist.c */
 t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t);
-double	get_ray_dist(t_fig *fig, t_xs *xs);
+double		get_ray_dist(t_fig *fig, t_xs *xs);
 
 /* light_and_shadow.c  */
 void		add_color(t_color *color, t_fig *fig, t_vec *vec, t_light *tmp);
-void		multi_lightning(t_light *light, t_fig *fig, t_util *util, t_amblight *amb);
+void		multi_lightning(t_light *light, t_fig *fig, \
+	t_util *util, t_amblight *amb);
 int			is_in_shadow(t_fig *fig, t_light *light, t_xs *xs, t_vec *vec);
 
+/*	light_and_shadow_utils.c */
+t_vector	get_diffuse_color(t_light *lt, t_fig *fig, double power);
+t_vector	get_specular_color(t_light *lt, double power);
+t_vector	get_light_color(t_vector l_sum, t_light *lt, double power);
+void		add_color(t_color *c, t_fig *fig, t_vec *vec, t_light *light);
+
 /* intersect_utils3.c*/
-void	get_cn_solution(t_xs *xs);
+void		get_cn_solution(t_xs *xs);
 
 /* threads.c */
-void	init_workers(t_worker *workers, t_rt *rt);
-void	thread_work(t_worker *workers);
+void		init_workers(t_worker *workers, t_rt *rt);
+void		thread_work(t_worker *workers);
 
 /* matrix_utils.c */
-void	print_mat(t_mat3 a);
-void	rotate_matrix(t_mat3 a, double c, double s, t_vector vec);
-void	mul_matrix3(t_mat3 a, t_mat3 b);
+void		print_mat(t_mat3 a);
+void		rotate_matrix(t_mat3 a, double c, double s, t_vector vec);
+void		mul_matrix3(t_mat3 a, t_mat3 b);
 
 /* checker.c */
-void	checkerboard(t_vector point, t_vec *vec, t_color *color);
+void		checkerboard(t_vec *vec, t_color *color);
 
 /* bump.c */
-void	bump(t_rt *rt, t_vector point, t_vec *vec, t_color *color);
+void		bump(t_worker *wk, t_vec *vec, t_color *color);
 
 /* xs.c */
-void	plane_xs(t_fig *pl, t_xs *xs);
-void	sphere_xs(t_fig *sp, t_xs *xs);
-void	cylinder_xs(t_fig *cy, t_xs *xs);
-void	cone_xs(t_fig *cn, t_xs *xs);
+void		plane_xs(t_fig *pl, t_xs *xs);
+void		sphere_xs(t_fig *sp, t_xs *xs);
+void		cylinder_xs(t_fig *cy, t_xs *xs);
+void		cone_xs(t_fig *cn, t_xs *xs);
 
 /* cy_handler.c */
-double	cylinder1(t_fig *cy, t_xs *xs);
-double	cylinder2(t_fig *cy, t_xs *xs);
-double	cylinder3(t_fig *cy, t_xs *xs);
-double	cylinder4(t_fig *cy, t_xs *xs);
+double		cylinder1(t_fig *cy, t_xs *xs);
+double		cylinder2(t_fig *cy, t_xs *xs);
+double		cylinder3(t_fig *cy, t_xs *xs);
+double		cylinder4(t_fig *cy, t_xs *xs);
 
 /* cy_utils.c */
 double		parallel_to_cy_norm(t_fig *cy, t_xs *xs);
@@ -488,7 +494,24 @@ void		get_cy_solution(t_xs *xs);
 double		get_cy_up_hit(t_fig *cy, t_xs *xs);
 
 /* cn_utils.c */
-double	parallel_to_cn_norm(t_fig *cn, t_xs *xs);
-double	cone1(t_fig *cn, t_xs *xs, t_vector close);
+double		parallel_to_cn_norm(t_fig *cn, t_xs *xs);
+double		cone1(t_fig *cn, t_xs *xs, t_vector close);
 
+/*key_bump.c */
+void		key_bump(int keycode, t_rt *rt, t_fig *fig);
+t_xpm		*parse_xpm(char *path, t_rt *rt, int i);
+
+/*	xpm_util_1 */
+void		skip_xpm(int fd);
+void		get_info_xpm(int fd, t_xpm *img);
+int			ft_sixteen(char c);
+void		get_rgb_xpm(int fd, t_xpm *img);
+int			find_color(char *tmp, t_xpm *img, int i, int *j);
+
+/*	xpm_util_2 */
+t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path, int i);
+void		interpret_xpm(int fd, t_xpm *img);
+t_vector	**get_height_map(t_xpm *image, double **height_map);
+t_vector	**translate_height_to_normal(double **height_map, t_vector \
+	**normal_map, int width, int height);
 #endif

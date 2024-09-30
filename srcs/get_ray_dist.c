@@ -12,8 +12,6 @@
 
 #include "../includes/minirt.h"
 
-static double	get_ray_dist_cy(t_rt *rt, t_fig *fig, t_vector point);
-
 t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t)
 {
 	t_vector	dqec[3];

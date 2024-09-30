@@ -12,10 +12,6 @@
 
 #include "../includes/minirt.h"
 
-// ∗ identifier: A
-// ∗ ambient lighting ratio in range [0.0,1.0]: 0.2
-// ∗ R,G,B colors in range [0-255]: 255, 255, 255
-
 void	parse_amb(t_rt *rt, char **args)
 {
 	if (rt->amblight->cnt)

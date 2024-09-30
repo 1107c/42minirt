@@ -21,7 +21,7 @@ double	cylinder1(t_fig *cy, t_xs *xs)
 
 	first = sub_vec(cy->xyz, xs->from);
 	second = sub_vec(add_vec(cy->xyz, \
-			mul_vec(cy->normal_vec, cy->height)), xs->from);;
+			mul_vec(cy->normal_vec, cy->height)), xs->from);
 	// 실린더 내부에서 광선을 쏜 경우(ok)
 	if (dot_product(first, second) < 0)
 	{
@@ -69,6 +69,8 @@ double	cylinder2(t_fig *cy, t_xs *xs)
 
 double	cylinder3(t_fig *cy, t_xs *xs)
 {
+	if (!cy)
+		return  (0);
 	// 실린더 내부(ok)
 	if (xs->t[0] < 0)
 	{
@@ -83,13 +85,13 @@ double	cylinder4(t_fig *cy, t_xs *xs)
 {
 	t_vector	first;
 	t_vector	second;
-	double		d[2];
+	// double		d[2];
 
 	first = sub_vec(cy->xyz, xs->from);
 	second = sub_vec(add_vec(cy->xyz, \
 			mul_vec(cy->normal_vec, cy->height)), xs->from);
-	d[0] = dot_product(xs->ray_dir, first);
-	d[1] = dot_product(xs->ray_dir, second);
+	// d[0] = dot_product(xs->ray_dir, first);
+	// d[1] = dot_product(xs->ray_dir, second);
 	// 실린더 외부1(ok)
 	if (xs->t[0] > 0)
 		return (xs->t[0]);

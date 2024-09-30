@@ -14,6 +14,8 @@
 
 double	intersect_plane(t_fig *pl, t_xs *xs)
 {
+	if (!pl)
+		return (0);
 	if (xs->left == 0)
 	{
 		if (xs->right == 0)
@@ -25,6 +27,8 @@ double	intersect_plane(t_fig *pl, t_xs *xs)
 
 double	intersect_sphere(t_fig *sp, t_xs *xs)
 {
+	if (!sp)
+		return (0);
 	if (xs->det < 0)
 		return (-1.0);
 	xs->t[0] = (-xs->abc[1] - sqrt(xs->det)) / xs->abc[0];
@@ -63,7 +67,7 @@ double	intersect_cylinder(t_fig *cy, t_xs *xs)
 double	intersect_cone(t_fig *cn, t_xs *xs)
 {
 	if (fabs(xs->abc[0]) < EPSILON \
-		&& fabs(xs->abc[1] < EPSILON))
+		&& abs(xs->abc[1] < EPSILON))
 		return (parallel_to_cn_norm(cn, xs));
 	if (xs->det < 0)
 		return (-1.0);

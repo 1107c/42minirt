@@ -61,3 +61,13 @@ void	get_cylinder_uv(double uv[2], t_vector point, t_fig *fig)
 	uv[0] = (theta * (0.5 * M_PI));
 	uv[1] = fmod(height, 1);
 }
+
+void	get_uv(t_vec *vec, double *uv)
+{
+	if (vec->fig->type == SPHERE)
+		get_sphere_uv(uv, vec->n_vec);
+	else if (vec->fig->type == PLANE)
+		get_plane_uv(uv, vec->inter_vec, vec->fig);
+	else if (vec->fig->type == CYLINDER || vec->fig->type == CONE)
+		get_cylinder_uv(uv, vec->inter_vec, vec->fig);
+}

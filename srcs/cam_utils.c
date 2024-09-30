@@ -12,11 +12,11 @@
 
 #include "../includes/minirt.h"
 
-static void	update_orient(t_cam *cam);
-static void	get_cam_basis(t_cam *cam);
-static t_vector	get_basis_from_matrix(t_mat3 a, t_vector base);
+static	void		update_orient(t_cam *cam);
+static	void		get_cam_basis(t_cam *cam);
+static	t_vector	get_basis_from_matrix(t_mat3 a, t_vector base);
 
-void	set_cam(t_cam *cam, double x, double y)
+void	set_cam(t_cam *cam)
 {
 	cam->distance_to_view = WINDOW_WIDTH / \
 							(2 * tan(ANG * (cam->fov / 2)));

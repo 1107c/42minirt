@@ -12,7 +12,6 @@
 
 #include "../includes/minirt.h"
 
-// 2차원 배열의 길이를 구하는 함수
 int	get_arg_len(char **args)
 {
 	int	n;
@@ -25,7 +24,6 @@ int	get_arg_len(char **args)
 	return (n);
 }
 
-// 2차원 배열을 프린트하는 함수
 void	print_args(char **args)
 {
 	if (!args || !*args)
@@ -39,7 +37,6 @@ void	print_args(char **args)
 	printf("\n");
 }
 
-// 2차원 배열을 free하는 함수
 void	free_args(char **args)
 {
 	int	i;
