@@ -36,33 +36,6 @@ t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t)
 	return (dqec[1]);
 }
 
-double	get_ray_dist_cy(t_rt *rt, t_fig *fig, t_vector point)
-{
-	double	t;
-	double	theta;
-	int		flg;
-
-	flg = 0;
-	// t = intersect_cylinder(fig, rt->cam->coords, point, &flg);
-	// vec->inter_vec = add_vec(rt->cam->coords, \
-	// 	mul_vec(sub_vec(point, rt->cam->coords), t));
-	// if (flg == 1)
-	// 	vec->n_vec = fig->normal_vec;
-	// else if (flg == 2)
-	// 	vec->n_vec = invert_vec(fig->normal_vec);
-	// else if (flg == 3)
-	// 	vec->n_vec = (t_vector) {0, 0, 0, 0};
-	// else
-	// {
-	// 	vec->n_vec = sub_vec(vec->inter_vec, fig->xyz);
-	// 	theta = dot_product(vec->n_vec, fig->normal_vec) / \
-	// 		sqrt(dot_product(vec->n_vec, vec->n_vec));
-	// 	vec->n_vec = sub_vec(vec->n_vec, mul_vec(fig->normal_vec, theta));
-	// 	vec->n_vec = normalize_vec(vec->n_vec);
-	// }
-	return (t);
-}
-
 void	prepare_computation(t_fig *fig, t_xs *xs)
 {
 	if (fig->type == PLANE)
