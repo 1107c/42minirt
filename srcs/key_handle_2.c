@@ -12,18 +12,24 @@
 
 #include "../includes/minirt.h"
 
-void	key_checkboard(t_rt *rt)
+void	key_checkboard_bump(int keycode, t_rt *rt)
 {
-	if (rt->selected && rt->selected->is_check == -1)
+	t_fig	*fig;
+
+	fig = rt->fig;
+	if (rt->selected && rt->selected->is_check == -1 && keycode == KEY_SPACE)
 	{
 		rt->selected->is_check *= -1;
 		draw(rt);
 	}
-	else if (rt->selected && rt->selected->is_check == 1)
+	else if (rt->selected && rt->selected->is_check == 1 && keycode == \
+		KEY_SPACE)
 	{
 		rt->selected->is_check *= -1;
 		draw(rt);
 	}
+	else
+		key_bump(keycode, rt, fig);
 }
 
 t_vector	fig_light_translate_module(int move, int dir, t_vector vec)
@@ -108,10 +114,4 @@ void	fig_rotate(int keycode, t_rt *rt)
 		rt->selected->up_vec = cross_product(rt->selected->normal_vec, \
 		rt->selected->right_vec);
 	}
-	// printf("norm: %lf %lf %lf\n", rt->selected->normal_vec.x, \
-	// 		rt->selected->normal_vec.y, rt->selected->normal_vec.z);
-	// printf("up: %lf %lf %lf\n", rt->selected->up_vec.x, \
-	// 		rt->selected->up_vec.y, rt->selected->up_vec.z);
-	// printf("right: %lf %lf %lf\n", rt->selected->right_vec.x, \
-	// 		rt->selected->right_vec.y, rt->selected->right_vec.z);
 }

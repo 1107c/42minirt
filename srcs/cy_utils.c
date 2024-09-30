@@ -13,6 +13,7 @@
 #include "../includes/minirt.h"
 
 static int	get_cy_type(t_xs *xs);
+static t_vector	find_closest_center(t_fig *cy, t_vector from, double dn);
 
 double	parallel_to_cy_norm(t_fig *cy, t_xs *xs)
 {
@@ -22,13 +23,13 @@ double	parallel_to_cy_norm(t_fig *cy, t_xs *xs)
 
 	if (fabs(xs->abc[2]) >= EPSILON)
 		return (-1.0);
-	closer_area = find_closest_center(cy, xs->from, xs->ray_dir, xs);
+	closer_area = find_closest_center(cy, xs->from, xs->dn);
 	center_vec = sub_vec(closer_area, xs->from);
 	height = fabs(dot_product(center_vec, cy->normal_vec));
 	return (height / xs->total_dist);
 }
 
-t_vector	find_closest_center(t_fig *cy, t_vector from, t_vector ray, t_xs *xs)
+t_vector	find_closest_center(t_fig *cy, t_vector from, double dn)
 {
 	t_vector	top;
 	t_vector	bottom;
@@ -50,7 +51,7 @@ t_vector	find_closest_center(t_fig *cy, t_vector from, t_vector ray, t_xs *xs)
 			return (bottom);
 		return (top);
 	}
-	if (xs->dn >= 0)
+	if (dn >= 0)
 		return (top);
 	return (bottom);
 }
@@ -100,7 +101,7 @@ double	get_cy_up_hit(t_fig *cy, t_xs *xs)
 	double		c;
 	double		hyp;
 
-	close = find_closest_center(cy, xs->from, xs->ray_dir, xs);
+	close = find_closest_center(cy, xs->from, xs->dn);
 	height = fabs(dot_product(sub_vec(close, xs->from), \
 			cy->normal_vec));
 	c = fabs(xs->dn) / xs->total_dist;

@@ -15,16 +15,11 @@
 static int		is_checker(double u, double v, int checker_size);
 static t_vector	get_final_color(t_color *color, int add);
 
-void	checkerboard(t_vector point, t_vec *vec, t_color *color)
+void	checkerboard(t_vec *vec, t_color *color)
 {
 	double	uv[2];
 
-	if (vec->fig->type == PLANE)
-		get_plane_uv(uv, vec->inter_vec, vec->fig);
-	else if (vec->fig->type == SPHERE)
-		get_sphere_uv(uv, vec->n_vec);
-	else
-		get_cylinder_uv(uv, vec->inter_vec, vec->fig);
+	get_uv(vec, uv);
 	if (is_checker(uv[0], uv[1], 10))
 		color->final_color = get_final_color(color, 0);
 	else

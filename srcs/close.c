@@ -31,13 +31,11 @@ void	close_all(t_rt *rt, char *error_msg)
 	if (rt->file_fd)
 		close(rt->file_fd);
 	free_lst(rt);
-	// free_bump(rt->bump);
-	// free_args(rt->map);
+	free_bump(rt->bump);
 	free(rt);
 	error(error_msg);
 }
 
-// 2차원 배열을 free하고 프로그램 종료
 void	free_2d_and_close_all(t_rt *rt, char **args, char *msg)
 {
 	free_args(args);

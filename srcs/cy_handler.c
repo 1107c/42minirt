@@ -12,7 +12,6 @@
 
 #include "../includes/minirt.h"
 
-static double	get_cy_hit_dist(t_fig *cy, t_xs *xs, t_vector close);
 static int	is_in_cylinder(t_fig *cy, t_xs *xs);
 
 double	cylinder1(t_fig *cy, t_xs *xs)
@@ -44,7 +43,7 @@ double	cylinder2(t_fig *cy, t_xs *xs)
 	if ((xs->beta < 0 && xs->ecn >= 0 && xs->dn <= 0) \
 		|| (xs->beta > xs->h && xs->ecn < 0 && xs->dn >= 0))
 		{
-			printf("%lf %lf\n", xs->beta, xs->ecn);
+			// printf("%lf %lf\n", xs->beta, xs->ecn);
 		return (-1.0);
 		}
 	if (xs->alpha < 0)
@@ -56,6 +55,7 @@ double	cylinder2(t_fig *cy, t_xs *xs)
 
 double	cylinder3(t_fig *cy, t_xs *xs)
 {
+	(void)cy;
 	if (xs->t[0] < 0)
 	{
 		xs->flag = 3;

@@ -20,8 +20,6 @@ void	pixel_to_image(t_image *img, double x, double y, t_vector rgb)
 	int	color;
 
 	color = encode_rgb(rgb.x, rgb.y, rgb.z);
-	// if (color)
-	// 	printf("x, y: %d %d \n", (int)x, (int)y);
 	pixel = ((int)y * img->size_line) + ((int)x * 4);
 	img->buffer[pixel + 0] = (color) & 0xff;
 	img->buffer[pixel + 1] = (color >> 8) & 0xff;

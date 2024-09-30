@@ -26,7 +26,7 @@ int	main(int arg, char **args)
 	if (!rt)
 		return (close(fd), print_err(FATAL_ERR));
 	parse_data(rt);
-	set_cam(rt->cam, WINDOW_WIDTH, WINDOW_HEIGHT);
+	set_cam(rt->cam);
 	mlx_key_hook(rt->win, &key_handle, rt);
 	mlx_mouse_hook(rt->win, &mouse_handle, rt);
 	mlx_hook(rt->win, 17, 1L << 0, &close_win, rt);
