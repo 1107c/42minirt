@@ -43,6 +43,7 @@ void	cylinder_xs(t_fig *cy, t_xs *xs)
 				- pow(xs->ecn, 2) - cy->radius_sq;
 	xs->det = pow(xs->abc[1], 2) - xs->abc[0] * xs->abc[2];
 	xs->h = cy->height;
+	xs->c = xs->h / sqrt(cy->radius_sq + pow(xs->h, 2));
 	xs->flag = 0;
 }
 

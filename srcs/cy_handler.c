@@ -13,22 +13,17 @@
 #include "../includes/minirt.h"
 
 static double	get_cy_hit_dist(t_fig *cy, t_xs *xs, t_vector close);
+static int	is_in_cylinder(t_fig *cy, t_xs *xs);
 
 double	cylinder1(t_fig *cy, t_xs *xs)
 {
-	t_vector	first;
-	t_vector	second;
-
-	first = sub_vec(cy->xyz, xs->from);
-	second = sub_vec(add_vec(cy->xyz, \
-			mul_vec(cy->normal_vec, cy->height)), xs->from);;
-	// 실린더 내부에서 광선을 쏜 경우(ok)
-	if (dot_product(first, second) < 0)
+	// return (EPSILON);
+	// return (-1.0);
+	if (is_in_cylinder(cy, xs))
 	{
 		xs->flag = 3;
 		return (xs->t[1]);
 	}
-	// 실린더 외부(ok)
 	else
 	{
 		if (xs->alpha < 0)
@@ -41,79 +36,61 @@ double	cylinder1(t_fig *cy, t_xs *xs)
 
 double	cylinder2(t_fig *cy, t_xs *xs)
 {
-	t_vector	first;
-	t_vector	second;
-	double		d[2];
-
-	first = sub_vec(cy->xyz, xs->from);
-	second = sub_vec(add_vec(cy->xyz, \
-			mul_vec(cy->normal_vec, cy->height)), xs->from);
-	d[0] = dot_product(xs->ray_dir, first);
-	d[1] = dot_product(xs->ray_dir, second);
-	// 실린더 외부1
-	if (d[0] > 0 && d[1] > 0)
+	if (is_in_cylinder(cy, xs))
 	{
-		if (xs->alpha < 0)
-			xs->flag = 2;
-		else
-			xs->flag = 1;
+		xs->flag = 3;
 		return (get_cy_up_hit(cy, xs));
 	}
-	// 실린더 외부2
-	else if (dot_product(first, second) < 0)
+	if ((xs->beta < 0 && xs->ecn >= 0 && xs->dn <= 0) \
+		|| (xs->beta > xs->h && xs->ecn < 0 && xs->dn >= 0))
+		{
+			printf("%lf %lf\n", xs->beta, xs->ecn);
 		return (-1.0);
-	xs->flag = 3;
-	return (get_cy_hit_dist(cy, xs, \
-		find_closest_center(cy, xs->from, xs->ray_dir)));
+		}
+	if (xs->alpha < 0)
+		xs->flag = 2;
+	else
+		xs->flag = 1;
+	return (get_cy_up_hit(cy, xs));
 }
 
 double	cylinder3(t_fig *cy, t_xs *xs)
 {
-	// 실린더 내부(ok)
 	if (xs->t[0] < 0)
 	{
 		xs->flag = 3;
 		return (xs->t[1]);
 	}
-	// 실린더 외부(ok)
 	return (xs->t[0]);
 }
 
 double	cylinder4(t_fig *cy, t_xs *xs)
 {
-	t_vector	first;
-	t_vector	second;
-	double		d[2];
-
-	first = sub_vec(cy->xyz, xs->from);
-	second = sub_vec(add_vec(cy->xyz, \
-			mul_vec(cy->normal_vec, cy->height)), xs->from);
-	d[0] = dot_product(xs->ray_dir, first);
-	d[1] = dot_product(xs->ray_dir, second);
-	// 실린더 외부1(ok)
 	if (xs->t[0] > 0)
 		return (xs->t[0]);
-	// 실린더 외부2(ok)
-	else if (dot_product(first, second) > 0)
-		return (-1.0);
-	// 실린더 내부
-	xs->flag = 3;
-	if (xs->beta <= 0)
-		return (get_cy_hit_dist(cy, xs, cy->xyz));
-	return (get_cy_hit_dist(cy, xs, add_vec(cy->xyz, \
-			mul_vec(cy->normal_vec, cy->height))));
+	if (is_in_cylinder(cy, xs))
+	{
+		xs->flag = 3;
+		return (get_cy_up_hit(cy, xs));
+	}
+	return (-1.0);
 }
 
-double	get_cy_hit_dist(t_fig *cy, t_xs *xs, t_vector close)
+int	is_in_cylinder(t_fig *cy, t_xs *xs)
 {
-	t_vector	line;
-	double		h;
-	double		c;
-	double		c1;
+	t_vector	dt;
+	double		h_sq;
+	double		dot;
+	double		dsq;
 
-	line = sub_vec(xs->from, close);
-	c = fabs(dot_product(cy->normal_vec, line));
-	h = sqrt(dot_product(line, line)) * c;
-	c1 = fabs(dot_product(cy->normal_vec, xs->ray_dir));
-	return (h / (xs->total_dist * c1));
+	h_sq = pow(xs->h, 2);
+	dt = mul_vec(cy->normal_vec, cy->height);
+	dot = dot_product(dt, xs->from_fig_center);
+	if (dot < 0.0 || dot > h_sq)
+		return (0);
+	dsq = dot_product(xs->from_fig_center, xs->from_fig_center) \
+		- pow(dot, 2) / h_sq;
+	if (dsq > cy->radius_sq)
+		return (0);
+	return (1);
 }

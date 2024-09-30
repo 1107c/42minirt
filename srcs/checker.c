@@ -23,7 +23,7 @@ void	checkerboard(t_vector point, t_vec *vec, t_color *color)
 		get_plane_uv(uv, vec->inter_vec, vec->fig);
 	else if (vec->fig->type == SPHERE)
 		get_sphere_uv(uv, vec->n_vec);
-	else if (vec->fig->type == CYLINDER || vec->fig->type == CONE)
+	else
 		get_cylinder_uv(uv, vec->inter_vec, vec->fig);
 	if (is_checker(uv[0], uv[1], 10))
 		color->final_color = get_final_color(color, 0);

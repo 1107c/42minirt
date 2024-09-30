@@ -65,7 +65,7 @@ int	draw_line(t_worker *wk, t_vector to)
 	while (fig)
 	{
 		time = get_ray_dist(fig, &wk->util.xs);
-		if (time > 0 && time <= wk->util.time)
+		if (time > 0 && time < wk->util.time - EPSILON)
 			update_closest_figure(&wk->util, fig, to, time);
 		fig = fig->next;
 	}

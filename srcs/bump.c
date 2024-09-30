@@ -21,11 +21,11 @@ void    bump(t_rt *rt, t_vector point, t_vec *vec, t_color *color)
     t_vector new_normal;
 
     if (vec->fig->type == SPHERE)
-        get_sphere_uv(uv, vec->n_vec, rt);
+        get_sphere_uv(uv, vec->n_vec);
     else if (vec->fig->type == PLANE)
-        get_plane_uv(vec->inter_vec, vec->fig, &uv[0], &uv[1]);
+        get_plane_uv(uv, vec->inter_vec, vec->fig);
     else if (vec->fig->type == CYLINDER || vec->fig->type == CONE)
-        get_cylinder_uv(vec->inter_vec, uv, vec->fig);
+        get_cylinder_uv(uv, vec->inter_vec, vec->fig);
     if (vec->fig->bump->normal_width > vec->fig->bump->normal_height)
     	vec->fig->bump->normal_width = vec->fig->bump->normal_height;
     else

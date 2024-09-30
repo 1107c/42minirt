@@ -483,7 +483,7 @@ double	cylinder4(t_fig *cy, t_xs *xs);
 
 /* cy_utils.c */
 double		parallel_to_cy_norm(t_fig *cy, t_xs *xs);
-t_vector	find_closest_center(t_fig *cy, t_vector from, t_vector ray);
+t_vector	find_closest_center(t_fig *cy, t_vector from, t_vector ray, t_xs *xs);
 void		get_cy_solution(t_xs *xs);
 double		get_cy_up_hit(t_fig *cy, t_xs *xs);
 

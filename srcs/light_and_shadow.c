@@ -67,6 +67,8 @@ void	add_color(t_color *c, t_fig *fig, t_vec *vec, t_light *light)
 	c->dif_sum = add_vec(c->dif_sum, c->diffuse_color);
 	c->spe_sum = add_vec(c->spe_sum, c->specular_color);
 	l_power = dot_product(vec->l_vec, vec->r_vec);
+	// if (l_power < -0.999999)
+	// 	printf("%lf\n", l_power);
 	c->l_sum = get_light_color(c->l_sum, light, l_power);
 }
 
@@ -79,10 +81,10 @@ int	is_in_shadow(t_fig *fig, t_light *light, t_xs *xs, t_vec *vec)
 
 	i_vec = vec->inter_vec;
 	l_vec = vec->l_vec;
-	xs->from = add_vec(vec->inter_vec, mul_vec(l_vec, V_EPSILON));
+	xs->from = add_vec(i_vec, mul_vec(l_vec, 0.1));
 	xs->ray_dir = sub_vec(light->xyz, xs->from);
 	xs->total_dist = sqrt(dot_product(xs->ray_dir, \
-							xs->ray_dir));
+					xs->ray_dir));
 	_fig = fig;
 	while (_fig)
 	{
