@@ -74,10 +74,12 @@ int	is_in_shadow(t_rt *rt, t_vector inter_vec, t_vector light_dir, \
 
 void	multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig)
 {
-	t_light	*tmp;
+	t_light		*tmp;
+	t_vector	light_sum;
 
 	c->dif_sum = (t_vector){0, 0, 0, 0};
 	c->spe_sum = (t_vector){0, 0, 0, 0};
+	light_sum = (t_vector){0, 0, 0, 0};
 	vec->e_vec = normalize_vec(sub_vec(rt->cam->coords, vec->inter_vec));
 	tmp = rt->light;
 	while (tmp)
@@ -91,10 +93,13 @@ void	multi_lightning(t_rt *rt, t_vec *vec, t_color *c, t_fig *fig)
 			dot_product(vec->e_vec, vec->r_vec)), SHINESS) \
 			* tmp->brightness * SPECULAR_STRENGTH);
 		c->spe_sum = add_vec(c->spe_sum, c->specular_color);
+		light_sum.x = fmin(255, light_sum.x + tmp->rgb.x * 0.2 * tmp->brightness);
+		light_sum.y = fmin(255, light_sum.y + tmp->rgb.y * 0.2 * tmp->brightness);
+		light_sum.z = fmin(255, light_sum.z + tmp->rgb.z * 0.2 * tmp->brightness);
 		tmp = tmp->next;
 	}
 	c->amb = mul_vec(fig->rgb, rt->amblight->light_ratio * AMBIENT_STRENGTH);
-	c->final_color.x = fmin(255, c->amb.x + c->dif_sum.x + c->spe_sum.x);
-	c->final_color.y = fmin(255, c->amb.y + c->dif_sum.y + c->spe_sum.y);
-	c->final_color.z = fmin(255, c->amb.z + c->dif_sum.z + c->spe_sum.z);
+	c->final_color.x = fmin(255, c->amb.x + c->dif_sum.x + c->spe_sum.x + light_sum.x);
+	c->final_color.y = fmin(255, c->amb.y + c->dif_sum.y + c->spe_sum.y + light_sum.y);
+	c->final_color.z = fmin(255, c->amb.z + c->dif_sum.z + c->spe_sum.z + light_sum.z);
 }
