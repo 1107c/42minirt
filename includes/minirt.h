@@ -105,6 +105,10 @@
 # define SIDE_CENTER_HIT		4
 # define SIDE_HIT				5
 
+# define CAM_MOVE				1
+# define CAM_ROT				10
+# define PI_ANG					180.0
+
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
@@ -183,7 +187,6 @@ typedef struct s_color
 	t_vector	dif_sum;
 	t_vector	spe_sum;
 	t_vector	final_color;
-	t_vector	save_color;
 	t_vector	l_sum;
 }	t_color;
 
@@ -425,11 +428,9 @@ void		set_cam(t_cam *cam);
 void		update_basis(t_cam *cam, double phi, double theta);
 
 /* key_handle_2.c */
-t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
 void		fig_light_translate(int keycode, t_fig *fig, t_light *light);
 void		key_light(int keycode, t_rt *rt);
 void		fig_rotate(int keycode, t_rt *rt);
-void		key_checkboard_bump(int keycode, t_rt *rt);
 
 /* mouse_handle.c */
 int			mouse_handle(int keycode, int x, int y, t_rt *rt);
@@ -498,17 +499,17 @@ double		test2(t_fig *cy, t_xs *xs, t_vector close);
 int			is_height(t_fig *cy, t_xs *xs);
 
 /* cn_utils.c */
-double		parallel_to_cn_norm(t_fig *cn, t_xs *xs);
-void		get_cn_solution(t_fig *cn, t_xs *xs);
+double		parallel_to_cn_norm(t_xs *xs);
+void		get_cn_solution(t_xs *xs);
 double		get_cn_center_hit(t_fig *cn, t_xs *xs, t_vector close);
 int			get_cn_type(t_xs *xs, double height);
 
 /* cn_handler.c */
-double	cone1(t_fig *cn, t_xs *xs);
-double	cone2(t_fig *cn, t_xs *xs);
-double	cone3(t_fig *cn, t_xs *xs);
-double	cone4(t_fig *cn, t_xs *xs);
-double	cone5(t_fig *cn, t_xs *xs);
+double		cone1(t_fig *cn, t_xs *xs);
+double		cone2(t_fig *cn, t_xs *xs);
+double		cone3(t_fig *cn, t_xs *xs);
+double		cone4(t_fig *cn, t_xs *xs);
+double		cone5(t_fig *cn, t_xs *xs);
 
 /*key_bump.c */
 void		key_bump(int keycode, t_rt *rt, t_fig *fig);
@@ -527,4 +528,14 @@ void		interpret_xpm(int fd, t_xpm *img);
 t_vector	**get_height_map(t_xpm *image, double **height_map);
 t_vector	**translate_height_to_normal(double **height_map, t_vector \
 	**normal_map, int width, int height);
+
+/* xpm_util_3.c */
+void		free_xpm(t_xpm *image, double **height_map);
+
+/* key_bump_2.c */
+void		key_checkboard_bump(int keycode, t_rt *rt);
+
+/* update_inter_n_vec.c */
+void		update_closest_figure(t_util *util, t_fig *fig, double time);
+
 #endif

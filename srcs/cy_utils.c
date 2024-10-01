@@ -78,18 +78,18 @@ int	get_cy_type(t_xs *xs)
 		|| (xs->alpha > xs->h && xs->beta > xs->h) \
 		|| (xs->t[0] < 0 && xs->t[1] < 0))
 		return (NO_HIT);
-	else if ((xs->alpha < 0 && xs->beta < xs->h) \
-		|| (xs->alpha > xs->h && xs->beta > 0))
-		return (CENTER_SIDE_HIT);
-	else if ((xs->alpha < 0 && xs->beta > xs->h) \
-		|| (xs->alpha > xs->h && xs->beta < 0))
-		return (CENTER_CENTER_HIT);
 	else if ((xs->alpha >= 0 && xs->alpha <= xs->h) \
 		&& (xs->beta >= 0 && xs->beta <= xs->h))
 		return (SIDE_SIDE_HIT);
+	else if ((xs->alpha < 0 && xs->beta < xs->h) \
+		|| (xs->alpha > xs->h && xs->beta > 0))
+		return (CENTER_SIDE_HIT);
 	else if ((xs->alpha > 0 && xs->beta > xs->h) \
 		|| (xs->alpha < xs->h && xs->beta < 0))
 		return (SIDE_CENTER_HIT);
+	else if ((xs->alpha < 0 && xs->beta > xs->h) \
+		|| (xs->alpha > xs->h && xs->beta < 0))
+		return (CENTER_CENTER_HIT);
 	return (NO_HIT);
 }
 

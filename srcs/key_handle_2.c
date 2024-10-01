@@ -12,24 +12,36 @@
 
 #include "../includes/minirt.h"
 
-void	key_checkboard_bump(int keycode, t_rt *rt)
-{
-	t_fig	*fig;
+static t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
+static void		update_cy_co(int keycode, t_fig *fig);
 
-	fig = rt->fig;
-	if (rt->selected && rt->selected->is_check == -1 && keycode == KEY_SPACE)
-	{
-		rt->selected->is_check *= -1;
-		draw(rt);
-	}
-	else if (rt->selected && rt->selected->is_check == 1 && keycode == \
-		KEY_SPACE)
-	{
-		rt->selected->is_check *= -1;
-		draw(rt);
-	}
-	else
-		key_bump(keycode, rt, fig);
+void	fig_light_translate(int keycode, t_fig *fig, t_light *light)
+{
+	if (keycode == NUM_UP && fig)
+		fig->xyz = fig_light_translate_module(10, 1, fig->xyz);
+	else if (keycode == NUM_DOWN && fig)
+		fig->xyz = fig_light_translate_module(-10, 1, fig->xyz);
+	else if (keycode == NUM_LEFT && fig)
+		fig->xyz = fig_light_translate_module(10, 0, fig->xyz);
+	else if (keycode == NUM_RIGHT && fig)
+		fig->xyz = fig_light_translate_module(-10, 0, fig->xyz);
+	else if (keycode == NUM_FRONT && fig)
+		fig->xyz = fig_light_translate_module(10, 2, fig->xyz);
+	else if (keycode == NUM_BACK && fig)
+		fig->xyz = fig_light_translate_module(-10, 2, fig->xyz);
+	else if (keycode == NUM_UP && light)
+		light->xyz = fig_light_translate_module(10, 1, light->xyz);
+	else if (keycode == NUM_DOWN && light)
+		light->xyz = fig_light_translate_module(-10, 1, light->xyz);
+	else if (keycode == NUM_LEFT && light)
+		light->xyz = fig_light_translate_module(10, 0, light->xyz);
+	else if (keycode == NUM_RIGHT && light)
+		light->xyz = fig_light_translate_module(-10, 0, light->xyz);
+	else if (keycode == NUM_FRONT && light)
+		light->xyz = fig_light_translate_module(10, 2, light->xyz);
+	else if (keycode == NUM_BACK && light)
+		light->xyz = fig_light_translate_module(-10, 2, light->xyz);
+	update_cy_co(keycode, fig);
 }
 
 t_vector	fig_light_translate_module(int move, int dir, t_vector vec)
@@ -59,35 +71,6 @@ void	update_cy_co(int keycode, t_fig *fig)
 		fig->top = fig_light_translate_module(10, 2, fig->top);
 	else if (keycode == NUM_BACK)
 		fig->top = fig_light_translate_module(-10, 2, fig->top);
-}
-
-void	fig_light_translate(int keycode, t_fig *fig, t_light *light)
-{
-	if (keycode == NUM_UP && fig)
-		fig->xyz = fig_light_translate_module(10, 1, fig->xyz);
-	else if (keycode == NUM_DOWN && fig)
-		fig->xyz = fig_light_translate_module(-10, 1, fig->xyz);
-	else if (keycode == NUM_LEFT && fig)
-		fig->xyz = fig_light_translate_module(10, 0, fig->xyz);
-	else if (keycode == NUM_RIGHT && fig)
-		fig->xyz = fig_light_translate_module(-10, 0, fig->xyz);
-	else if (keycode == NUM_FRONT && fig)
-		fig->xyz = fig_light_translate_module(10, 2, fig->xyz);
-	else if (keycode == NUM_BACK && fig)
-		fig->xyz = fig_light_translate_module(-10, 2, fig->xyz);
-	else if (keycode == NUM_UP && light)
-		light->xyz = fig_light_translate_module(10, 1, light->xyz);
-	else if (keycode == NUM_DOWN && light)
-		light->xyz = fig_light_translate_module(-10, 1, light->xyz);
-	else if (keycode == NUM_LEFT && light)
-		light->xyz = fig_light_translate_module(10, 0, light->xyz);
-	else if (keycode == NUM_RIGHT && light)
-		light->xyz = fig_light_translate_module(-10, 0, light->xyz);
-	else if (keycode == NUM_FRONT && light)
-		light->xyz = fig_light_translate_module(10, 2, light->xyz);
-	else if (keycode == NUM_BACK && light)
-		light->xyz = fig_light_translate_module(-10, 2, light->xyz);
-	update_cy_co(keycode, fig);
 }
 
 void	key_light(int keycode, t_rt *rt)

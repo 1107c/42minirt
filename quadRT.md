@@ -170,3 +170,9 @@ t_xs		init_cn_util(t_fig *cn, t_vector p1, t_vector p2)
 	util.det = util.abc[1] * util.abc[1] - util.abc[0] * util.abc[2];
 	return (util);
 	}*/
+
+	if (keycode == 112)
+	{
+		printf("coords: %lf,%lf,%lf\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
+		printf("orient: %lf,%lf,%lf\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
+	}
