@@ -49,9 +49,9 @@ t_vector	update_nvec(t_vec *vec, t_vector normal_from_map)
 	t_vector	new_normal;
 
 	if (fabs(vec->n_vec.y) != 1)
-		y_unit_vector = (t_vector){0, 1, 0, 0};
+		y_unit_vector = init_vector(0, 1, 0);
 	else
-		y_unit_vector = (t_vector){0, 0, -vec->n_vec.y, 0};
+		y_unit_vector = init_vector(0, 0, 1);
 	tangent = normalize_vec(cross_product(y_unit_vector, vec->n_vec));
 	bitangent = normalize_vec(cross_product(vec->n_vec, tangent));
 	new_normal.x = tangent.x * normal_from_map.x + bitangent.x * \

@@ -28,10 +28,10 @@
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH	1260
+#  define WINDOW_WIDTH	1920
 # endif
 # ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT	740
+#  define WINDOW_HEIGHT	1080
 # endif
 # define WINDOW_TITLE	"miniRT"
 
@@ -99,10 +99,10 @@
 # define FIG_MAX_ERR			"Error\n=> figure maximum count exceeded"
 
 # define NO_HIT					0
-# define CENTER_SIDE_HIT		1
-# define CENTER_CENTER_HIT		2
-# define SIDE_SIDE_HIT			3
-# define SIDE_CENTER_HIT		4
+# define SIDE_SIDE_HIT			1
+# define CENTER_SIDE_HIT		2
+# define SIDE_CENTER_HIT		3
+# define CENTER_CENTER_HIT		4
 # define SIDE_HIT				5
 
 # define CAM_MOVE				1

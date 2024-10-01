@@ -36,10 +36,10 @@ double	cone2(t_fig *cn, t_xs *xs)
 	}
 	else if (xs->alpha < 0)
 	{
-		xs->flag = 1;
+		xs->flag = 2;
 		return (get_cn_center_hit(cn, xs, cn->xyz));
 	}
-	xs->flag = 2;
+	xs->flag = 1;
 	return (get_cn_center_hit(cn, xs, cn->top));
 }
 
@@ -79,10 +79,10 @@ double	cone4(t_fig *cn, t_xs *xs)
 	}
 	else if (xs->alpha < 0)
 	{
-		xs->flag = 1;
+		xs->flag = 2;
 		return (get_cn_center_hit(cn, xs, cn->xyz));
 	}
-	xs->flag = 2;
+	xs->flag = 1;
 	return (get_cn_center_hit(cn, xs, cn->top));
 }
 
@@ -108,9 +108,9 @@ double	cone5(t_fig *cn, t_xs *xs)
 		return (xs->t[0]);
 	if (xs->alpha < cn->height)
 	{
-		xs->flag = 1;
+		xs->flag = 2;
 		return (get_cn_center_hit(cn, xs, cn->xyz));
 	}
-	xs->flag = 2;
+	xs->flag = 1;
 	return (get_cn_center_hit(cn, xs, cn->top));
 }

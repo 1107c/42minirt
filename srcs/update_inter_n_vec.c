@@ -12,7 +12,7 @@
 
 #include "../includes/minirt.h"
 
-static void	update_closest_cylinder(t_util *util, t_fig *fig);
+static t_vector	update_closest_cylinder(t_util *util, t_fig *fig);
 
 void	update_closest_figure(t_util *util, t_fig *fig, double time)
 {
@@ -31,28 +31,29 @@ void	update_closest_figure(t_util *util, t_fig *fig, double time)
 			util->vec.n_vec = init_vector(0, 0, 0);
 	}
 	else if (fig->type == CYLINDER)
-		update_closest_cylinder(util, fig);
+		util->vec.n_vec = update_closest_cylinder(util, fig);
 	else
 		util->vec.n_vec = get_cone_normal(fig, &util->xs, time);
 }
 
-void	update_closest_cylinder(t_util *util, t_fig *fig)
+t_vector	update_closest_cylinder(t_util *util, t_fig *fig)
 {
-	double	theta;
+	t_vector	n_vec;
+	double		theta;
 
 	if (util->xs.flag == 1)
-		util->vec.n_vec = fig->normal_vec;
+		return (fig->normal_vec);
 	else if (util->xs.flag == 2)
-		util->vec.n_vec = invert_vec(fig->normal_vec);
+		return (invert_vec(fig->normal_vec));
 	else if (util->xs.flag == 3)
-		util->vec.n_vec = init_vector(0, 0, 0);
+		return (init_vector(0, 0, 0));
 	else
 	{
-		util->vec.n_vec = sub_vec(util->vec.inter_vec, fig->xyz);
-		theta = dot_product(util->vec.n_vec, fig->normal_vec) / \
-			sqrt(dot_product(util->vec.n_vec, util->vec.n_vec));
-		util->vec.n_vec = sub_vec(util->vec.n_vec, \
+		n_vec = sub_vec(util->vec.inter_vec, fig->xyz);
+		theta = dot_product(n_vec, fig->normal_vec) / \
+			sqrt(dot_product(n_vec, n_vec));
+		n_vec = sub_vec(n_vec, \
 			mul_vec(fig->normal_vec, theta));
-		util->vec.n_vec = normalize_vec(util->vec.n_vec);
+		return (normalize_vec(n_vec));
 	}
 }
