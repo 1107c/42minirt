@@ -28,10 +28,10 @@
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH	1920
+#  define WINDOW_WIDTH	400
 # endif
 # ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT	1080
+#  define WINDOW_HEIGHT	300
 # endif
 # define WINDOW_TITLE	"miniRT"
 
@@ -108,6 +108,11 @@
 # define CAM_MOVE				1
 # define CAM_ROT				10
 # define PI_ANG					180.0
+
+# define BOTTOM					0
+# define LOW_MID				1
+# define HIGH_MID				2
+# define TOP					3
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -431,6 +436,7 @@ void		update_basis(t_cam *cam, double phi, double theta);
 void		fig_light_translate(int keycode, t_fig *fig, t_light *light);
 void		key_light(int keycode, t_rt *rt);
 void		fig_rotate(int keycode, t_rt *rt);
+void		update_cy_co(t_fig *fig);
 
 /* mouse_handle.c */
 int			mouse_handle(int keycode, int x, int y, t_rt *rt);

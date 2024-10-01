@@ -176,3 +176,23 @@ t_xs		init_cn_util(t_fig *cn, t_vector p1, t_vector p2)
 		printf("coords: %lf,%lf,%lf\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
 		printf("orient: %lf,%lf,%lf\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
 	}
+
+		// return (EPSILON);
+	// if (is_in_cylinder(cy, xs))
+	// {
+	// 	xs->flag = 3;
+	// 	return (get_cy_up_hit(cy, xs));
+	// }
+	// // return (EPSILON);
+	// if ((xs->beta < 0 && xs->ecd <= 0) \
+	// 	|| (xs->beta > cy->height && xs->ecd >= 0))
+	// 	{
+	// 		printf("%lf %lf\n", xs->beta, xs->ecd);
+	// 	return (-1.0);
+	// 	}
+	// // return (EPSILON);
+	// if (xs->alpha < 0)
+	// 	xs->flag = 2;
+	// else
+	// 	xs->flag = 1;
+	// return (get_cy_up_hit(cy, xs));
