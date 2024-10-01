@@ -32,7 +32,7 @@ int	key_handle(int keycode, t_rt *rt)
 			keycode == NUM_LEFT || keycode == NUM_RIGHT || \
 			keycode == NUM_FRONT || keycode == NUM_BACK)
 		fig_light_translate(keycode, rt->selected, rt->selected_light);
-	else if (keycode == KEY_LIGHT)
+	else if (keycode == KEY_LIGHT || keycode == KEY_F)
 		key_light(keycode, rt);
 	else if (keycode == NUM_ROT_X || keycode == NUM_ROT_Y)
 		fig_rotate(keycode, rt);

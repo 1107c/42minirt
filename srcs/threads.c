@@ -40,8 +40,14 @@ void	thread_work(t_worker *workers)
 
 	i = -1;
 	while (++i < NUM_THREADS)
-		pthread_create(&threads[i], NULL, \
-						render_scene, &workers[i]);
+	{
+		if (workers->rt->fast == -1)
+			pthread_create(&threads[i], NULL, \
+							render_scene, &workers[i]);
+		else
+			pthread_create(&threads[i], NULL, \
+							render_scene_fast, &workers[i]);
+	}
 	i = -1;
 	while (++i < NUM_THREADS)
 		pthread_join(threads[i], NULL);

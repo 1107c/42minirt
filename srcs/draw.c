@@ -12,7 +12,6 @@
 
 #include "../includes/minirt.h"
 
-static int	draw_line(t_worker *wk, t_vector point);
 static void	init_util(t_util *util, t_vector from, t_vector to);
 static void	init_xs(t_xs *xs);
 
