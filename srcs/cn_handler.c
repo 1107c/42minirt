@@ -77,7 +77,7 @@ double	cone4(t_fig *cn, t_xs *xs)
 		xs->flag = 3;
 		return (xs->t[0]);
 	}
-	else if (xs->alpha < 0)
+	else if (xs->alpha < cn->height)
 	{
 		xs->flag = 2;
 		return (get_cn_center_hit(cn, xs, cn->xyz));

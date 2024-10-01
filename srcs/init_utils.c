@@ -55,6 +55,7 @@ void	init_map(t_rt *rt)
 	int	i;
 
 	i = -1;
+	rt->fast = -1;
 	rt->map = (char **)ft_calloc((WINDOW_HEIGHT + 1), sizeof(char *));
 	if (!rt->map)
 		close_all(rt, MEM_ALLOC_ERR);

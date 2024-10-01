@@ -26,7 +26,8 @@ t_vector	get_in_color(int *i, int j, t_worker *worker, t_vector point)
 		{
 			worker->rt->pixcel_map[j][*i + 1] = worker->util.color.final_color;
 			worker->rt->ch_map[j][*i + 1] = 1;
-			worker->rt->pixcel_map[j + 1][*i + 1] = worker->util.color.final_color;
+			worker->rt->pixcel_map[j + 1][*i + 1] = worker->\
+			util.color.final_color;
 			worker->rt->ch_map[j + 1][*i + 1] = 1;
 			worker->rt->pixcel_map[j + 1][*i] = worker->util.color.final_color;
 			worker->rt->ch_map[j + 1][*i] = 1;
