@@ -12,12 +12,12 @@
 
 #include "../includes/minirt.h"
 
-void	free_xpm(t_xpm *image, double **height_map)
+void	free_xpm(int height, double **height_map)
 {
 	int	i;
 
 	i = 0;
-	while (i < image->info[0])
+	while (i < height)
 		free(height_map[i++]);
-	free(image);
+	free(height_map);
 }

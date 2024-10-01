@@ -99,11 +99,12 @@ void	free_bump(t_bump *bump)
 	while (bump)
 	{
 		tmp = bump;
-		i = -1;
-		while (++i < bump->normal_height)
+		i = 0;
+		while (i < bump->normal_height)
 		{
 			free(bump->normal_map[i]);
-			free(bump->color_map[i++]);
+			free(bump->color_map[i]);
+			i++;
 		}
 		free(bump->normal_map);
 		free(bump->color_map);

@@ -10,8 +10,8 @@
 #                                                                              #
 # **************************************************************************** #
 
-CC = clang
-CFLAGS =-g -Wall -Wextra -Werror
+CC = cc
+CFLAGS =-g -Wall -Wextra -Werror -fsanitize=address
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 
@@ -23,7 +23,7 @@ PRE_MEN_C = 2d_array_utils.c bump.c cam_utils.c checker.c close.c cn_utils.c \
 			parse_utils.c parse.c print_data.c threads.c vector_util.c \
 			vector_util2.c xs.c xpm_util_1.c xpm_util_2.c light_and_shadow_utils.c \
 			key_bump.c cy_utils2.c cn_handler.c xpm_util_3.c key_bump_2.c \
-			update_inter_n_vec.c render_scene_fast.c
+			update_inter_n_vec.c render_scene_fast.c render_fast_utils.c
 
 PRE_MEN_O = $(PRE_MEN_C:%.c=%.o)
 

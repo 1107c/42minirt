@@ -15,10 +15,10 @@
 int	error(char *error_msg)
 {
 	if (!error_msg)
-		exit(EXIT_SUCCESS);
+		exit(EXIT_FAILURE);
 	ft_putendl_fd(error_msg, STDERR_FILENO);
 	exit(EXIT_FAILURE);
-	return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 int	print_err(t_msg	msg)

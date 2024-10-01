@@ -33,12 +33,14 @@ int	boundary_check(int tmp, double max)
 
 void	get_bump_uv(t_vec *vec, int *u, int *v, double *uv)
 {
-	if (vec->fig->bump->normal_width > vec->fig->bump->normal_height)
-		vec->fig->bump->normal_width = vec->fig->bump->normal_height;
+	vec->fig->bump->save_height = vec->fig->bump->normal_height;
+	vec->fig->bump->save_width = vec->fig->bump->normal_width;
+	if (vec->fig->bump->save_width > vec->fig->bump->save_height)
+		vec->fig->bump->save_height = vec->fig->bump->save_height;
 	else
-		vec->fig->bump->normal_height = vec->fig->bump->normal_width;
-	*u = (uv[0] * (vec->fig->bump->normal_width - 1));
-	*v = (uv[1] * (vec->fig->bump->normal_height - 1));
+		vec->fig->bump->save_width = vec->fig->bump->save_width;
+	*u = (uv[0] * (vec->fig->bump->save_width - 1));
+	*v = (uv[1] * (vec->fig->bump->save_height - 1));
 }
 
 t_vector	update_nvec(t_vec *vec, t_vector normal_from_map)

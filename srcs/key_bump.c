@@ -110,15 +110,15 @@ void	key_bump(int keycode, t_rt *rt, t_fig *fig)
 				rt->selected->bump = init_bump();
 				if (!rt->selected->bump)
 					close_all(rt, MEM_ALLOC_ERR);
+				rt->selected->bump->normal_map = \
+				get_normal_map(rt->selected->bump, \
+				rt, get_xpm_name(rt->bump_cnt++), -1);
 				rt->bump = rt->selected->bump;
 				while (fig)
 				{
 					fig->bump = rt->selected->bump;
 					fig = fig->next;
 				}
-				rt->selected->bump->normal_map = \
-				get_normal_map(rt->selected->bump, \
-				rt, get_xpm_name(rt->bump_cnt++), -1);
 				rt->did_get_normal_map = 1;
 			}
 		}

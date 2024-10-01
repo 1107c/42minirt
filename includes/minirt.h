@@ -24,7 +24,7 @@
 
 # define AMBIENT_STRENGTH	0.85
 # define DIFFUSE_STRENGTH	0.35
-# define SPECULAR_STRENGTH	0.2
+# define SPECULAR_STRENGTH	0.8
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
@@ -543,7 +543,7 @@ t_vector	**translate_height_to_normal(double **height_map, t_vector \
 	**normal_map, int width, int height);
 
 /* xpm_util_3.c */
-void		free_xpm(t_xpm *image, double **height_map);
+void		free_xpm(int height, double **height_map);
 
 /* key_bump_2.c */
 void		key_checkboard_bump(int keycode, t_rt *rt);
@@ -553,5 +553,9 @@ void		update_closest_figure(t_util *util, t_fig *fig, double time);
 
 /*	render_scene_fast */
 void		*render_scene_fast(void *wk);
+
+/*	render_fast_utils */
+void		rt_map(int i, int j, t_worker *worker);
+void		rt_pixcel(int i, int j, t_worker *worker);
 
 #endif

@@ -96,7 +96,7 @@ t_vector	**translate_height_to_normal(double **height_map, t_vector \
 				lrbt[3], 0}));
 		}
 	}
-	return (normal_map);
+	return (free_xpm(height, height_map), normal_map);
 }
 
 t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path, int i)
@@ -123,7 +123,6 @@ t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path, int i)
 		bump->save_height = image->info[0];
 	else
 		bump->save_height = image->info[1];
-	free_xpm(image, height_map);
-	return (translate_height_to_normal(height_map, \
-			bump->normal_map, image->info[1], image->info[0]));
+	return (free(image), translate_height_to_normal(height_map, \
+			bump->normal_map, bump->normal_width, bump->normal_height));
 }

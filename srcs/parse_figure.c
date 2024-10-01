@@ -23,7 +23,7 @@ void	parse_plane(t_rt *rt, char **args, int type)
 		free_2d_and_close_all(rt, args, fig->xyz.error);
 	if (!is_valid_multi_double_value(&(fig->normal_vec), args[2], -1, 1))
 		free_2d_and_close_all(rt, args, fig->normal_vec.error);
-	if (!is_normalized_vec(rt->fig->normal_vec))
+	if (!is_normalized_vec(fig->normal_vec))
 		free_2d_and_close_all(rt, args, NORM_VEC_ERR);
 	if (!is_valid_multi_double_value(&(fig->rgb), args[3], 0, 255))
 		free_2d_and_close_all(rt, args, fig->rgb.error);
@@ -53,7 +53,7 @@ void	parse_cylinder(t_rt *rt, char **args, int type)
 		free_2d_and_close_all(rt, args, fig->xyz.error);
 	if (!is_valid_multi_double_value(&(fig->normal_vec), args[2], -1, 1))
 		free_2d_and_close_all(rt, args, fig->normal_vec.error);
-	if (!is_normalized_vec(rt->fig->normal_vec))
+	if (!is_normalized_vec(fig->normal_vec))
 		free_2d_and_close_all(rt, args, NORM_VEC_ERR);
 	if (!is_valid_single_double_value(rt, args[3], EPSILON, INT_MAX))
 		free_2d_and_close_all(rt, args, rt->error);
