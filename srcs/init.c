@@ -97,8 +97,6 @@ t_amblight	*init_amblight(t_rt *rt)
 	return (amblight);
 }
 
-// comment -> yeojukim
-// : 수정된 구조체에 따라 수정했습니다.
 t_cam	*init_cam(t_rt *rt)
 {
 	t_cam	*cam;
