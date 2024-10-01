@@ -80,7 +80,8 @@ t_xpm	*parse_xpm(char *path, t_rt *rt, int i)
 
 void	key_bump_next(int keycode, t_rt *rt)
 {
-	if (keycode == KEY_N && rt->selected &&rt->selected->is_bump == 1)
+	if (keycode == KEY_N && rt->selected \
+		&& rt->selected->is_bump == 1)
 	{
 		if (rt->bump_cnt < 14)
 		{
@@ -95,7 +96,6 @@ void	key_bump_next(int keycode, t_rt *rt)
 			rt->selected->bump = rt->bump;
 		else
 			rt->selected->bump = rt->selected->bump->next;
-		draw(rt);
 	}
 }
 
@@ -123,7 +123,6 @@ void	key_bump(int keycode, t_rt *rt, t_fig *fig)
 			}
 		}
 		rt->selected->is_bump *= -1;
-		draw(rt);
 	}
 	key_bump_next(keycode, rt);
 }

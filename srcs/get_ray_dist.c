@@ -12,26 +12,27 @@
 
 #include "../includes/minirt.h"
 
-t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t)
+t_vector	get_cone_normal(t_fig *cn, t_xs *xs, double time)
 {
-	t_vector	dqec[3];
-	double		ecn;
-	double		dn;
+	t_vector	dqec;
 	double		r;
-	double		alpha;
 
-	dqec[0] = sub_vec(p2, p1);
-	dqec[2] = sub_vec(p1, cn->xyz);
-	ecn = dot_product(dqec[2], cn->normal_vec);
-	dn = dot_product(dqec[0], cn->normal_vec);
-	alpha = ecn + t * dn;
-	r = cn->diameter * (cn->height - alpha) / (2 * cn->height);
-	dqec[1] = sub_vec(add_vec(dqec[2], mul_vec(dqec[0], t)), \
-		mul_vec(cn->normal_vec, ecn + t * dn));
-	dqec[1] = add_vec(mul_vec(cn->normal_vec, r), \
-		mul_vec(dqec[1], cn->height - alpha));
-	dqec[1] = normalize_vec(dqec[1]);
-	return (dqec[1]);
+	if (xs->flag == 1)
+		return (cn->normal_vec);
+	else if (xs->flag == 2)
+		return (invert_vec(cn->normal_vec));
+	else if (xs->flag == 3)
+		return (init_vector(0, 0, 0));
+	r = cn->diameter * (cn->height - xs->alpha) \
+		/ xs->h;
+	dqec = sub_vec(add_vec(xs->from_fig_center, \
+			mul_vec(xs->ray_dir, time)), \
+			mul_vec(cn->normal_vec, xs->ecn \
+			+ time * xs->dn));
+	dqec = add_vec(mul_vec(cn->normal_vec, r), \
+			mul_vec(dqec, cn->height - xs->alpha));
+	dqec = normalize_vec(dqec);
+	return (dqec);
 }
 
 void	prepare_computation(t_fig *fig, t_xs *xs)

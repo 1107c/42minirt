@@ -15,7 +15,7 @@
 
 # define NUM_THREADS	16
 
-# define V_EPSILON	0.001
+# define V_EPSILON	0.1
 
 # define PLANE		0
 # define SPHERE		1
@@ -28,10 +28,10 @@
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH	1260
+#  define WINDOW_WIDTH	1920
 # endif
 # ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT	740
+#  define WINDOW_HEIGHT	1080
 # endif
 # define WINDOW_TITLE	"miniRT"
 
@@ -100,10 +100,15 @@
 # define FIG_MAX_ERR			"Error\n=> figure maximum count exceeded"
 
 # define NO_HIT					0
-# define CENTER_SIDE_HIT			1
-# define CENTER_CENTER_HIT		2
-# define SIDE_SIDE_HIT			3
-# define SIDE_CENTER_HIT			4
+# define SIDE_SIDE_HIT			1
+# define CENTER_SIDE_HIT		2
+# define SIDE_CENTER_HIT		3
+# define CENTER_CENTER_HIT		4
+# define SIDE_HIT				5
+
+# define CAM_MOVE				1
+# define CAM_ROT				10
+# define PI_ANG					180.0
 
 # include <sys/types.h>
 # include <sys/stat.h>
@@ -183,7 +188,6 @@ typedef struct s_color
 	t_vector	dif_sum;
 	t_vector	spe_sum;
 	t_vector	final_color;
-	t_vector	save_color;
 	t_vector	l_sum;
 }	t_color;
 
@@ -207,6 +211,8 @@ typedef struct s_xs
 	double		right;
 	int			type;
 	int			flag;
+	int			t_a;
+	int			t_b;
 }	t_xs;
 
 typedef struct s_util
@@ -266,6 +272,7 @@ typedef struct s_bump
 typedef struct s_fig
 {
 	t_vector		xyz;
+	t_vector		top;
 	t_vector		normal_vec;
 	t_vector		rgb;
 	t_vector		rgb2;
@@ -428,11 +435,9 @@ void		set_cam(t_cam *cam);
 void		update_basis(t_cam *cam, double phi, double theta);
 
 /* key_handle_2.c */
-t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
 void		fig_light_translate(int keycode, t_fig *fig, t_light *light);
 void		key_light(int keycode, t_rt *rt);
 void		fig_rotate(int keycode, t_rt *rt);
-void		key_checkboard_bump(int keycode, t_rt *rt);
 
 /* mouse_handle.c */
 int			mouse_handle(int keycode, int x, int y, t_rt *rt);
@@ -447,7 +452,7 @@ void		get_uv(t_vec *vec, double *uv);
 void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
 
 /* get_ray_dist.c */
-t_vector	get_cone_normal(t_fig *cn, t_vector p1, t_vector p2, double t);
+t_vector	get_cone_normal(t_fig *cn, t_xs *xs, double time);
 double		get_ray_dist(t_fig *fig, t_xs *xs);
 
 /* light_and_shadow.c  */
@@ -461,9 +466,6 @@ t_vector	get_diffuse_color(t_light *lt, t_fig *fig, double power);
 t_vector	get_specular_color(t_light *lt, double power);
 t_vector	get_light_color(t_vector l_sum, t_light *lt, double power);
 void		add_color(t_color *c, t_fig *fig, t_vec *vec, t_light *light);
-
-/* intersect_utils3.c*/
-void		get_cn_solution(t_fig *cn, t_xs *xs);
 
 /* threads.c */
 void		init_workers(t_worker *workers, t_rt *rt);
@@ -504,9 +506,17 @@ double		test2(t_fig *cy, t_xs *xs, t_vector close);
 int			is_height(t_fig *cy, t_xs *xs);
 
 /* cn_utils.c */
-double		parallel_to_cn_norm(t_fig *cn, t_xs *xs);
-double		cone1(t_fig *cn, t_xs *xs, t_vector close);
+double		parallel_to_cn_norm(t_xs *xs);
+void		get_cn_solution(t_xs *xs);
+double		get_cn_center_hit(t_fig *cn, t_xs *xs, t_vector close);
 int			get_cn_type(t_xs *xs, double height);
+
+/* cn_handler.c */
+double		cone1(t_fig *cn, t_xs *xs);
+double		cone2(t_fig *cn, t_xs *xs);
+double		cone3(t_fig *cn, t_xs *xs);
+double		cone4(t_fig *cn, t_xs *xs);
+double		cone5(t_fig *cn, t_xs *xs);
 
 /*key_bump.c */
 void		key_bump(int keycode, t_rt *rt, t_fig *fig);
@@ -525,6 +535,16 @@ void		interpret_xpm(int fd, t_xpm *img);
 t_vector	**get_height_map(t_xpm *image, double **height_map);
 t_vector	**translate_height_to_normal(double **height_map, t_vector \
 	**normal_map, int width, int height);
+
+/* xpm_util_3.c */
+void		free_xpm(t_xpm *image, double **height_map);
+
+/* key_bump_2.c */
+void		key_checkboard_bump(int keycode, t_rt *rt);
+
+/* update_inter_n_vec.c */
+void		update_closest_figure(t_util *util, t_fig *fig, double time);
+
 
 /*	render_scene_fast */
 void	*render_scene_fast(void *wk);

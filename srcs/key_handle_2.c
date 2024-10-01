@@ -12,36 +12,8 @@
 
 #include "../includes/minirt.h"
 
-void	key_checkboard_bump(int keycode, t_rt *rt)
-{
-	t_fig	*fig;
-
-	fig = rt->fig;
-	if (rt->selected && rt->selected->is_check == -1 && keycode == KEY_SPACE)
-	{
-		rt->selected->is_check *= -1;
-		draw(rt);
-	}
-	else if (rt->selected && rt->selected->is_check == 1 && keycode == \
-		KEY_SPACE)
-	{
-		rt->selected->is_check *= -1;
-		draw(rt);
-	}
-	else
-		key_bump(keycode, rt, fig);
-}
-
-t_vector	fig_light_translate_module(int move, int dir, t_vector vec)
-{
-	if (dir == 0)
-		return ((t_vector){vec.x + move, vec.y, vec.z, NULL});
-	if (dir == 1)
-		return ((t_vector){vec.x, vec.y + move, vec.z, NULL});
-	if (dir == 2)
-		return ((t_vector){vec.x, vec.y, vec.z + move, NULL});
-	return ((t_vector){0, 0, 0, NULL});
-}
+static t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
+static void		update_cy_co(int keycode, t_fig *fig);
 
 void	fig_light_translate(int keycode, t_fig *fig, t_light *light)
 {
@@ -69,6 +41,36 @@ void	fig_light_translate(int keycode, t_fig *fig, t_light *light)
 		light->xyz = fig_light_translate_module(10, 2, light->xyz);
 	else if (keycode == NUM_BACK && light)
 		light->xyz = fig_light_translate_module(-10, 2, light->xyz);
+	update_cy_co(keycode, fig);
+}
+
+t_vector	fig_light_translate_module(int move, int dir, t_vector vec)
+{
+	if (dir == 0)
+		return (init_vector(vec.x + move, vec.y, vec.z));
+	if (dir == 1)
+		return (init_vector(vec.x, vec.y + move, vec.z));
+	if (dir == 2)
+		return (init_vector(vec.x, vec.y, vec.z + move));
+	return (init_vector(0, 0, 0));
+}
+
+void	update_cy_co(int keycode, t_fig *fig)
+{
+	if (!fig || fig->type == PLANE || fig->type || SPHERE)
+		return ;
+	if (keycode == NUM_UP)
+		fig->top = fig_light_translate_module(10, 1, fig->top);
+	else if (keycode == NUM_DOWN)
+		fig->top = fig_light_translate_module(-10, 1, fig->top);
+	else if (keycode == NUM_LEFT)
+		fig->top = fig_light_translate_module(10, 0, fig->top);
+	else if (keycode == NUM_RIGHT)
+		fig->top = fig_light_translate_module(-10, 0, fig->top);
+	else if (keycode == NUM_FRONT)
+		fig->top = fig_light_translate_module(10, 2, fig->top);
+	else if (keycode == NUM_BACK)
+		fig->top = fig_light_translate_module(-10, 2, fig->top);
 }
 
 void	key_light(int keycode, t_rt *rt)
@@ -99,14 +101,16 @@ void	key_light(int keycode, t_rt *rt)
 
 void	fig_rotate(int keycode, t_rt *rt)
 {
-	if (keycode == NUM_ROT_X && rt->selected)
+	if (!rt->selected)
+		return ;
+	if (keycode == NUM_ROT_X)
 	{
 		rt->selected->normal_vec = add_vec(mul_vec(rt->selected->right_vec, \
 		sin(ANG * 20)), mul_vec(rt->selected->normal_vec, cos(ANG * 20)));
 		rt->selected->right_vec = cross_product(rt->selected->up_vec, \
 		rt->selected->normal_vec);
 	}
-	if (keycode == NUM_ROT_Y && rt->selected)
+	if (keycode == NUM_ROT_Y)
 	{
 		rt->selected->normal_vec = add_vec(invert_vec(mul_vec(rt->selected->\
 		up_vec, sin(ANG * 20))), mul_vec(rt->selected->normal_vec, \

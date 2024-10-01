@@ -64,6 +64,10 @@ void	parse_cylinder(t_rt *rt, char **args, int type)
 	fig->height = ft_atod(args[4]);
 	if (!is_valid_multi_double_value(&(fig->rgb), args[5], 0, 255))
 		free_2d_and_close_all(rt, args, fig->rgb.error);
+	if (type == CYLINDER)
+		fig->top = add_vec(fig->xyz, mul_vec(fig->normal_vec, fig->height));
+	else
+		fig->top = add_vec(fig->xyz, mul_vec(fig->normal_vec, 2 * fig->height));
 }
 
 t_fig	*get_figure(t_rt *rt, char **args, int len, int type)

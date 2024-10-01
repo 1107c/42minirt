@@ -14,20 +14,23 @@
 
 t_vector	get_in_color(int *i, int j, t_worker *worker, t_vector point)
 {
-	worker->rt->map[j][*i] = draw_line(worker, point);
-	worker->rt->map[j][*i + 1] = worker->rt->map[j][*i];
-	worker->rt->map[j + 1][*i] = worker->rt->map[j][*i];
-	worker->rt->map[j + 1][*i + 1] = worker->rt->map[j][*i];
-	worker->rt->ch_map[j][*i] = 1;
-	worker->rt->pixcel_map[j][*i] = worker->util.color.final_color;
-	if (worker->util.before == worker->rt->map[j][*i])
+	if (j >= 0 && *i >= 0 && j + 1 < WINDOW_HEIGHT && *i + 1 < WINDOW_WIDTH)
 	{
-		worker->rt->pixcel_map[j][*i + 1] = worker->util.color.final_color;
-		worker->rt->ch_map[j][*i + 1] = 1;
-		worker->rt->pixcel_map[j + 1][*i + 1] = worker->util.color.final_color;
-		worker->rt->ch_map[j + 1][*i + 1] = 1;
-		worker->rt->pixcel_map[j + 1][*i] = worker->util.color.final_color;
-		worker->rt->ch_map[j + 1][*i] = 1;
+		worker->rt->map[j][*i] = draw_line(worker, point);
+		worker->rt->map[j][*i + 1] = worker->rt->map[j][*i];
+		worker->rt->map[j + 1][*i] = worker->rt->map[j][*i];
+		worker->rt->map[j + 1][*i + 1] = worker->rt->map[j][*i];
+		worker->rt->ch_map[j][*i] = 1;
+		worker->rt->pixcel_map[j][*i] = worker->util.color.final_color;
+		if (worker->util.before == worker->rt->map[j][*i])
+		{
+			worker->rt->pixcel_map[j][*i + 1] = worker->util.color.final_color;
+			worker->rt->ch_map[j][*i + 1] = 1;
+			worker->rt->pixcel_map[j + 1][*i + 1] = worker->util.color.final_color;
+			worker->rt->ch_map[j + 1][*i + 1] = 1;
+			worker->rt->pixcel_map[j + 1][*i] = worker->util.color.final_color;
+			worker->rt->ch_map[j + 1][*i] = 1;
+		}
 	}
 	worker->util.before = worker->rt->map[j][*i];
 	(*i)++;
@@ -102,7 +105,7 @@ void	draw_point_and_init(int i, int j, t_worker *worker)
 void	*render_scene_fast(void *wk)
 {
 	t_worker	*worker;
-	t_vector	point;
+	t_vector	point;	
 	t_vector	save;
 	int			i;
 	int			j;

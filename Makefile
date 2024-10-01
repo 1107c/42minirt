@@ -17,12 +17,13 @@ BONUS_DIR	=	./bonus/
 
 PRE_MEN_C = 2d_array_utils.c bump.c cam_utils.c checker.c close.c cn_utils.c \
 			cy_handler.c cy_utils.c draw_utils.c draw.c error.c get_ray_dist.c \
-			get_uv.c init_utils.c init.c intersect_utils3.c intersection.c \
+			get_uv.c init_utils.c init.c intersection.c \
 			key_handle_2.c key_handle.c light_and_shadow.c lst_utils.c \
 			main.c matrix_utils.c mouse_handle.c parse_element.c parse_figure.c \
 			parse_utils.c parse.c print_data.c threads.c vector_util.c \
 			vector_util2.c xs.c xpm_util_1.c xpm_util_2.c light_and_shadow_utils.c \
-			key_bump.c cy_utils2.c render_scene_fast.c
+			key_bump.c cy_utils2.c cn_handler.c xpm_util_3.c key_bump_2.c \
+			update_inter_n_vec.c render_scene_fast.c
 
 PRE_MEN_O = $(PRE_MEN_C:%.c=%.o)
 

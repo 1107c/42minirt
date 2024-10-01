@@ -84,3 +84,95 @@ proj_vector_yzx.y = 0;
 theta = dot_product(proj_vector_yzx, z_unit_vector) /
 		sqrt(dot_product(proj_vector_yzx, proj_vector_yzx));
 cam->right_vec = (t_vector) {theta, 0, -sqrt(1 - theta * theta), 0};
+
+# CONE
+	// if (xs->t[0] > 0)
+	// {
+	// 	if (xs->alpha <= xs->h && xs->alpha >= 0)
+	// 		return (xs->t[0]);
+	// 	if (xs->beta >= 0 && xs->beta <= xs->h)
+	// 		return (xs->t[1]);
+	// 	return (-1.0);
+	// }
+	// else
+	// {
+	// 	double	d;
+	// 	double	e;
+	// 	double	f;
+
+	// 	d = dot_product(xs->ray_dir, sub_vec(cn->xyz, xs->from));
+	// 	e = dot_product(xs->ray_dir, sub_vec(add_vec(cn->xyz, \
+	// 		mul_vec(cn->normal_vec, 2 * cn->height)), xs->from));
+	// 	f = xs->dn / sqrt(dot_product(xs->ray_dir, xs->ray_dir));
+	// 	if (xs->t[1] > 0)
+	// 	{
+	// 		if (xs->beta <= xs->h && xs->beta >= 0)
+	// 			return (xs->t[1]);
+	// 		if (xs->alpha > 0 && xs->beta < 0 \
+	// 			&& fabs(f) <= xs->c && d >= 0 && e < 0)
+	// 			return (get_cn_center_hit(cn, xs, cn->xyz));
+	// 		if (xs->alpha < xs->h && xs->beta > xs->h \
+	// 			&& fabs(f) <= xs->c && e >= 0 && d < 0)
+	// 			return (get_cn_center_hit(cn, xs, add_vec(cn->xyz, \
+	// 				mul_vec(cn->normal_vec, 2 * cn->height))));
+	// 	}
+	// 	else
+	// 	{
+	// 		if (fabs(f) >= xs->c && d >= 0 && e < 0)
+	// 			return (get_cn_center_hit(cn, xs, cn->xyz));
+	// 		if (fabs(f) >= xs->c && e >= 0 && d < 0)
+	// 			return (get_cn_center_hit(cn, xs, add_vec(cn->xyz, \
+	// 				mul_vec(cn->normal_vec, 2 * cn->height))));
+	// 	}
+	// }
+	// return (-1.0);
+
+/*
+t_xs		init_cn_util(t_fig *cn, t_vector p1, t_vector p2)
+{
+	t_xs	util;
+	double	radius;
+	double	height_ratio;
+
+	 util.origin = p1;
+	util.ray_dir = sub_vec(p2, p1);
+	 d = sub_vec(util.ray_dir, cn->normal_vec);
+	 radius = cn->diameter / 2;
+	 apex = add_vec(cn->xyz, mul_vec(cn->normal_vec, cn->height));
+	 h = cn->height;
+	 util.abc[0] = d.x * d.x + d.y * d.y - (radius * radius) / (h * h) * d.z * d.z;
+	 util.abc[1] = d.x * (util.origin.x - apex.x) + d.y * (util.origin.y - apex.y) -
+	 			(radius * radius) / (h * h) * d.z * (util.origin.z - apex.z);
+	 util.abc[2] = (util.origin.x - apex.x) * (util.origin.x - apex.x) +
+				(util.origin.y - apex.y) * (util.origin.y - apex.y) -
+				(radius * radius) / (h * h) * (util.origin.z - apex.z) * (util.origin.z - apex.z);
+	util.from_fig_center = sub_vec(p1, cn->xyz);
+	util.dn = dot_product(util.ray_dir, cn->normal_vec);
+	util.ecn = dot_product(cn->normal_vec, util.from_fig_center);
+	util.ecd = dot_product(util.ray_dir, util.from_fig_center);
+	radius = cn->diameter / 2;
+	height_ratio = pow(radius / cn->height, 2);
+	util.abc[0] = dot_product(util.ray_dir, util.ray_dir) - \
+				(1 + height_ratio) \
+				* pow(util.dn, 2);
+	util.abc[1] = util.ecd - util.ecn * util.dn * (1 + height_ratio) \
+				+ height_ratio * cn->height * util.dn;
+	util.abc[2] = dot_product(util.from_fig_center, util.from_fig_center) \
+			+ 2 * (pow(radius, 2) / cn->height) * util.ecn \
+			- (1 + height_ratio) \
+			* pow(util.ecn, 2) - pow(radius, 2);
+	util.c = cn->height / sqrt(pow(radius, 2) + pow(cn->height, 2));
+	util.h = cn->height * 2;
+	 util.abc[0] = dot_product(util.ray_dir, util.ray_dir) - 2 * pow(util.ray_dir.y, 2);
+	 util.abc[1] = util.ray_dir.x * util.origin.x - util.ray_dir.y * util.origin.y \
+				+ util.ray_dir.z * util.origin.z;
+	 util.abc[2] = dot_product(util.origin, util.origin) - 2 * pow(util.origin.y, 2);
+	util.det = util.abc[1] * util.abc[1] - util.abc[0] * util.abc[2];
+	return (util);
+	}*/
+
+	if (keycode == 112)
+	{
+		printf("coords: %lf,%lf,%lf\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
+		printf("orient: %lf,%lf,%lf\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
+	}

@@ -99,16 +99,6 @@ t_vector	**translate_height_to_normal(double **height_map, t_vector \
 	return (normal_map);
 }
 
-void	free_xpm(t_xpm	*image, double **height_map)
-{
-	int	i;
-
-	i = 0;
-	while (i < image->info[0])
-		free(height_map[i++]);
-	free(image);
-}
-
 t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path, int i)
 {
 	t_xpm	*image;
@@ -133,6 +123,7 @@ t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path, int i)
 		bump->save_height = image->info[0];
 	else
 		bump->save_height = image->info[1];
-	return (free_xpm(image, height_map), translate_height_to_normal(height_map, \
-	bump->normal_map, image->info[1], image->info[0]));
+	free_xpm(image, height_map);
+	return (translate_height_to_normal(height_map, \
+			bump->normal_map, image->info[1], image->info[0]));
 }
