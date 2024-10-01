@@ -72,119 +72,16 @@ double	intersect_cone(t_fig *cn, t_xs *xs)
 	if (xs->det < 0)
 		return (-1.0);
 	get_cn_solution(cn, xs);
-	// return (EPSILON);
 	if (xs->type == NO_HIT)
 		return (-1.0);
 	if (xs->type == SIDE_SIDE_HIT)
-	{
-		// return (EPSILON);
-		if (xs->t[0] > 0)
-			return (xs->t[0]);
-		if (xs->t[1] > 0)
-			return (xs->t[1]);
-		return (-1.0);
-	}
+		return(cone1(cn, xs));
 	else if (xs->type == CENTER_SIDE_HIT)
-	{
-		// return (EPSILON);
-		t_vector	top;
-		
-		top = add_vec(cn->xyz, mul_vec(cn->normal_vec, xs->h));
-		if (xs->left >= xs->c && xs->right >= xs->c)
-			return (xs->t[1]);
-		if (xs->alpha < 0)
-			return (cone1(cn, xs, cn->xyz));
-		return (cone1(cn, xs, top));
-	}
+		return(cone2(cn, xs));
 	else if (xs->type == SIDE_CENTER_HIT)
-	{
-		// return (EPSILON);
-		t_vector	top;
-		
-		top = add_vec(cn->xyz, mul_vec(cn->normal_vec, xs->h));
-		if (xs->left >= xs->c && xs->right >= xs->c)
-			return (xs->t[1]);
-		if (xs->alpha > xs->h)
-			return (cone1(cn, xs, top));
-		return (cone1(cn, xs, cn->xyz));
-	}
+		return(cone3(cn, xs));
+	else if (xs->type == CENTER_CENTER_HIT)
+		return(cone4(cn, xs));
 	else
-	{
-		// return (EPSILON);
-		t_vector	top;
-		
-		top = add_vec(cn->xyz, mul_vec(cn->normal_vec, xs->h));
-		if (xs->t[1] < 0)
-		{
-			if (xs->left >= xs->c && xs->right >= xs->c)
-			{
-				if (xs->beta < 0)
-					return (cone1(cn, xs, cn->xyz));
-				return (cone1(cn, xs, top));
-			}
-			return (-1.0);
-		}
-		else if (xs->t[0] < 0)
-		{
-			if (xs->beta >= 0 && xs->beta <= xs->h)
-				return (xs->t[1]);
-			return (-1.0);
-		}
-		else
-		{
-			// return (EPSILON);
-			if (xs->left >= xs->c && xs->right >= xs->c)
-			{
-				if (xs->alpha >= 0 && xs->alpha <= xs->h)
-					return (xs->t[0]);
-				return (-1.0);
-			}
-			// return (-1.0);
-			if (xs->alpha < cn->height)
-				return (cone1(cn, xs, cn->xyz));
-			return (-1.0);
-			return (cone1(cn, xs, cn->xyz));
-		}
-	}
-
-	// if (xs->t[0] > 0)
-	// {
-	// 	if (xs->alpha <= xs->h && xs->alpha >= 0)
-	// 		return (xs->t[0]);
-	// 	if (xs->beta >= 0 && xs->beta <= xs->h)
-	// 		return (xs->t[1]);
-	// 	return (-1.0);
-	// }
-	// else
-	// {
-	// 	double	d;
-	// 	double	e;
-	// 	double	f;
-
-	// 	d = dot_product(xs->ray_dir, sub_vec(cn->xyz, xs->from));
-	// 	e = dot_product(xs->ray_dir, sub_vec(add_vec(cn->xyz, \
-	// 		mul_vec(cn->normal_vec, 2 * cn->height)), xs->from));
-	// 	f = xs->dn / sqrt(dot_product(xs->ray_dir, xs->ray_dir));
-	// 	if (xs->t[1] > 0)
-	// 	{
-	// 		if (xs->beta <= xs->h && xs->beta >= 0)
-	// 			return (xs->t[1]);
-	// 		if (xs->alpha > 0 && xs->beta < 0 \
-	// 			&& fabs(f) <= xs->c && d >= 0 && e < 0)
-	// 			return (cone1(cn, xs, cn->xyz));
-	// 		if (xs->alpha < xs->h && xs->beta > xs->h \
-	// 			&& fabs(f) <= xs->c && e >= 0 && d < 0)
-	// 			return (cone1(cn, xs, add_vec(cn->xyz, \
-	// 				mul_vec(cn->normal_vec, 2 * cn->height))));
-	// 	}
-	// 	else
-	// 	{
-	// 		if (fabs(f) >= xs->c && d >= 0 && e < 0)
-	// 			return (cone1(cn, xs, cn->xyz));
-	// 		if (fabs(f) >= xs->c && e >= 0 && d < 0)
-	// 			return (cone1(cn, xs, add_vec(cn->xyz, \
-	// 				mul_vec(cn->normal_vec, 2 * cn->height))));
-	// 	}
-	// }
-	// return (-1.0);
+		return(cone5(cn, xs));
 }

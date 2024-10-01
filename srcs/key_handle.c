@@ -12,8 +12,8 @@
 
 #include "../includes/minirt.h"
 
-static void	key_translate(int keycode, t_rt *rt);
-static void	key_rotate(int keycode, t_rt *rt);
+static void	cam_translate(int keycode, t_rt *rt);
+static void	cam_rotate(int keycode, t_rt *rt);
 
 void	fig_resize_dia(int keycode, t_rt *rt)
 {
@@ -65,11 +65,11 @@ int	key_handle(int keycode, t_rt *rt)
 		close_all(rt, NULL);
 	else if (keycode == KEY_UP || keycode == KEY_DOWN || \
 			keycode == KEY_LEFT || keycode == KEY_RIGHT)
-		key_rotate(keycode, rt);
+		cam_rotate(keycode, rt);
 	else if (keycode == KEY_W || keycode == KEY_A || \
 		keycode == KEY_S || keycode == KEY_D || \
 		keycode == KEY_Q || keycode == KEY_E)
-		key_translate(keycode, rt);
+		cam_translate(keycode, rt);
 	else if (keycode == NUM_UP || keycode == NUM_DOWN || \
 			keycode == NUM_LEFT || keycode == NUM_RIGHT || \
 			keycode == NUM_FRONT || keycode == NUM_BACK)
@@ -87,32 +87,30 @@ int	key_handle(int keycode, t_rt *rt)
 	return (draw(rt), 0);
 }
 
-void	key_translate(int keycode, t_rt *rt)
+void	cam_translate(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_W)
-	{
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, 1));
-	}
+		mul_vec(rt->cam->orient_vec, 0.3));
 	else if (keycode == KEY_S)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->orient_vec, -1));
+		mul_vec(rt->cam->orient_vec, -0.3));
 	else if (keycode == KEY_D)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, 1));
+		mul_vec(rt->cam->right_vec, 0.3));
 	else if (keycode == KEY_A)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->right_vec, -1));
+		mul_vec(rt->cam->right_vec, -0.3));
 	else if (keycode == KEY_Q)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, 1));
+		mul_vec(rt->cam->up_vec, 0.3));
 	else if (keycode == KEY_E)
 		rt->cam->coords = add_vec(rt->cam->coords, \
-		mul_vec(rt->cam->up_vec, -1));
+		mul_vec(rt->cam->up_vec, -0.3));
 	rt->cam->screen_origin = init_point(rt->cam);
 }
 
-void	key_rotate(int keycode, t_rt *rt)
+void	cam_rotate(int keycode, t_rt *rt)
 {
 	if (keycode == KEY_UP)
 		rt->cam->phi += 10;
@@ -130,6 +128,6 @@ void	key_rotate(int keycode, t_rt *rt)
 		rt->cam->phi -= 360.0;
 	else if (rt->cam->phi <= -180.0)
 		rt->cam->phi += 360.0;
-	update_basis(rt->cam, rt->cam->phi * (ANG), \
+	update_basis(rt->cam, rt->cam->phi * ANG, \
 				rt->cam->theta * ANG);
 }

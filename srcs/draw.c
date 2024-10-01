@@ -15,7 +15,7 @@
 static int	draw_line(t_worker *wk, t_vector point);
 static void	init_util(t_util *util, t_vector from, t_vector to);
 static void	update_closest_figure(t_util *util, t_fig *fig, \
-								t_vector to, double time);
+								double time);
 
 void	draw(t_rt *rt)
 {
@@ -66,7 +66,7 @@ int	draw_line(t_worker *wk, t_vector to)
 	{
 		time = get_ray_dist(fig, &wk->util.xs);
 		if (time > 0 && time < wk->util.time - EPSILON)
-			update_closest_figure(&wk->util, fig, to, time);
+			update_closest_figure(&wk->util, fig, time);
 		fig = fig->next;
 	}
 	if (!wk->util.vec.fig)
@@ -139,8 +139,7 @@ void	update_closest_cylinder(t_util *util, t_fig *fig)
 	}
 }
 
-void	update_closest_figure(t_util *util, t_fig *fig, \
-								t_vector to, double time)
+void	update_closest_figure(t_util *util, t_fig *fig, double time)
 {
 	util->time = time;
 	util->vec.fig = fig;
@@ -159,6 +158,5 @@ void	update_closest_figure(t_util *util, t_fig *fig, \
 	else if (fig->type == CYLINDER)
 		update_closest_cylinder(util, fig);
 	else
-		util->vec.n_vec = get_cone_normal(fig, \
-							util->xs.from, to, time);
+		util->vec.n_vec = get_cone_normal(fig, &util->xs, time);
 }

@@ -66,6 +66,7 @@ void	cone_xs(t_fig *cn, t_xs *xs)
 				+ 2 * (cn->radius_sq / cn->height) * xs->ecn \
 				- (1 + h_ratio) * pow(xs->ecn, 2) - cn->radius_sq;
 	xs->c = cn->height / sqrt(cn->radius_sq + pow(cn->height, 2));
+	xs->c = sqrt(1 - pow(xs->c, 2));
 	xs->h = cn->height * 2;
 	xs->det = pow(xs->abc[1], 2) - xs->abc[0] * xs->abc[2];
 	xs->flag = 0;
