@@ -14,27 +14,20 @@
 
 t_vector	get_in_color(int *i, int j, t_worker *worker, t_vector point)
 {
-	if (j >= 0 && *i >= 0 && j + 1 < WINDOW_HEIGHT && *i + 1 < WINDOW_WIDTH)
+	if (j >= 0 && *i >= 0 && j + 2 < WINDOW_HEIGHT && *i + 2 < WINDOW_WIDTH)
 	{
 		worker->rt->map[j][*i] = draw_line(worker, point);
-		worker->rt->map[j][*i + 1] = worker->rt->map[j][*i];
-		worker->rt->map[j + 1][*i] = worker->rt->map[j][*i];
-		worker->rt->map[j + 1][*i + 1] = worker->rt->map[j][*i];
+		rt_map(*i, j, worker);
 		worker->rt->ch_map[j][*i] = 1;
 		worker->rt->pixcel_map[j][*i] = worker->util.color.final_color;
 		if (worker->util.before == worker->rt->map[j][*i])
 		{
-			worker->rt->pixcel_map[j][*i + 1] = worker->util.color.final_color;
-			worker->rt->ch_map[j][*i + 1] = 1;
-			worker->rt->pixcel_map[j + 1][*i + 1] = worker->util.color.final_color;
-			worker->rt->ch_map[j + 1][*i + 1] = 1;
-			worker->rt->pixcel_map[j + 1][*i] = worker->util.color.final_color;
-			worker->rt->ch_map[j + 1][*i] = 1;
+			rt_pixcel(*i, j, worker);
 		}
 	}
 	worker->util.before = worker->rt->map[j][*i];
-	(*i)++;
-	return (add_vec(point, mul_vec(worker->rt->cam->right_vec, 2)));
+	(*i) += 2;
+	return (add_vec(point, mul_vec(worker->rt->cam->right_vec, 3)));
 }
 
 void	adjust_boundary(int	*i1, int *i2, int ch[WINDOW_HEIGHT]\
@@ -121,8 +114,8 @@ void	*render_scene_fast(void *wk)
 		save = point;
 		while (++i < WINDOW_WIDTH)
 			point = get_in_color(&i, j, worker, point);
-		j++;
-		point = sub_vec(save, mul_vec(worker->rt->cam->up_vec, 2));
+		j += 2;
+		point = sub_vec(save, mul_vec(worker->rt->cam->up_vec, 3));
 	}
 	j = worker->y_start - 1;
 	while (++j < worker->y_end)

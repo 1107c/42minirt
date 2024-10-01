@@ -42,7 +42,6 @@ t_rt	*init_rt(int fd)
 	rt->fig_cnt = 0;
 	rt->bump_cnt = 0;
 	rt->did_get_normal_map = 0;
-	rt->fast = -1;
 	init_map(rt);
 	return (rt);
 }

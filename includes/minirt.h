@@ -28,10 +28,10 @@
 # define SHINESS	128.0
 
 # ifndef WINDOW_WIDTH
-#  define WINDOW_WIDTH	400
+#  define WINDOW_WIDTH	1920
 # endif
 # ifndef WINDOW_HEIGHT
-#  define WINDOW_HEIGHT	300
+#  define WINDOW_HEIGHT	1080
 # endif
 # define WINDOW_TITLE	"miniRT"
 
@@ -551,8 +551,11 @@ void		key_checkboard_bump(int keycode, t_rt *rt);
 /* update_inter_n_vec.c */
 void		update_closest_figure(t_util *util, t_fig *fig, double time);
 
-
 /*	render_scene_fast */
 void	*render_scene_fast(void *wk);
+
+/*	render_fast_utils */
+void	rt_map(int i, int j, t_worker *worker);
+void	rt_pixcel(int i, int j, t_worker *worker);
 
 #endif
