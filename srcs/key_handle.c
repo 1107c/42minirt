@@ -56,11 +56,6 @@ void	fig_resize_height(int keycode, t_rt *rt)
 
 int	key_handle(int keycode, t_rt *rt)
 {
-	if (keycode == 112)
-	{
-		printf("coords: %lf,%lf,%lf\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
-		printf("orient: %lf,%lf,%lf\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
-	}
 	if (keycode == KEY_ESC)
 		close_all(rt, NULL);
 	else if (keycode == KEY_UP || keycode == KEY_DOWN || \
@@ -74,7 +69,7 @@ int	key_handle(int keycode, t_rt *rt)
 			keycode == NUM_LEFT || keycode == NUM_RIGHT || \
 			keycode == NUM_FRONT || keycode == NUM_BACK)
 		fig_light_translate(keycode, rt->selected, rt->selected_light);
-	else if (keycode == KEY_LIGHT)
+	else if (keycode == KEY_LIGHT || keycode == KEY_F)
 		key_light(keycode, rt);
 	else if (keycode == NUM_ROT_X || keycode == NUM_ROT_Y)
 		fig_rotate(keycode, rt);

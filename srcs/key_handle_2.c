@@ -73,14 +73,14 @@ void	fig_light_translate(int keycode, t_fig *fig, t_light *light)
 
 void	key_light(int keycode, t_rt *rt)
 {
-	if (!keycode)
-		return ;
-	if (!rt->selected_light)
+	if (keycode == KEY_F)
+		rt->fast *= -1;
+	if (!rt->selected_light && keycode == KEY_LIGHT)
 	{
 		rt->selected_light = rt->light;
 		rt->selected_light->is_click *= -1;
 	}
-	else
+	else if (keycode == KEY_LIGHT)
 	{
 		rt->selected_light->is_click *= -1;
 		if (!rt->selected_light->next)
@@ -89,7 +89,7 @@ void	key_light(int keycode, t_rt *rt)
 			rt->selected_light = rt->selected_light->next;
 		rt->selected_light->is_click *= -1;
 	}
-	if (rt->selected)
+	if (rt->selected && keycode == KEY_LIGHT)
 	{
 		rt->selected->rgb = rt->selected->rgb2;
 		rt->selected->is_click *= -1;

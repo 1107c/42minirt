@@ -50,6 +50,7 @@
 # define KEY_E		101
 # define KEY_B		98
 # define KEY_N		110
+# define KEY_F		102
 # define KEY_LIGHT	108
 # define KEY_PLUS	61
 # define KEY_MINUS	45
@@ -212,6 +213,7 @@ typedef struct s_util
 {
 	t_vec	vec;
 	t_color	color;
+	int		before;
 	t_xs	xs;
 	double	time;
 }	t_util;
@@ -321,6 +323,10 @@ typedef struct s_rt
 	int			bump_cnt;
 	int			did_get_normal_map;
 	char		**map;
+	t_vector	pixcel_map[WINDOW_HEIGHT][WINDOW_WIDTH];
+	int			ch_map[WINDOW_HEIGHT][WINDOW_WIDTH];
+	int			fast;
+	int			before;
 }	t_rt;
 
 typedef struct s_worker
@@ -355,6 +361,7 @@ int			close_win(t_rt *rt);
 /* draw.c */
 void		draw(t_rt *rt);
 void		*render_scene(void *worker);
+int			draw_line(t_worker *wk, t_vector point);
 void		clear_image(t_image *img);
 void		pixel_to_image(t_image *img, double x, double y, t_vector rgb);
 
@@ -518,4 +525,8 @@ void		interpret_xpm(int fd, t_xpm *img);
 t_vector	**get_height_map(t_xpm *image, double **height_map);
 t_vector	**translate_height_to_normal(double **height_map, t_vector \
 	**normal_map, int width, int height);
+
+/*	render_scene_fast */
+void	*render_scene_fast(void *wk);
+
 #endif

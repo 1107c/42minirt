@@ -12,7 +12,6 @@
 
 #include "../includes/minirt.h"
 
-static int	draw_line(t_worker *wk, t_vector point);
 static void	init_util(t_util *util, t_vector from, t_vector to);
 static void	update_closest_figure(t_util *util, t_fig *fig, \
 								t_vector to, double time);
