@@ -13,7 +13,6 @@
 #include "../includes/minirt.h"
 
 static t_vector	fig_light_translate_module(int move, int dir, t_vector vec);
-static void		update_cy_co(int keycode, t_fig *fig);
 
 void	fig_light_translate(int keycode, t_fig *fig, t_light *light)
 {
@@ -41,7 +40,7 @@ void	fig_light_translate(int keycode, t_fig *fig, t_light *light)
 		light->xyz = fig_light_translate_module(10, 2, light->xyz);
 	else if (keycode == NUM_BACK && light)
 		light->xyz = fig_light_translate_module(-10, 2, light->xyz);
-	update_cy_co(keycode, fig);
+	update_cy_co(fig);
 }
 
 t_vector	fig_light_translate_module(int move, int dir, t_vector vec)
@@ -55,22 +54,16 @@ t_vector	fig_light_translate_module(int move, int dir, t_vector vec)
 	return (init_vector(0, 0, 0));
 }
 
-void	update_cy_co(int keycode, t_fig *fig)
+void	update_cy_co(t_fig *fig)
 {
-	if (!fig || fig->type == PLANE || fig->type || SPHERE)
+	if (!fig || fig->type == PLANE || fig->type == SPHERE)
 		return ;
-	if (keycode == NUM_UP)
-		fig->top = fig_light_translate_module(10, 1, fig->top);
-	else if (keycode == NUM_DOWN)
-		fig->top = fig_light_translate_module(-10, 1, fig->top);
-	else if (keycode == NUM_LEFT)
-		fig->top = fig_light_translate_module(10, 0, fig->top);
-	else if (keycode == NUM_RIGHT)
-		fig->top = fig_light_translate_module(-10, 0, fig->top);
-	else if (keycode == NUM_FRONT)
-		fig->top = fig_light_translate_module(10, 2, fig->top);
-	else if (keycode == NUM_BACK)
-		fig->top = fig_light_translate_module(-10, 2, fig->top);
+	else if (fig->type == CYLINDER)
+		fig->top = add_vec(fig->xyz, mul_vec(fig->normal_vec, \
+						fig->height));
+	else if (fig->type == CONE)
+		fig->top = add_vec(fig->xyz, mul_vec(fig->normal_vec, \
+						2 * fig->height));
 }
 
 void	key_light(int keycode, t_rt *rt)
@@ -118,4 +111,5 @@ void	fig_rotate(int keycode, t_rt *rt)
 		rt->selected->up_vec = cross_product(rt->selected->normal_vec, \
 		rt->selected->right_vec);
 	}
+	update_cy_co(rt->selected);
 }

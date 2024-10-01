@@ -110,4 +110,5 @@ void	fig_resize_height(int keycode, t_rt *rt)
 		rt->selected->height += 2;
 	else if (keycode == KEY_MINUS && rt->selected->height > 3)
 		rt->selected->height -= 2;
+	update_cy_co(rt->selected);
 }

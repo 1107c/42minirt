@@ -59,8 +59,7 @@ double	cylinder4(t_fig *cy, t_xs *xs)
 	double		d[2];
 
 	first = sub_vec(cy->xyz, xs->from);
-	second = sub_vec(add_vec(cy->xyz, \
-			mul_vec(cy->normal_vec, cy->height)), xs->from);
+	second = sub_vec(cy->top, xs->from);
 	d[0] = dot_product(xs->ray_dir, first);
 	d[1] = dot_product(xs->ray_dir, second);
 	if (d[0] > 0 && d[1] > 0)

@@ -35,6 +35,7 @@ void	cylinder_xs(t_fig *cy, t_xs *xs)
 	xs->from_fig_center = sub_vec(xs->from, cy->xyz);
 	xs->dn = dot_product(xs->ray_dir, cy->normal_vec);
 	xs->ecn = dot_product(xs->from_fig_center, cy->normal_vec);
+	xs->ecd = dot_product(xs->ray_dir, xs->from_fig_center);
 	xs->abc[0] = dot_product(xs->ray_dir, xs->ray_dir) \
 				- pow(xs->dn, 2);
 	xs->abc[1] = dot_product(xs->ray_dir, xs->from_fig_center) \

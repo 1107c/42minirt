@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../includes/minirt.h"
-#include <complex.h>
 
 int	is_in_cylinder(t_fig *cy, t_xs *xs)
 {
@@ -21,7 +20,7 @@ int	is_in_cylinder(t_fig *cy, t_xs *xs)
 	double		dsq;
 
 	h_sq = pow(xs->h, 2);
-	dt = mul_vec(cy->normal_vec, cy->height);
+	dt = sub_vec(cy->top, cy->xyz);
 	dot = dot_product(dt, xs->from_fig_center);
 	if (dot < 0.0 || dot > h_sq)
 		return (0);

@@ -67,6 +67,7 @@ double	intersect_cylinder(t_fig *cy, t_xs *xs)
 		return (cylinder3(cy, xs));
 	else
 		return (cylinder4(cy, xs));
+	return (-1.0);
 }
 
 double	intersect_cone(t_fig *cn, t_xs *xs)

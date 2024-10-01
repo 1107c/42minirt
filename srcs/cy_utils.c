@@ -16,16 +16,11 @@ static int		get_cy_type(t_xs *xs);
 
 double	parallel_to_cy_norm(t_fig *cy, t_xs *xs)
 {
-	t_vector	closer_area;
-	t_vector	center_vec;
-	double		height;
-
 	if (fabs(xs->abc[2]) >= EPSILON)
 		return (-1.0);
-	closer_area = find_closest_center(cy, xs->from, xs->dn);
-	center_vec = sub_vec(closer_area, xs->from);
-	height = fabs(dot_product(center_vec, cy->normal_vec));
-	return (height / xs->total_dist);
+	if (is_in_cylinder(cy, xs))
+		return (EPSILON);
+	return (-1.0);
 }
 
 t_vector	find_closest_center(t_fig *cy, t_vector from, double dn)
@@ -37,14 +32,14 @@ t_vector	find_closest_center(t_fig *cy, t_vector from, double dn)
 	double		height;
 
 	bottom = cy->xyz;
-	top = add_vec(cy->xyz, mul_vec(cy->normal_vec, cy->height));
+	top = cy->top;
 	t[0] = sub_vec(bottom, from);
 	t[1] = sub_vec(top, from);
 	dist[0] = dot_product(t[0], t[0]);
 	dist[1] = dot_product(t[1], t[1]);
 	height = fmax(fabs(dot_product(t[0], cy->normal_vec)), \
 			fabs(dot_product(t[1], cy->normal_vec)));
-	if (height >= cy->height)
+	if (height > cy->height)
 	{
 		if (dist[0] < dist[1])
 			return (bottom);

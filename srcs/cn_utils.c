@@ -56,37 +56,37 @@ double	get_cn_center_hit(t_fig *cn, t_xs *xs, t_vector close)
 int	get_equation_type(double sol, double h1, double h2)
 {
 	if (sol < 0)
-		return (0);
+		return (BOTTOM);
 	else if (sol < h1)
-		return (1);
+		return (LOW_MID);
 	else if (sol <= h2)
-		return (2);
-	return (3);
+		return (HIGH_MID);
+	return (TOP);
 }
 
 int	get_cn_type(t_xs *xs, double h)
 {
 	xs->t_a = get_equation_type(xs->alpha, h, xs->h);
 	xs->t_b = get_equation_type(xs->beta, h, xs->h);
-	if ((xs->t_a == 0 && xs->t_b == 0) \
-		|| (xs->t_a == 3 && xs->t_b == 3))
+	if ((xs->t_a == BOTTOM && xs->t_b == BOTTOM) \
+		|| (xs->t_a == TOP && xs->t_b == TOP))
 		return (NO_HIT);
-	else if ((xs->t_a == 1 && xs->t_b == 1) \
-		|| (xs->t_a == 2 && xs->t_b == 2))
+	else if ((xs->t_a == LOW_MID && xs->t_b == LOW_MID) \
+		|| (xs->t_a == HIGH_MID && xs->t_b == HIGH_MID))
 		return (SIDE_SIDE_HIT);
-	else if ((xs->t_a == 0 && xs->t_b == 1) \
-		|| (xs->t_a == 3 && xs->t_b == 2))
+	else if ((xs->t_a == BOTTOM && xs->t_b == LOW_MID) \
+		|| (xs->t_a == TOP && xs->t_b == HIGH_MID))
 		return (CENTER_SIDE_HIT);
-	else if ((xs->t_a == 2 && xs->t_b == 3)
-		|| (xs->t_a == 1 && xs->t_b == 0))
+	else if ((xs->t_a == HIGH_MID && xs->t_b == TOP)
+		|| (xs->t_a == LOW_MID && xs->t_b == BOTTOM))
 		return (SIDE_CENTER_HIT);
-	else if ((xs->t_a == 1 && xs->t_b == 2) \
-		|| (xs->t_a == 2 && xs->t_b == 1))
+	else if ((xs->t_a == LOW_MID && xs->t_b == HIGH_MID) \
+		|| (xs->t_a == HIGH_MID && xs->t_b == LOW_MID))
 		return (CENTER_CENTER_HIT);
-	else if ((xs->t_a == 0 && xs->t_b == 2) \
-		|| (xs->t_a == 3 && xs->t_b == 1) \
-		|| (xs->t_a == 1 && xs->t_b == 3) \
-		|| (xs->t_a == 2 && xs->t_b == 0))
+	else if ((xs->t_a == BOTTOM && xs->t_b == HIGH_MID) \
+		|| (xs->t_a == TOP && xs->t_b == LOW_MID) \
+		|| (xs->t_a == LOW_MID && xs->t_b == TOP) \
+		|| (xs->t_a == HIGH_MID && xs->t_b == BOTTOM))
 		return (SIDE_HIT);
 	return (NO_HIT);
 }
