@@ -51,7 +51,7 @@ double	cylinder2(t_fig *cy, t_xs *xs)
 	else if (is_height(cy, xs))
 		return (-1.0);
 	xs->flag = 3;
-	return (test2(cy, xs, find_closest_center1(cy, xs->from, xs->ray_dir)));
+	return (test2(cy, xs, find_closest_center(cy, xs->from, xs->dn)));
 }
 
 double	cylinder3(t_fig *cy, t_xs *xs)

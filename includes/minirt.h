@@ -390,8 +390,6 @@ void		print_rt(t_rt *rt);
 /* key_handle.c */
 int			key_handle(int keycode, t_rt *rt);
 
-// comment -> yeojukim
-// : 벡터 유틸들의 함수목록들입니다.
 /* vector_utils.c */
 t_vector	normalize_vec(t_vector rhs);
 double		dot_product(t_vector lhs, t_vector rhs);
@@ -491,13 +489,12 @@ double		cylinder4(t_fig *cy, t_xs *xs);
 double		parallel_to_cy_norm(t_fig *cy, t_xs *xs);
 void		get_cy_solution(t_xs *xs);
 double		get_cy_up_hit(t_fig *cy, t_xs *xs);
+t_vector	find_closest_center(t_fig *cy, t_vector from, double dn);
 
 /* cy_utils2.c */
 int			is_in_cylinder(t_fig *cy, t_xs *xs);
 double		test2(t_fig *cy, t_xs *xs, t_vector close);
 int			is_height(t_fig *cy, t_xs *xs);
-t_vector	find_closest_center1(t_fig *cy, t_vector point, t_vector ray);
-
 
 /* cn_utils.c */
 double		parallel_to_cn_norm(t_fig *cn, t_xs *xs);
