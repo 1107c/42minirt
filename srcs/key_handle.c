@@ -19,21 +19,22 @@ void	fig_resize_dia(int keycode, t_rt *rt)
 {
 	if (keycode == NUM_PLUS && rt->selected)
 	{
-		if (rt->selected->type == 1)
 			rt->selected->diameter += 2;
-		else if (rt->selected->type == 2)
-			rt->selected->diameter += 2;
-		else if (rt->selected->type == 3)
-			rt->selected->diameter += 2;
+			rt->selected->radius_sq = pow(rt->selected->diameter / 2, 2);
+		// else if (rt->selected->type == 2)
+			// rt->selected->diameter += 2;
+		// else if (rt->selected->type == 3)
+			// rt->selected->diameter += 2;
 	}
 	if (keycode == NUM_MINUS && rt->selected && rt->selected->diameter > 3)
 	{
-		if (rt->selected->type == 1)
+		// if (rt->selected->type == 1)
 			rt->selected->diameter -= 2;
-		else if (rt->selected->type == 2)
-			rt->selected->diameter -= 2;
-		else if (rt->selected->type == 3)
-			rt->selected->diameter -= 2;
+			rt->selected->radius_sq = pow(rt->selected->diameter / 2, 2);
+		// else if (rt->selected->type == 2)
+			// rt->selected->diameter -= 2;
+		// else if (rt->selected->type == 3)
+			// rt->selected->diameter -= 2;
 	}
 }
 
@@ -55,6 +56,11 @@ void	fig_resize_height(int keycode, t_rt *rt)
 
 int	key_handle(int keycode, t_rt *rt)
 {
+	if (keycode == 112)
+	{
+		printf("coords: %lf,%lf,%lf\n", rt->cam->coords.x, rt->cam->coords.y, rt->cam->coords.z);
+		printf("orient: %lf,%lf,%lf\n", rt->cam->orient_vec.x, rt->cam->orient_vec.y, rt->cam->orient_vec.z);
+	}
 	if (keycode == KEY_ESC)
 		close_all(rt, NULL);
 	else if (keycode == KEY_UP || keycode == KEY_DOWN || \

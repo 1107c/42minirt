@@ -77,7 +77,7 @@ int	get_cy_type(t_xs *xs)
 {
 	if ((xs->alpha < 0 && xs->beta < 0) \
 		|| (xs->alpha > xs->h && xs->beta > xs->h) \
-		|| (xs->t[0] <= EPSILON && xs->t[1] <= EPSILON))
+		|| (xs->t[0] < 0 && xs->t[1] < 0))
 		return (NO_HIT);
 	else if ((xs->alpha < 0 && xs->beta < xs->h) \
 		|| (xs->alpha > xs->h && xs->beta > 0))

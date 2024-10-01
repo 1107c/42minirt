@@ -458,7 +458,7 @@ t_vector	get_light_color(t_vector l_sum, t_light *lt, double power);
 void		add_color(t_color *c, t_fig *fig, t_vec *vec, t_light *light);
 
 /* intersect_utils3.c*/
-void		get_cn_solution(t_xs *xs);
+void		get_cn_solution(t_fig *cn, t_xs *xs);
 
 /* threads.c */
 void		init_workers(t_worker *workers, t_rt *rt);
@@ -495,6 +495,7 @@ double		get_cy_up_hit(t_fig *cy, t_xs *xs);
 /* cn_utils.c */
 double		parallel_to_cn_norm(t_fig *cn, t_xs *xs);
 double		cone1(t_fig *cn, t_xs *xs, t_vector close);
+int			get_cn_type(t_xs *xs, double height);
 
 /*key_bump.c */
 void		key_bump(int keycode, t_rt *rt, t_fig *fig);

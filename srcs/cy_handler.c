@@ -40,8 +40,9 @@ double	cylinder2(t_fig *cy, t_xs *xs)
 		xs->flag = 3;
 		return (get_cy_up_hit(cy, xs));
 	}
-	if ((xs->beta < 0 && xs->ecn >= 0 && xs->dn <= 0) \
-		|| (xs->beta > xs->h && xs->ecn < 0 && xs->dn >= 0))
+	return (-1.0);
+	if ((xs->beta < 0 && xs->ecn <= 0) \
+		|| (xs->beta > xs->h && xs->ecn >= 0))
 		{
 			// printf("%lf %lf\n", xs->beta, xs->ecn);
 		return (-1.0);

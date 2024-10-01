@@ -43,3 +43,33 @@ double	cone1(t_fig *cn, t_xs *xs, t_vector close)
 	hit_dist = h / c;
 	return (hit_dist / xs->total_dist);
 }
+
+int	get_cn_type(t_xs *xs, double height)
+{
+	if ((xs->alpha < 0 && xs->beta < 0) ||
+		(xs->alpha > xs->h && xs->beta > xs->h))
+		return (NO_HIT);
+	else if (((xs->alpha >= 0 && xs->alpha < height) \
+		&& (xs->beta >= 0 && xs->beta < height)) \
+		|| ((xs->alpha > height && xs->alpha <= xs->h) \
+		&& (xs->beta > height && xs->beta <= xs->h)))
+		return (SIDE_SIDE_HIT);
+	else if ((xs->alpha < 0 \
+		&& (xs->beta >= 0 && xs->beta < height)) \
+		|| (xs->alpha > xs->h \
+		&& (xs->beta > height && xs->beta <= xs->h)))
+		return (CENTER_SIDE_HIT);
+	else if (((xs->alpha > height && xs->alpha < xs->h) \
+		&& xs->beta > xs->h) \
+		|| ((xs->alpha > 0 && xs->alpha < height) \
+		&& xs->beta < 0))
+		return (SIDE_CENTER_HIT);
+	else if (((xs->alpha >= 0 && xs->alpha < height) \
+		&& xs->beta > height) \
+		|| ((xs->alpha > height && xs->alpha <= xs->h) \
+		&& xs->beta < height) \
+		|| (xs->alpha < 0 && xs->beta > height) \
+		|| (xs->alpha > xs->h && xs->beta < height))
+		return (CENTER_CENTER_HIT);
+	return (NO_HIT);
+}

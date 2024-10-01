@@ -56,9 +56,11 @@ t_xs		init_cn_util(t_fig *cn, t_vector p1, t_vector p2)
 	return (util);
 	}*/
 
-void	get_cn_solution(t_xs *xs)
+void	get_cn_solution(t_fig *cn, t_xs *xs)
 {
-	double	temp_t;
+	t_vector	top;
+	t_vector	line;
+	double		temp_t;
 
 	xs->t[0] = (-xs->abc[1] + sqrt(xs->det)) / xs->abc[0];
 	xs->t[1] = (-xs->abc[1] - sqrt(xs->det)) / xs->abc[0];
@@ -70,4 +72,10 @@ void	get_cn_solution(t_xs *xs)
 	}
 	xs->alpha = xs->t[0] * xs->dn + xs->ecn;
 	xs->beta = xs->t[1] * xs->dn + xs->ecn;
+	xs->type = get_cn_type(xs, xs->h / 2);
+	xs->left = -xs->ecn / sqrt(dot_product( \
+			xs->from_fig_center, xs->from_fig_center));
+	top = add_vec(cn->xyz, mul_vec(cn->normal_vec, xs->h));
+	line = normalize_vec(sub_vec(top, xs->from));
+	xs->right = dot_product(line, cn->normal_vec);
 }
