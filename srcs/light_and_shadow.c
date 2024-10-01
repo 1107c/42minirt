@@ -21,10 +21,10 @@ int	is_in_shadow(t_fig *fig, t_light *light, t_xs *xs, t_vec *vec)
 	double		time;
 
 	l_vec = vec->l_vec;
-	xs->from = add_vec(vec->inter_vec, mul_vec(l_vec, 0.1));
+	xs->from = add_vec(vec->inter_vec, mul_vec(l_vec, V_EPSILON));
 	xs->ray_dir = sub_vec(light->xyz, xs->from);
 	xs->total_dist = sqrt(dot_product(xs->ray_dir, \
-					xs->ray_dir));
+							xs->ray_dir));
 	_fig = fig;
 	while (_fig)
 	{

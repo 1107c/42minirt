@@ -492,6 +492,13 @@ double		parallel_to_cy_norm(t_fig *cy, t_xs *xs);
 void		get_cy_solution(t_xs *xs);
 double		get_cy_up_hit(t_fig *cy, t_xs *xs);
 
+/* cy_utils2.c */
+int			is_in_cylinder(t_fig *cy, t_xs *xs);
+double		test2(t_fig *cy, t_xs *xs, t_vector close);
+int			is_height(t_fig *cy, t_xs *xs);
+t_vector	find_closest_center1(t_fig *cy, t_vector point, t_vector ray);
+
+
 /* cn_utils.c */
 double		parallel_to_cn_norm(t_fig *cn, t_xs *xs);
 double		cone1(t_fig *cn, t_xs *xs, t_vector close);

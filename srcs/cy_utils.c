@@ -12,7 +12,7 @@
 
 #include "../includes/minirt.h"
 
-static int	get_cy_type(t_xs *xs);
+static int		get_cy_type(t_xs *xs);
 static t_vector	find_closest_center(t_fig *cy, t_vector from, double dn);
 
 double	parallel_to_cy_norm(t_fig *cy, t_xs *xs)
