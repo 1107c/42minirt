@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   draw.c                                             :+:      :+:    :+:   */
+/*   draw_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksuh <ksuh@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: myeochoi <myeochoi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/28 17:53:00 by ksuh              #+#    #+#             */
-/*   Updated: 2024/09/28 17:53:00 by ksuh             ###   ########.fr       */
+/*   Created: 2024/09/01 13:37:46 by ksuh              #+#    #+#             */
+/*   Updated: 2024/09/19 23:47:18 by myeochoi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,10 @@ static void	init_xs(t_xs *xs);
 
 void	draw(t_rt *rt)
 {
-	t_worker	workers;
+	t_worker	workers[NUM_THREADS];
 
-	workers.y_start = 0;
-	workers.y_end = WINDOW_HEIGHT;
-	workers.rt = rt;
-	render_scene(&workers);
+	init_workers(workers, rt);
+	thread_work(workers);
 	mlx_put_image_to_window(rt->mlx, rt->win, \
 							rt->img->img, 0, 0);
 }

@@ -106,7 +106,7 @@ t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path, int i)
 
 	image = parse_xpm(path, rt, 0);
 	height_map = malloc(sizeof(double *) * image->info[0]);
-	bump->normal_map = malloc(sizeof(t_vector *) * image->info[0]);
+	bump->normal_map = malloc(sizeof(t_vector *) * (image->info[0] + 1));
 	if (!height_map || !bump->normal_map)
 		close_all(rt, MEM_ALLOC_ERR);
 	bump->normal_height = image->info[0];
@@ -118,8 +118,8 @@ t_vector	**get_normal_map(t_bump *bump, t_rt *rt, char *path, int i)
 		if (!height_map[i] || !bump->normal_map[i])
 			close_all(rt, MEM_ALLOC_ERR);
 	}
+	bump->normal_map[image->info[0]] = 0;
 	bump->color_map = get_height_map(image, height_map);
-	bump->save_height = bump->normal_height;
 	return (free(image), translate_height_to_normal(height_map, \
 			bump->normal_map, bump->normal_width, bump->normal_height));
 }

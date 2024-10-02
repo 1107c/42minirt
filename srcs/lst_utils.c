@@ -100,7 +100,7 @@ void	free_bump(t_bump *bump)
 	{
 		tmp = bump;
 		i = 0;
-		while (i < bump->save_height)
+		while (bump->color_map[i] != 0)
 		{
 			free(bump->normal_map[i]);
 			free(bump->color_map[i]);

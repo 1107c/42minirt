@@ -64,7 +64,7 @@ t_xpm	*parse_xpm(char *path, t_rt *rt, int i)
 	skip_xpm(fd);
 	get_info_xpm(fd, img);
 	get_rgb_xpm(fd, img);
-	img->pixels = malloc(sizeof(t_vector *) * img->info[0]);
+	img->pixels = malloc(sizeof(t_vector *) * (img->info[0] + 1));
 	if (!img->pixels)
 		close_all(rt, MEM_ALLOC_ERR);
 	while (i < img->info[0])
@@ -73,6 +73,7 @@ t_xpm	*parse_xpm(char *path, t_rt *rt, int i)
 		if (!img->pixels[i - 1])
 			close_all(rt, MEM_ALLOC_ERR);
 	}
+	img->pixels[img->info[0]] = 0;
 	interpret_xpm(fd, img);
 	close(fd);
 	return (img);
@@ -83,7 +84,9 @@ void	key_bump_next(int keycode, t_rt *rt)
 	if (keycode == KEY_N && rt->selected \
 		&& rt->selected->is_bump == 1)
 	{
-		if (rt->bump_cnt < 14)
+		if (rt->bump_cnt < 14 && rt->selected->bump->next)
+			rt->selected->bump = rt->selected->bump->next;
+		else if (rt->bump_cnt < 14)
 		{
 			rt->selected->bump->next = init_bump();
 			if (!rt->selected->bump->next)
