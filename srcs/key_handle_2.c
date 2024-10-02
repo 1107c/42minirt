@@ -103,7 +103,7 @@ void	fig_rotate(int keycode, t_rt *rt)
 		rt->selected->right_vec = cross_product(rt->selected->up_vec, \
 		rt->selected->normal_vec);
 	}
-	if (keycode == NUM_ROT_Y)
+	else if (keycode == NUM_ROT_Y)
 	{
 		rt->selected->normal_vec = add_vec(invert_vec(mul_vec(rt->selected->\
 		up_vec, sin(ANG * 20))), mul_vec(rt->selected->normal_vec, \

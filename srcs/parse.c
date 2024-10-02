@@ -109,7 +109,6 @@ int	is_valid_num(char **s, int *dot, int *comma)
 	return (1);
 }
 
-// 요소를 구분하는 함수
 void	parse_args(t_rt *rt, char **args)
 {
 	if (!ft_strcmp(args[0], "A"))
