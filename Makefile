@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC = cc
-CFLAGS =-g  
+CFLAGS =-g -fsanitize=address
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 

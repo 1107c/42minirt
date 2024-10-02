@@ -33,13 +33,11 @@ int	boundary_check(int tmp, double max)
 
 void	get_bump_uv(t_vec *vec, int *u, int *v, double *uv)
 {
-	vec->fig->bump->save_height = vec->fig->bump->normal_height;
-	vec->fig->bump->save_width = vec->fig->bump->normal_width;
-	if (vec->fig->bump->save_width > vec->fig->bump->normal_height)
-		vec->fig->bump->save_width = vec->fig->bump->normal_height;
+	if (vec->fig->bump->normal_width > vec->fig->bump->normal_height)
+		vec->fig->bump->normal_width = vec->fig->bump->normal_height;
 	else
-		vec->fig->bump->normal_height = vec->fig->bump->save_width;
-	*u = (uv[0] * (vec->fig->bump->save_width - 1));
+		vec->fig->bump->normal_height = vec->fig->bump->normal_width;
+	*u = (uv[0] * (vec->fig->bump->normal_width - 1));
 	*v = (uv[1] * (vec->fig->bump->normal_height - 1));
 }
 
@@ -77,8 +75,8 @@ void	bump(t_worker *wk, t_vec *vec, t_color *color)
 	u = 0;
 	v = 0;
 	get_bump_uv(vec, &u, &v, uv);
-	u = boundary_check(u, vec->fig->bump->save_width);
-	v = boundary_check(v, vec->fig->bump->save_height);
+	u = boundary_check(u, vec->fig->bump->normal_width);
+	v = boundary_check(v, vec->fig->bump->normal_height);
 	normal_from_map = vec->fig->bump->normal_map[v][u];
 	color_from_map = vec->fig->bump->color_map[v][u];
 	vec->n_vec = update_nvec(vec, normal_from_map);
