@@ -11,7 +11,7 @@
 # **************************************************************************** #
 
 CC = cc
-CFLAGS =-g -Wall -Wextra -Werror -fsanitize=address
+CFLAGS =-g  
 MEN_DIR = ./srcs/
 BONUS_DIR	=	./bonus/
 
