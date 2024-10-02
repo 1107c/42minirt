@@ -16,6 +16,7 @@ t_vector	get_cone_normal(t_fig *cn, t_xs *xs, double time)
 {
 	t_vector	dqec;
 	double		r;
+	double		alpha;
 
 	if (xs->flag == 1)
 		return (cn->normal_vec);
@@ -23,14 +24,17 @@ t_vector	get_cone_normal(t_fig *cn, t_xs *xs, double time)
 		return (invert_vec(cn->normal_vec));
 	else if (xs->flag == 3)
 		return (init_vector(0, 0, 0));
-	r = cn->diameter * (cn->height - xs->alpha) \
+	if (xs->flag == 4)
+		alpha = xs->alpha;
+	else
+		alpha = xs->beta;
+	r = cn->diameter * (cn->height - alpha) \
 		/ xs->h;
 	dqec = sub_vec(add_vec(xs->from_fig_center, \
 			mul_vec(xs->ray_dir, time)), \
-			mul_vec(cn->normal_vec, xs->ecn \
-			+ time * xs->dn));
+			mul_vec(cn->normal_vec, alpha));
 	dqec = add_vec(mul_vec(cn->normal_vec, r), \
-			mul_vec(dqec, cn->height - xs->alpha));
+			mul_vec(dqec, cn->height - alpha));
 	dqec = normalize_vec(dqec);
 	return (dqec);
 }

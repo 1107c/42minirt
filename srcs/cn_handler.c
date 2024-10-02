@@ -16,7 +16,10 @@ double	cone1(t_fig *cn, t_xs *xs)
 {
 	(void) cn;
 	if (xs->t[0] > 0)
+	{
+		xs->flag = 4;
 		return (xs->t[0]);
+	}
 	else if (xs->t[1] > 0)
 	{
 		xs->flag = 3;
@@ -46,7 +49,10 @@ double	cone2(t_fig *cn, t_xs *xs)
 double	cone3(t_fig *cn, t_xs *xs)
 {
 	if (xs->t[0] > 0)
+	{
+		xs->flag = 4;
 		return (xs->t[0]);
+	}
 	else if (xs->left >= xs->c && xs->right >= xs->c)
 	{
 		xs->flag = 3;
@@ -103,7 +109,7 @@ double	cone5(t_fig *cn, t_xs *xs)
 	}
 	if (xs->t[0] < 0)
 		return (-1.0);
-	xs->flag = 3;
+	xs->flag = 4;
 	if (xs->left >= xs->c && xs->right >= xs->c)
 		return (xs->t[0]);
 	if (xs->alpha < cn->height)
